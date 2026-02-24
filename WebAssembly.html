@@ -1,0 +1,282 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>哈囉！WebAssembly！</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="哈囉webassembly"><a class="header" href="#哈囉webassembly">哈囉！WebAssembly！</a></h1>
+</div>
+<p>Go 1.11 實驗性地加入了 WebAssembly 的支援，這表示你可以使用 Go 來撰寫程式碼，然後令其在網頁中執行，也可以與瀏覽器互動，像是瀏覽器的 JavaScript 環境、DOM 操作等。</p>
+<p>對 Go 開發者而言，理想的狀況下，若 Go 封裝的好，最好是可以完全忽略 JavaScript、瀏覽器環境等事實，也不需要知道 WebAssembly 的細節，然而，畢竟目前還是實驗性質，如果能認識 JavaScript、瀏覽器、WebAssembly 的特性，對使用 Go 撰寫程式並編譯為 WebAssembly 來說，是有很大的幫助的。</p>
+<p>如果對 JavaScript、瀏覽器的細節有興趣，建議參考〈<a href="https://openhome.cc/Gossip/ECMAScript/">ECMAScript 本質部份</a>〉，如果對 WebAssembly 的細節有興趣，建議參考〈<a href="https://openhome.cc/Gossip/WebAssembly/">WebAssembly</a>〉文件。</p>
+<p>無論如何，來看個簡單的 Go 程式如何編譯為 WebAssembly，首先，來個簡單的 Go 程式：</p>
+<pre><code class="language-prettyprint">package main
+
+func main() {
+    println("Hello, WebAssembly")
+}
+</code></pre>
+<p>再簡單也不過，在編譯為 WebAssembly 之後，<code>println</code> 的輸出預設會是瀏覽器主控台（console），接下來，若要編譯為 WebAssembly，環境變數 <code>GOOS</code> 必須設定為 <code>js</code>，<code>GOARCH</code> 必須設定為 <code>wasm</code>。</p>
+<p>如果你是使用 Visual Studio Code，安裝了 <a href="https://github.com/Microsoft/vscode-go">vscode-go</a> 擴充，可以在 settings.json 中設定：</p>
+<pre><code class="language-prettyprint">{
+    "go.toolsEnvVars": {"GOOS":"js", "GOARCH": "wasm"}
+}
+</code></pre>
+<p>如果是要在 Visual Studio Code 開啟的終端機中設定環境變數，因為它是基於 Power Shell，可以如下設定環境變數：</p>
+<pre><code class="language-prettyprint">$env:GOOS="js"
+$env:GOARCH="wasm"
+</code></pre>
+<p>如果是在 Windows 的命令提示字元，就是使用 <code>set</code> 了：</p>
+<pre><code class="language-prettyprint">SET GOOS=js
+SET GOARCH=wasm
+</code></pre>
+<p>接下來，可以執行建構：</p>
+<pre><code class="language-prettyprint">go build -o test.wasm main.go
+</code></pre>
+<p>test.wasm 是編譯出來的 WebAssembly 模組位元組碼，除了你撰寫的程式之外，根據〈<a href="https://goo.gl/YfaETG">Go 1.11 Release Notes</a>〉，編譯出來的 WebAssembly 模組也包含了 goroutine、垃圾收集、maps 等功能的執行環境，最小約在 2MB 左右，壓縮後可以減至 500KB。</p>
+<p>接下來就是開個 HTML 檔案，在當中使用 JavaScript，運用 Fetch API、WebAssembly API 等，取得、編譯、初始化 WebAssembly 模組，這些細節在〈<a href="https://openhome.cc/Gossip/WebAssembly/">WebAssembly</a>〉文件都有談到。</p>
+<p>如果想要直接有個現成的載入頁面可以使用，可以複製 Go 安裝目錄的 misc\wasm 中 wasm_exec.html 與 wasm_exec.js 到你的工作目錄之中，wasm_exec.html 裏頭寫的 JavaScript，會使用 Fetch API 來取得 test.wasm，這也是為什麼，方才編譯時指定輸出檔案名稱為 test.wasm 的原因。</p>
+<p>如果你有安裝 Node.js，那麼可以直接搭配 wasm_exec.js 來運行 test.wasm，這會顯示 Hello, WebAssembly：</p>
+<pre><code class="language-prettyprint">node wasm_exec.js test.wasm
+</code></pre>
+<p>如果要在瀏覽器中運行，你需要有個 HTTP 伺服器，例如 Node.js 的 <code>http-server</code>，在啟動之後，請求你的 http://localhost:8080/wasm_exec.html。</p>
+<p>這會看到一個 Run 按鈕，開啟你瀏覽器上的開發者工具，然後按下網頁中的 Run 按鈕，你就會看到開發者工具中的主控台顯示了文字：</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/WebAssembly-1.JPG" class="pure-img-responsive" alt="哈囉！WebAssembly！" />
+</div>
+</div>
+<p>要注意的是，在執行完 Go 的 <code>main</code> 之後，程式就結束了，就網頁中 Run 按鈕的事件來說，每按一次是會重新跑一次 WebAssembly 模組實例，也就是重新跑一次 <code>main</code> 流程，有時這不會是你想要的，這時就要在 Go 中以某種方式，阻斷 <code>main</code> 的流程，這之後還會看到。</p>
+<p>這只是個體驗，之後的文件還會談到，如何操作瀏覽器中的 JavaScript、DOM，以及 Go 中定義的函式，如何能被 JavaScript 取得呼叫。</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Module.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="JavaScript.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Module.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="JavaScript.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

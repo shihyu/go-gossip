@@ -1,0 +1,393 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>unicode 套件</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="unicode-套件"><a class="header" href="#unicode-套件">unicode 套件</a></h1>
+</div>
+<p><code>unicode</code>、<code>unicode/utf8</code>、<code>unicode/utf16</code> 是用來判斷、處理 Unicode 以及 UTF-8、UTF-16 編碼的套件，在使用這些套件之前，要先知道的是，Go 認為「字元」的定義過於模糊，在 Go 中使用 <code>rune</code> 儲存 Unicode 碼點（Code point），而 Go 中字串是 UTF-8 編碼的位元組組成。</p>
+<p><a href="https://golang.org/pkg/unicode/"><code>unicode</code></a> 套件主要用來判斷 Unicode 碼點的特性（properties），在 Unicode 規範中，每個碼點會被指定某些特性，具有相同特性的一組碼點構成一個集合，以便於理解、判斷這組碼點。</p>
+<p>例如，<a href="https://en.wikipedia.org/wiki/Template:General_Category_(Unicode)">General Category</a> 特性有 Letter/L 代表字母、Number/N 代表數字等，在 Go 的 <a href="https://golang.org/pkg/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 一開頭，列出的就是這類特性的變數：</p>
+<pre><code class="language-prettyprint">var (
+    ...
+    Digit  = _Nd // 十進位數字的集合
+
+    Letter = _L  // 字母集合
+    L      = _L
+    ...
+    Number = _N  // 數字集合
+    N      = _N
+    ...
+}
+</code></pre>
+<p>每個變數的型態都是 <code>*RangeTable</code>，由碼點的範圍等欄位組成：</p>
+<pre><code class="language-prettyprint">type RangeTable struct {
+    R16         []Range16   // 用 uint16 記錄碼點低位至高位
+    R32         []Range32   // 記錄 R16 無法表示的範圍，用 uint32 記錄碼點低位至高位
+    LatinOffset int 
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>碼點範圍表可以在 <a href="https://golang.org/src/unicode/tables.go">tables.go</a> 找到。舉例來說，字母集合的碼點範圍：</p>
+<pre><code class="language-prettyprint">var _L = &amp;RangeTable{
+    R16: []Range16{
+        {0x0041, 0x005a, 1},
+        {0x0061, 0x007a, 1},
+        {0x00aa, 0x00b5, 11},
+        很長的清單...
+</code></pre>
+<p>透過指定 <code>RangeTable</code>，就可以簡單地判斷碼點是否有某特性，例如，<code>²³¹¼½¾𝟏𝟐𝟑𝟜𝟝𝟞𝟩𝟪𝟫𝟬𝟭𝟮𝟯𝟺𝟻𝟼㉛㉜㉝ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫⅬⅭⅮⅯⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹⅺⅻⅼⅽⅾⅿ</code> 都是數字：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "unicode"
+)
+
+func allNumbers(s string) bool {
+    for _, r := range []rune(s) {
+        if !unicode.Is(unicode.Number, r) {
+            return false
+        }
+    }
+    return true
+}
+
+func main() {
+    // true
+    fmt.Println(allNumbers("²³¹¼½¾𝟏𝟐𝟑𝟜𝟝𝟞𝟩𝟪𝟫𝟬𝟭𝟮𝟯𝟺𝟻𝟼㉛㉜㉝ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫⅬⅭⅮⅯⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹⅺⅻⅼⅽⅾⅿ"))
+}
+</code></pre>
+<p>Unicode 將希臘文、漢字等以<a href="https://en.wikipedia.org/wiki/Script_(Unicode)">文字（Script）</a>特性標示，在 Go 的 <a href="https://golang.org/pkg/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 第二組列出的變數清單，就是對應的 <code>RangeTable</code>，例如 <code>unicode.Han</code> 是正體中文、簡體中文，以及日、韓、越南文的全部漢字範圍。</p>
+<p>另外還有一些其他特性，列在 Go 的 <a href="https://golang.org/pkg/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 第三組變數清單，例如 <code>unicode.White_Space</code> 代表被標示為空白特性的碼點，這包括了半形、全形、Tab 等。</p>
+<p>如果想要使用多個 RangeTable，<code>可以透過 IsOneOf</code>：</p>
+<pre><code class="language-prettyprint">func IsOneOf(ranges []*RangeTable, r rune) bool
+</code></pre>
+<p><code>unicode</code> 也提供了一些常用的判斷函式：</p>
+<pre><code class="language-prettyprint">func IsControl(r rune) bool
+func IsDigit(r rune) bool
+func IsGraphic(r rune) bool
+func IsLetter(r rune) bool
+func IsLower(r rune) bool
+func IsMark(r rune) bool
+func IsNumber(r rune) bool
+func IsPrint(r rune) bool
+func IsPunct(r rune) bool
+func IsSpace(r rune) bool
+func IsSymbol(r rune) bool
+func IsTitle(r rune) bool
+func IsUpper(r rune) bool
+</code></pre>
+<p>在大小寫或特定轉換上，有以下的函式：</p>
+<pre><code class="language-prettyprint">func To(_case int, r rune) rune
+func ToLower(r rune) rune
+func ToTitle(r rune) rune
+func ToUpper(r rune) rune
+</code></pre>
+<p>基本上，這可以應付大多數語言的轉換，像是全形字母的大小寫或首字母大寫等，<code>To</code> 可使用的常數有：</p>
+<pre><code class="language-prettyprint">const (
+    UpperCase = iota
+    LowerCase
+    TitleCase
+    MaxCase
+)
+</code></pre>
+<p>例如，<code>unicode.To(unicode.UpperCase, rune('ａ'))</code> 可以得到 <code>'Ａ'</code>。</p>
+<h1 id="unicodeutf8unicodeutf16-套件"><a class="header" href="#unicodeutf8unicodeutf16-套件">unicode/utf8、unicode/utf16 套件</a></h1>
+<p><code>unicode/utf8</code> 套件提供的函式，主要是進行 <code>rune</code> 與 UTF-8 編碼之間的處理。例如驗證是否為合法的 UTF-8 <code>[]byte</code> 或字串：</p>
+<pre><code class="language-prettyprint">func Valid(p []byte) bool
+func ValidString(s string) bool
+</code></pre>
+<p>驗證 <code>rune</code> 可否編碼為 UTF-8：</p>
+<pre><code class="language-prettyprint">func ValidRune(r rune) bool
+</code></pre>
+<p>在 <code>rune</code> 與 UTF-8 編碼之間轉換：</p>
+<pre><code class="language-prettyprint">func DecodeLastRune(p []byte) (r rune, size int)
+func DecodeLastRuneInString(s string) (r rune, size int)
+func DecodeRune(p []byte) (r rune, size int)
+func DecodeRuneInString(s string) (r rune, size int)
+func EncodeRune(p []byte, r rune) int
+</code></pre>
+<p><code>unicode/utf16</code> 主要是進行 <code>rune</code> 與 UTF-16 編碼之間的處理，只不過目前函式只有幾個：</p>
+<pre><code class="language-prettyprint">func Decode(s []uint16) []rune
+func DecodeRune(r1, r2 rune) rune
+func Encode(s []rune) []uint16
+func EncodeRune(r rune) (r1, r2 rune)
+func IsSurrogate(r rune) bool
+</code></pre>
+<p>UTF-8 編碼下，碼元（code unit）是 8 個位元，Go 中使用 <code>byte</code> 也就是 <code>uint8</code> 來儲存，UTF-16 編碼下，碼元（code unit）是 16 個位元，Go 中使用 <code>uint16</code> 來儲存。</p>
+<p>來看個簡單的範例，使用 <code>unicode/utf8</code> 與 <code>unicode/utf16</code> 套件來顯示「Hello, 世界」的 UTF-16 碼元：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "unicode/utf8"
+    "unicode/utf16"
+)
+
+func main() {    
+    b := []byte("Hello, 世界")
+
+    for len(b) &gt; 0 {
+        r, size := utf8.DecodeRune(b)
+        u16 := utf16.Encode([]rune{r})
+        fmt.Printf("%#U:\n  Code unit %04X\n", r, u16)
+        b = b[size:]
+    }
+}
+</code></pre>
+<p>顯示結果如下：</p>
+<pre><code class="language-prettyprint">U+0048 'H':       
+  Code unit [0048]
+U+0065 'e':       
+  Code unit [0065]
+U+006C 'l':       
+  Code unit [006C]
+U+006C 'l':       
+  Code unit [006C]
+U+006F 'o':
+  Code unit [006F]
+U+002C ',':
+  Code unit [002C]
+U+0020 ' ':
+  Code unit [0020]
+U+4E16 '世':
+  Code unit [4E16]
+U+754C '界':
+  Code unit [754C]
+</code></pre>
+<p>Unicode 碼點號碼與碼元顯示剛好一樣對吧？這就是為什麼常有人會亂說「Unicode 使用 16 位元儲存」的原因之一吧！… XD</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Bytes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="XText.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Bytes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="XText.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

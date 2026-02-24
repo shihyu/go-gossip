@@ -1,0 +1,635 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>結構與方法</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="結構與方法"><a class="header" href="#結構與方法">結構與方法</a></h1>
+</div>
+<p>在〈<a href="Struct.html">結構入門</a>〉中看過，有些資料會有相關性，相關聯的資料組織在一起，對於資料本身的可用性或者是程式碼的可讀性，都會有所幫助，實際上，有些資料與可處理它的函式也會有相關性，將相關聯的資料與函式組織在一起，對資料與函式本身的可用性或者是程式碼的可讀性，也有著極大的幫助。</p>
+<h1 id="建立方法"><a class="header" href="#建立方法">建立方法</a></h1>
+<p>假設可能原本有如下的程式內容，負責銀行帳戶的建立、存款與提款：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func Deposit(account *Account, amount float64) {
+    if amount &lt;= 0 {
+        panic("必須存入正數")
+    }
+    account.balance += amount
+}
+
+func Withdraw(account *Account, amount float64) error {
+    if amount &gt; account.balance {
+        return errors.New("餘額不足")
+    }
+    account.balance -= amount
+    return nil
+}
+
+func String(account *Account) string {
+    return fmt.Sprintf("Account{%s %s %.2f}",
+        account.id, account.name, account.balance)
+}
+
+func main() {
+    account := &amp;Account{"1234-5678", "Justin Lin", 1000}
+    Deposit(account, 500)
+    Withdraw(account, 200)
+    fmt.Println(String(account)) // Account{1234-5678 Justin Lin 1300.00}
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>實際上，<code>Desposit</code>、<code>Withdraw</code>、<code>String</code> 的函式操作，都是與傳入的 <code>Account</code> 實例有關，何不將它們組織在一起呢？這樣比較容易使用些，在 Go 語言中，你可以重新修改函式如下：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func (ac *Account) Deposit(amount float64) {
+    if amount &lt;= 0 {
+        panic("必須存入正數")
+    }
+    ac.balance += amount
+}
+
+func (ac *Account) Withdraw(amount float64) error {
+    if amount &gt; ac.balance {
+        return errors.New("餘額不足")
+    }
+    ac.balance -= amount
+    return nil
+}
+
+func (ac *Account) String() string {
+    return fmt.Sprintf("Account{%s %s %.2f}",
+        ac.id, ac.name, ac.balance)
+}
+
+func main() {
+    account := &amp;Account{"1234-5678", "Justin Lin", 1000}
+    account.Deposit(500)
+    account.Withdraw(200)
+    fmt.Println(account.String()) // Account{1234-5678 Justin Lin 1300.00}
+}
+</code></pre>
+<p>簡單來說，只是將函式的第一個參數，移至方法名稱之前成為函式呼叫的接收者（Receiver），這麼一來，就可以使用 <code>account.Deposit(500)</code>、<code>account.Withdraw(200)</code>、<code>account.String()</code> 這樣的方式來呼叫函式，就像是物件導向程式語言中的方法（Method）。</p>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>注意到，在這邊使用的是 <code>(ac *Account)</code>，也就是指標，如果你是如下使用 <code>(ac Account)</code>：</p>
+<pre><code class="language-prettyprint">func (ac Account) Deposit(amount float64) {
+    if amount &lt;= 0 {
+        panic("必須存入正數")
+    }
+    ac.balance += amount
+}
+</code></pre>
+<p>那麼執行像是 <code>account.Deposit(500)</code>，就像是以 <code>Deposit(*account, 500)</code> 呼叫以下函式：</p>
+<pre><code class="language-prettyprint">func Deposit(account Account, amount float64) {
+    if amount &lt;= 0 {
+        panic("必須存入正數")
+    }
+    account.balance += amount
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>也就是，相當於將 <code>Account</code> 實例以傳值方式複製給 <code>Deposit</code> 函式的參數。</p>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>某些程度上，可以將接收者想成是其他語言中的 <code>this</code> 或 <code>self</code>，<a href="https://github.com/golang/go/wiki/CodeReviewComments#receiver-names">Go 建議為接收者適當命名</a>，而不是用 <code>this</code>、<code>self</code> 之類的名稱。接收者並沒有文件上記載的作用，命名時不用其他參數具有一定的描述性，只要能表達程式意圖就可以了，Go 建議是個一或兩個字母的名稱（某些程度上，也可以用來與其他參數區別）。</p>
+<h1 id="名稱相同的方法"><a class="header" href="#名稱相同的方法">名稱相同的方法</a></h1>
+<p>之前談過，Go 語言中不允許方法重載（Overload），因此，對於以下的程式，是會發生 <code>String</code> 重複宣告的編譯錯誤：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func String(account *Account) string {
+    return fmt.Sprintf("Account{%s %s %.2f}",
+        account.id, account.name, account.balance)
+}
+
+type Point struct {
+    x, y int
+}
+
+func String(point *Point) string { // String redeclared in this block 的編譯錯誤
+    return fmt.Sprintf("Point{%d %d}", point.x, point.y)
+}
+
+func main() {
+    account := &amp;Account{"1234-5678", "Justin Lin", 1000}
+    point := &amp;Point{10, 20}
+    fmt.Println(account.String())
+    fmt.Println(point.String())
+}
+</code></pre>
+<p>然而，若是將函式定義為方法，就不會有這個問題，Go 可以從方法的接收者辨別，該使用哪個 <code>String</code> 方法：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func (ac *Account) String() string {
+    return fmt.Sprintf("Account{%s %s %.2f}",
+        ac.id, ac.name, ac.balance)
+}
+
+type Point struct {
+    x, y int
+}
+
+func (p *Point) String() string {
+    return fmt.Sprintf("Point{%d %d}", p.x, p.y)
+}
+
+func main() {
+    account := &amp;Account{"1234-5678", "Justin Lin", 1000}
+    point := &amp;Point{10, 20}
+    fmt.Println(account.String()) // Account{1234-5678 Justin Lin 1000.00}
+    fmt.Println(point.String())   // Point{10 20}
+}
+</code></pre>
+<h1 id="方法作為值"><a class="header" href="#方法作為值">方法作為值</a></h1>
+<p>在 Go 語言中，函式也可以作為值傳遞，那麼就產生了一個問題，方法呢？既然方法本質上也是個函式，那麼是否也可以作為值傳遞，答案是可以的，不過，以上面的程式為例，你不能直接以 <code>String := String</code> 這樣的方式傳遞，而必須使用方法運算式（Method expression）。例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func (ac *Account) Deposit(amount float64) {
+    if amount &lt;= 0 {
+        panic("必須存入正數")
+    }
+    ac.balance += amount
+}
+
+func (ac *Account) Withdraw(amount float64) error {
+    if amount &gt; ac.balance {
+        return errors.New("餘額不足")
+    }
+    ac.balance -= amount
+    return nil
+}
+
+func (ac *Account) String() string {
+    return fmt.Sprintf("Account{%s %s %.2f}",
+        ac.id, ac.name, ac.balance)
+}
+
+func main() {
+    deposit := (*Account).Deposit
+    withdraw := (*Account).Withdraw
+    String := (*Account).String
+
+    account1 := &amp;Account{"1234-5678", "Justin Lin", 1000}
+    deposit(account1, 500)
+    withdraw(account1, 200)
+    fmt.Println(String(account1)) // Account{1234-5678 Justin Lin 1300.00}
+
+    account2 := &amp;Account{"5678-1234", "Monica Huang", 500}
+    deposit(account2, 250)
+    withdraw(account2, 150)
+    fmt.Println(String(account2)) // Account{5678-1234 Monica Huang 600.00}
+}
+</code></pre>
+<p>可以看到，這樣取得的函式，就像是本文一開始的範例那樣，你可以傳入任何的 <code>Account</code> 實例。另一個取得方法的方式是方法值（Method value），這會保有取得方法當時的接收者：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func (ac *Account) Deposit(amount float64) {
+    if amount &lt;= 0 {
+        panic("必須存入正數")
+    }
+    ac.balance += amount
+}
+
+func (ac *Account) Withdraw(amount float64) error {
+    if amount &gt; ac.balance {
+        return errors.New("餘額不足")
+    }
+    ac.balance -= amount
+    return nil
+}
+
+func (ac *Account) String() string {
+    return fmt.Sprintf("Account{%s %s %.2f}",
+        ac.id, ac.name, ac.balance)
+}
+
+func main() {
+    account1 := &amp;Account{"1234-5678", "Justin Lin", 1000}
+    acct1Deposit := account1.Deposit
+    acct1Withdraw := account1.Withdraw
+    acct1String := account1.String
+
+    acct1Deposit(500)
+    acct1Withdraw(200)
+    fmt.Println(acct1String()) // Account{1234-5678 Justin Lin 1300.00}
+
+    account2 := &amp;Account{"5678-1234", "Monica Huang", 500}
+    acct2Deposit := account2.Deposit
+    acct2Withdraw := account2.Withdraw
+    acct2String := account2.String
+
+    acct2Deposit(250)
+    acct2Withdraw(150)
+    fmt.Println(acct2String()) // Account{5678-1234 Monica Huang 600.00}
+}
+</code></pre>
+<h1 id="值都能有方法"><a class="header" href="#值都能有方法">值都能有方法</a></h1>
+<p>實際上，不只是結構的實例可以定義方法，在 Go 語言中，只要是值，就可以定義方法，條件是必須是定義的型態（defined type），具體而言，就是使用 <code>type</code> 定義的新型態。</p>
+<p>例如，以下的範例為 <code>[]int</code> 定義了一個新的型態名稱，並定義了一個 <code>ForEach</code> 方法：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type IntList []int
+type Funcint func(int)
+
+func (lt IntList) ForEach(f Funcint) {
+    for _, ele := range lt {
+        f(ele)
+    }
+}
+
+func main() {
+    var lt IntList = []int{10, 20, 30, 40, 50}
+    lt.ForEach(func(ele int) {
+        fmt.Println(ele)
+    })
+}
+</code></pre>
+<p>這個範例會顯示 10 到 50 作為結果，必須留意的是，<code>type</code> 定義了新型態 <code>Funcint</code>，因為 <code>ForEach</code> 是針對 <code>Funcint</code> 定義，而不是針對 <code>[]int</code>，因此底下是行不通的：</p>
+<pre><code class="language-prettyprint">lt2 := []int {10, 20, 30, 40, 50}
+
+// lt2.ForEach undefined (type []int has no field or method ForEach)
+lt2.ForEach(func(ele int) {
+    fmt.Println(ele)
+})
+</code></pre>
+<p>編譯器認為 <code>[]int</code> 並沒有定義 <code>ForEach</code>，因此發生錯誤，想要通過編譯的話，可以進行型態轉換：</p>
+<pre><code class="language-prettyprint">lt2 := IntList([]int {10, 20, 30, 40, 50})
+lt2.ForEach(func(ele int) {
+    fmt.Println(ele)
+})
+</code></pre>
+<p>你甚至可以基於 <code>int</code> 等基本型態定義方法，同樣地，必須定義一個新的型態名稱：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+)
+
+type Int int
+type FuncInt func(Int)
+
+func (n Int) Times(f FuncInt) {
+    if n &lt; 0 {
+        panic("必須是正數")
+    }
+
+    var i Int
+    for i = 0; i &lt; n; i++ {
+        f(i)
+    }
+}
+
+func main() {
+    var x Int = 10
+    x.Times(func(n Int) {
+        fmt.Println(n)
+    })
+}
+</code></pre>
+<p>像這樣基於某個基本型態定義新型態，並為其定義更多高階特性，在 Go 的領域是常見的做法。這個範例會顯示 0 到 9，看起來就像是指定函式，要求執行 x 次吧！…XD</p>
+<h1 id="nil-接收者"><a class="header" href="#nil-接收者">nil 接收者</a></h1>
+<p>在 Go 中，接收者可以是 <code>nil</code>，這讓你有機會在方法中處理接收者為 <code>nil</code> 的情況，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func (ac *Account) String() string {
+    if ac == nil {
+        return "&lt;nil&gt;"
+    }
+    return fmt.Sprintf("Account{%s %s %.2f}",
+        ac.id, ac.name, ac.balance)
+}
+
+func findById(id string) *Account {
+    accts := []*Account{&amp;Account{"123", "Justin Lin", 10000}, &amp;Account{"456", "Monica", 10000}}
+    for i := 0; i &lt; len(accts); i++ {
+        if accts[i].id == id {
+            return accts[i]
+        }
+    }
+    return nil
+}
+
+func main() {
+    fmt.Println(findById("123").String())
+    fmt.Println(findById("789").String())
+}
+</code></pre>
+<p>如果是其他語言，例如 Java 的話，在 <code>findById("789").String()</code> 的地方會 <code>NullPointerException</code>，不過在 Go 中，可以針對接收者是否為 <code>nil</code>，來決定如何處理，例如這邊就實作了 nil safety 的概念。</p>
+<h1 id="模擬建構式初始式"><a class="header" href="#模擬建構式初始式">模擬建構式、初始式</a></h1>
+<p>Go 沒有物件導向語言中建構式或初始式之類的概念，然而可以自行模擬，例如在 <a href="https://golang.org/pkg/container/list/">container/list</a> 的<a href="https://golang.org/src/container/list/list.go">原始碼</a>可以看到 <code>New</code> 作為一個工廠函式，用來建立新的 <code>List</code>，初始的流程寫在 <code>Init</code> 方法之中：</p>
+<pre><code class="language-prettyprint">...
+// Init initializes or clears list l.
+func (l *List) Init() *List {
+    l.root.next = &amp;l.root
+    l.root.prev = &amp;l.root
+    l.len = 0
+    return l
+}
+
+// New returns an initialized list.
+func New() *List { return new(List).Init() }
+</code></pre>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Struct.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="StructComposition.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Struct.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="StructComposition.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

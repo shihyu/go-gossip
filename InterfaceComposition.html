@@ -1,0 +1,366 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>介面組合</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="介面組合"><a class="header" href="#介面組合">介面組合</a></h1>
+</div>
+<p>有時，可能會想要基於某個已定義的介面，並新增自己的行為，在 Go 中，這類似於結構中方法的查找，只要在定義介面時，內嵌想要的介面名稱就可以了。例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type ParentTester interface {
+    ptest()
+}
+
+type ChildTester interface {
+    ParentTester
+    ctest()
+}
+
+type Subject struct {
+    name string
+}
+
+func (s *Subject) ptest() {
+    fmt.Printf("ptest %s\n", s)
+}
+
+func (s *Subject) ctest() {
+    fmt.Printf("ctest %s\n", s)
+}
+
+func main() {
+    var tester ChildTester = &amp;Subject{"Test"}
+    tester.ptest()
+    tester.ctest()
+}
+</code></pre>
+<p>在上面，<code>Subject</code> 必須實作 <code>ParentTester</code> 與 <code>ChildTest</code> 中定義的全部行為，其實例才可以被指定 <code>ChildTest</code>。你也可以介面中包含多個介面：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type SuperTester interface {
+    stest()
+}
+
+type ParentTester interface {
+    ptest()
+}
+
+type ChildTester interface {
+    SuperTester
+    ParentTester
+    ctest()
+}
+
+type Subject struct {
+    name string
+}
+
+func (s *Subject) stest() {
+    fmt.Printf("stest %s\n", s)
+}
+
+func (s *Subject) ptest() {
+    fmt.Printf("ptest %s\n", s)
+}
+
+func (s *Subject) ctest() {
+    fmt.Printf("ctest %s\n", s)
+}
+
+func main() {
+    var tester ChildTester = &amp;Subject{"Test"}
+    tester.stest()
+    tester.ptest()
+    tester.ctest()
+}
+</code></pre>
+<p>如果多個介面間的行為重複定義了，就會出現 duplicate method 的錯誤。（這是個有爭議性的特性，因為許多人認為，實際上雖然在介面語法上確實重複定義了行為，然而就 Duck typing 的精神來看，結構上只要有實作行為就可以了，事實上在其他語言中，像是 Java 中，類似的情況並不會發生編譯錯誤，有關此議題，可參考 <a href="https://github.com/golang/go/issues/6977">golang/go 的 此 issue</a>）。</p>
+<p>雖然說這像是介面有了繼承方面的語法，然而更精確地說，應該是行為的內嵌，因此，只要是有實現相關行為，就算沒有被包含在某個介面中，也可以做介面轉換：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type SuperTester interface {
+    stest()
+}
+
+type ParentTester interface {
+    ptest()
+}
+
+type ChildTester interface {
+    SuperTester
+    ParentTester
+    ctest()
+}
+
+type Tester interface {
+    stest()
+    ptest()
+    ctest()
+}
+
+type Subject struct {
+    name string
+}
+
+func (s *Subject) stest() {
+    fmt.Printf("stest %s\n", s)
+}
+
+func (s *Subject) ptest() {
+    fmt.Printf("ptest %s\n", s)
+}
+
+func (s *Subject) ctest() {
+    fmt.Printf("ctest %s\n", s)
+}
+
+func main() {
+    var ctester ChildTester = &amp;Subject{"Test"}
+    var tester Tester = ctester
+    tester.stest()
+    tester.ptest()
+    tester.ctest()
+}
+</code></pre>
+<p>有些文件會說，在介面有組合關係時，子介面的實例可以指定給父介面，反之就不行，這種說法不能說是錯，畢竟就上例來說，<code>ChildTester</code> 介面的實例，被指定給 <code>ParentTester</code> 介面時，從編譯器的角度來看，<code>ChildTester</code> 介面確實是有 <code>ParentTester</code> 介面的行為；反過來的話，<code>ParentTester</code> 介面被指定給 <code>ChildTester</code> 介面時，編譯器是看不到 <code>ParentTester</code> 介面上，會有 <code>ChildTester</code> 介面行為的，當然會發生錯誤。</p>
+<p>更精確來說，Go 本身並非基於類別，沒有提供繼承語法，也就沒有父介面、子介面的概念，以上僅僅只是以行為的內嵌實現了繼承的概念，因而是就看不看得到相關的行為，來判斷是否可通過編譯。</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="TypeAssertion.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="StdOutInErr.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="TypeAssertion.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="StdOutInErr.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

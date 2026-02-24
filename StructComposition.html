@@ -1,0 +1,503 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>結構組合</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="結構組合"><a class="header" href="#結構組合">結構組合</a></h1>
+</div>
+<p>結構本身用來組織相關資料，可以將處理結構的相關函式定義為方法，類似物件導向程式語言中，使用類別定義值域與方法，那麼繼承呢？Go 語言並非以物件導向為主要典範的語言，沒有繼承的概念，不過可以使用組合代替繼承。</p>
+<h1 id="在組告之前"><a class="header" href="#在組告之前">在組告之前</a></h1>
+<p>在〈<a href="http://openhome.cc/Gossip/Go/Method.html">結構與方法</a>〉中使用 <code>struct</code> 定義了 <code>Account</code>，如果今天你想定義一個支票帳戶，方式之一是…</p>
+<pre><code class="language-prettyprint">type CheckingAccount struct {
+    id string
+    name string
+    balance float64
+    overdraftlimit float64
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>這是個很尋常的作法，也許你想將 <code>id</code>、<code>name</code> 與 <code>balance</code> 組織在一起：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type CheckingAccount struct {
+    account struct {
+        id      string
+        name    string
+        balance float64
+    }
+    overdraftlimit float64
+}
+
+func main() {
+    checking := CheckingAccount{}
+    checking.account = struct {
+        id      string
+        name    string
+        balance float64
+    }{"1234-5678", "Justin Lin", 1000}
+    checking.overdraftlimit = 30000
+
+    fmt.Println(checking)                // {{1234-5678 Justin Lin 1000} 30000}
+    fmt.Println(checking.account)        // {1234-5678 Justin Lin 1000}
+    fmt.Println(checking.account.name)   // Justin Lin
+    fmt.Println(checking.overdraftlimit) // 30000
+}
+</code></pre>
+<p>這是一種方式，不過使用起來麻煩，或許你可以這麼做：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+type CheckingAccount struct {
+    account        Account
+    overdraftlimit float64
+}
+
+func main() {
+    checking := CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 30000}
+
+    fmt.Println(checking)                // {{1234-5678 Justin Lin 1000} 30000}
+    fmt.Println(checking.account)        // {1234-5678 Justin Lin 1000}
+    fmt.Println(checking.account.name)   // Justin Lin
+    fmt.Println(checking.overdraftlimit) // 300000
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>看來還不錯，不過，如果想要 <code>fmt.Println(checking.name)</code> 就能取得名稱的話，這種寫法行不通！</p>
+<h1 id="結構值域的查找"><a class="header" href="#結構值域的查找">結構值域的查找</a></h1>
+<p>在定義結構時，可以將另一已定義的結構直接內嵌：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+type CheckingAccount struct {
+    Account
+    overdraftlimit float64
+}
+
+func main() {
+    account := CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 30000}
+
+    fmt.Println(account)                // {{1234-5678 Justin Lin 1000} 30000}
+    fmt.Println(account.id)             // 1234-5678
+    fmt.Println(account.name)           // Justin
+    fmt.Println(account.balance)        // 1000
+    fmt.Println(account.overdraftlimit) // 30000
+}
+</code></pre>
+<p>這稱為型態內嵌（type embedding），<code>Account</code> 被稱為 <code>CheckingAccount</code> 的內部型態，反之，<code>CheckingAccount</code> 是 <code>Account</code> 的外部型態，雖然是透過 <code>account.id</code>、<code>account.name</code>、<code>account.balance</code> 來存取，不過內部型態提昇，令內部型態定義的值域為可見。</p>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>那麼，如果想要明確地透過 <code>Account</code> 的結構來存取呢？也是可以的：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+type CheckingAccount struct {
+    Account
+    overdraftlimit float64
+}
+
+func main() {
+    account := CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 30000}
+
+    fmt.Println(account)                 // {{1234-5678 Justin Lin 1000} 30000}
+    fmt.Println(account.Account.id)      // 1234-5678
+    fmt.Println(account.Account.name)    // Justin
+    fmt.Println(account.Account.balance) // 1000
+    fmt.Println(account.overdraftlimit)  // 30000
+}
+</code></pre>
+<p>雖然內部型態會提昇，然而，若外部型態中定義了同名值域，就會直接取得外部型態的值域，因此，如果 <code>CheckingAccount</code> 定義了相同的值域 <code>balance</code>，如果透過 <code>account.balance</code>，結果會是找到 <code>CheckingAccount</code> 定義的 <code>balance</code>，如果想明確找到 <code>Account</code> 的 <code>balance</code>，可以指定 <code>Account</code> 作為前置：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+type CheckingAccount struct {
+    Account
+    balance        float64
+    overdraftlimit float64
+}
+
+func main() {
+    account := CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 2000, 30000}
+
+    fmt.Println(account.balance)         // 2000
+    fmt.Println(account.Account.balance) // 1000
+}
+</code></pre>
+<p>無論是結構值域或是方法，若來自兩個結構的值域或方法產生了同名衝突，Go 會有 ambiguous selector 的錯誤提示，此時你必須明確指定結構名稱，指定使用來自哪個結構的值域或方法。</p>
+<h1 id="方法的查找"><a class="header" href="#方法的查找">方法的查找</a></h1>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>如果內部型態原本定義了方法，這些方法也是查找時的對象：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func (ac *Account) Deposit(amount float64) {
+    if amount &lt;= 0 {
+        panic("必須存入正數")
+    }
+    ac.balance += amount
+}
+
+func (ac *Account) Withdraw(amount float64) error {
+    if amount &gt; ac.balance {
+        return errors.New("餘額不足")
+    }
+    ac.balance -= amount
+    return nil
+}
+
+type CheckingAccount struct {
+    Account
+    overdraftlimit float64
+}
+
+func main() {
+    account := CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 30000}
+    account.Deposit(2000)
+    account.Withdraw(500)
+    fmt.Println(account) // {{1234-5678 Justin Lin 2500} 30000}
+}
+</code></pre>
+<p>類似地，若外部型態中定義了同名的方法，那麼就會使用該方法，這類似重新定義（Override）的概念：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func (ac *Account) Deposit(amount float64) {
+    if amount &lt;= 0 {
+        panic("必須存入正數")
+    }
+    ac.balance += amount
+}
+
+func (ac *Account) Withdraw(amount float64) error {
+    if amount &gt; ac.balance {
+        return errors.New("餘額不足")
+    }
+    ac.balance -= amount
+    return nil
+}
+
+type CheckingAccount struct {
+    Account
+    overdraftlimit float64
+}
+
+func (ac *CheckingAccount) Withdraw(amount float64) error {
+    if amount &gt; ac.balance+ac.overdraftlimit {
+        return errors.New("超出信用額度")
+    }
+    ac.balance -= amount
+    return nil
+}
+
+func main() {
+    account := CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 30000}
+    account.Deposit(2000)
+    if err := account.Withdraw(50000); err != nil {
+        fmt.Println(err)
+    } else {
+        fmt.Println(account)
+    }
+}
+</code></pre>
+<p>在上面的範例中，會顯示「超出信用額度」的訊息，拿掉 <code>func (account *CheckingAccount) Withdraw(amount float64)</code> 該函式的定義，則會顯示「餘額不足」的訊息。</p>
+<p>如果想指定使用 <code>Account</code> 的 <code>Withdraw</code> 函式，也還是可以的：</p>
+<pre><code class="language-prettyprint">func main() {
+    account := CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 30000}
+    account.Deposit(2000)
+    if err := account.Account.Withdraw(50000); err != nil {
+        fmt.Println(err)
+    } else {
+        fmt.Println(account)
+    }
+}
+</code></pre>
+<p>雖然可以實現方法重新定義的概念，不過，單純只是如上定義的話，並不支援多型的概念，因為一開始這麼指定就會出錯了：</p>
+<pre><code class="language-prettyprint">// cannot use CheckingAccount literal (type CheckingAccount) as type Account in assignment
+var account Account = CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 30000}
+</code></pre>
+<p>若想實作出多型的概念，必須使用 <code>interface</code>，這在之後的文件會加以說明。</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Method.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Interface.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Method.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Interface.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

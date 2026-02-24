@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>go doc 文件即註解</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="go-doc-註解即文件"><a class="header" href="#go-doc-註解即文件">go doc 註解即文件</a></h1>
+</div>
+<p>如果你想查詢套件、函式等的說明，可以使用 <code>go doc</code> 指令。</p>
+<h1 id="查詢文件"><a class="header" href="#查詢文件">查詢文件</a></h1>
+<p>如果你想要查詢套件的文件說明，可以使用 <code>go doc packageName</code>，例如 <code>go doc fmt</code> 可查詢 <code>fmt</code> 套件的說明，</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/godoc-1.JPG" class="pure-img-responsive" alt="go doc" />
+</div>
+</div>
+<p>可以看到，這顯示了整個套件的說明，通常我們會想要查詢套件中某個函式，這可以使用 <code>go doc packageName.funcName</code>，例如，查詢 <code>fmt</code> 中的 <code>Println</code>，可以使用 <code>go doc fmt.Println</code>：</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/godoc-2.JPG" class="pure-img-responsive" alt="go doc" />
+</div>
+</div>
+<p>你也可以加上 <code>-src</code> 來查詢原始碼，雖然整個套件也可以查詢，不過我想，這直接開 Go 目錄的 src 中原始碼來看比較快，或許加上 <code>-src</code> 的機會，會是在查詢函式的原始碼時比較多：</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/godoc-3.JPG" class="pure-img-responsive" alt="go doc" />
+</div>
+</div>
+<p>如同 <code>go xxx</code> 的指令說明，想要得到 <code>go doc</code> 的說明，可以使用 <code>go help doc</code> 指令。</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/godoc-6.JPG" class="pure-img-responsive" alt="go doc" />
+</div>
+</div>
+<h1 id="註解即文件"><a class="header" href="#註解即文件">註解即文件</a></h1>
+<p>實際上，<code>go doc</code> 的文件說明來自於原始碼中的註解，這樣的概念有點類似 Java 的 JavaDoc，或者是 Python 的 DocString，不過 Go 的理念是讓它更簡單，不使用特殊標記，不使用特別的格式，希望可以在沒有 <code>go doc</code> 的場合中，也可以藉由閱讀原始碼中的註解，輕易地得到文件說明。</p>
+<p>當然，基本上還是要有一些約定，例如，在函式之前，緊接著函式的註解，中間沒有空白行，就是函式的文件說明來源。</p>
+<p>類似地，在套件之前，緊接著套件的註解，就是套件的文件說明來源，通常，一個套件的文件說明，會是來自於套件中，一個 doc.go 中 <code>package</code> 宣告前的註解，例如，你可以在 <a href="https://golang.org/src/fmt/"><code>fmt</code> 的原始碼目錄</a> 中，找到一個 <a href="https://golang.org/src/fmt/doc.go">doc.go</a>，其中除了 <code>package fmt</code> 之外，沒有任何原始碼，剩下的只有註解。</p>
+<p>除了函式、套件之外，最頂層的型態宣告、變數、常數等前緊接著的註解，都可以是文件的來源，不相鄰的註解則會被 <code>godoc</code> 忽略，如果有已知的 Bug，可以使用 <code>BUG()</code> 標示，例如 <a href="https://golang.org/src/bytes/bytes.go">bytes.go</a> 中有個：</p>
+<pre><code class="language-prettyprint">// BUG(rsc): The rule Title uses for word boundaries does not handle Unicode punctuation properly.
+func Title(s []byte) []byte {
+    ....
+</code></pre>
+<p>這會出現在文件的 <a href="https://golang.org/pkg/bytes/#pkg-note-BUG">Bugs 區段</a>。</p>
+<p>如果你想要從註解產生 HTML 文件（使用 <code>-html</code> 引數），那麼有幾個簡單的規則（用過 Markdown 的應該感覺有點熟悉），參考一下 Go 的原始碼，應該能很快地掌握。</p>
+<p>基本上，<code>go doc</code> 會在 <code>GOROOT</code> 與 <code>GOPATH</code> 中的原始碼查詢註解作為文件，如果想改變查詢時的 Go 目錄，可以使用 <code>-goroot</code> 指定。</p>
+<p>有關註解與文件間的關係，也可以進一步參考 <a href="https://golang.org/doc/effective_go.html#commentary">Effective Go 的 Commentary</a>。</p>
+<h1 id="godoc-文件伺服器"><a class="header" href="#godoc-文件伺服器">godoc 文件伺服器</a></h1>
+<p>Go 1.2rc1 之後，曾經從 <code>go doc</code> 改用 <code>godoc</code> 指令了，不過，從 <a href="https://golang.org/doc/go1.5">Go 1.5 Release Notes</a> 中看到，Go 1.5 有個新的 <code>go doc</code> 指令，專門用於命令列模式下的文件查詢，這使得 <code>godoc</code> 主要剩下文件服器的功能，因而在 Go 1.13 中，<code>godoc</code> 被移除。</p>
+<p>如果在一個網路受限的環境，又想要在網頁上查詢文件，還是可以安裝 <code>godoc</code>：</p>
+<pre><code class="language-prettyprint">go get -u golang.org/x/tools/cmd/godoc
+</code></pre>
+<p>這時執行 bin 中的 <code>godoc</code>，並附帶一個 <code>-http</code> 引數指定連接埠，例如，<code>./bin/godoc -http=:6060</code>，這會在本機啟動一個 HTTP 伺服器，使用瀏覽器連接 http://localhost:6060（或 http://主機IP:6060）就可以查詢文件：</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/godoc-4.JPG" class="pure-img-responsive" alt="godoc" />
+</div>
+</div>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="gofmt.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Testing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="gofmt.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Testing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

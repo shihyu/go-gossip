@@ -1,0 +1,382 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>來個 Hello, World</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="來個-hello-world"><a class="header" href="#來個-hello-world">來個 Hello, World</a></h1>
+</div>
+<p>我在這邊使用的是 Windows 中的 Go 1.13 版本，你可以至 <a href="https://golang.org/">Go 的官方網站</a> 下載安裝 Go。</p>
+<p>如果想來點不同的安裝方式，可以參考〈<a href="http://openhome.cc/Gossip/CodeData/DockerLayman/DockerLayman4.html">門外漢的 Go 輕量開發環境</a>〉，在 Raspberry Pi 上的 Docker 容器中建立相關環境，就目前為止。</p>
+<p>你至少得設定 <code>GOROOT</code> 環境變數，這會是你的 Go 安裝目錄。</p>
+<h1 id="go-run"><a class="header" href="#go-run">go run</a></h1>
+<p>要撰寫第一個 Hello, World 程式，你可以建立一個 main.go，在當中撰寫以下的內容：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, World")
+    fmt.Println("哈囉！世界！")
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>每個 .go 原始碼，都必須從 <code>package</code> 定義開始，而對於包括程式進入點 <code>main</code> 函式的 .go 原始碼，必須是在 <code>package main</code> 之中，為了要能輸出訊息，這邊使用了 <code>fmt</code> 套件（package）之中的 <code>Println</code> 函式，開頭的大寫 P 表示這是個公開的函式，可以在套件之外進行呼叫。</p>
+<p>Go 的創建者之一也是 UTF-8 的創建者，因此，Go 可以直接處理多國語言，只要你確定編輯器編碼為 UTF-8 就可以了，如果你使用 vim，可以在 vim 的命令模式下輸入 <code>:set encoding=utf-8</code>，或者是在 .vimrc 之中增加一行 <code>set encoding=utf-8</code>。</p>
+<p>Go 可以用直譯的方式來執行程式，第一個 Hello, World 程式就是這麼做的，執行 <code>go run</code> 指定你的原始碼檔名就可以了：</p>
+<pre><code class="language-prettyprint">$ go run main.go
+Hello, World
+哈囉！世界！
+</code></pre>
+<h1 id="package-與-gopath"><a class="header" href="#package-與-gopath">package 與 GOPATH</a></h1>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>那麼，一開始的 <code>package</code> 是怎麼回事？試著先來建立一個 hello.go：</p>
+<pre><code class="language-prettyprint">package hello
+
+import "fmt"
+
+func HelloWorld() {
+    fmt.Println("Hello, World")
+}
+</code></pre>
+<p>記得，<code>package</code> 中定義的函式，名稱必須是以大寫開頭，其他套件外的程式，才能進行呼叫，若函式名稱是小寫，那麼會是套件中才可以使用的函式。</p>
+<p>接著，原本的 main.go 修改為：</p>
+<pre><code class="language-prettyprint">package main
+
+import "hello"
+
+func main() {
+    hello.HelloWorld()
+}
+</code></pre>
+<p>現在顯然地，main.go 中要用到方才建立的 <code>hello</code> 套件中的 <code>HelloWorld</code> 函式，這時 <code>package</code> 的設定就會發揮一下效用，你得將 hello.go 移到 src/hello 目錄之中，也就是目錄名稱必須符合 <code>package</code> 設定之名稱。</p>
+<p>同樣地，你可以將 main.go 移到 src/main 目錄之中，以符合 <code>package</code> 的設定。</p>
+<p>而 src 的位置，必須是在 <code>GOROOT</code> 或者是 <code>GOPATH</code> 的路徑中可以找到，當 Go 需要某套件中的元素時，會分別到這兩個環境變數的目錄之中，查看 src 中是否有相應於套件的原始碼存在。</p>
+<p>為了方便，通常會設定 <code>GOPATH</code>，例如，指向目前的工作目錄：</p>
+<pre><code class="language-prettyprint">set GOPATH=c:\workspace\go-exercise
+</code></pre>
+<p>如果沒有設定 <code>GOPATH</code> 的話，Go 預設會是使用者目錄的 go 目錄，雖然目前 <code>GOPATH</code> 中只一個目錄，不過 <code>GOPATH</code> 中可以設定數個目錄，現在我的 go-exercise 目錄底下會有這些東西：</p>
+<pre><code class="language-prettyprint">go-exercise
+          └─src
+              ├─hello
+              │      hello.go
+              │
+              └─main
+                      main.go
+</code></pre>
+<p>接著在 go 目錄中執行指令 <code>go run src/main/main.go</code> 的話，你就會看到 Hello, World 了。</p>
+<h1 id="go-build"><a class="header" href="#go-build">go build</a></h1>
+<p>如果想編譯原始碼為可執行檔，那麼可以使用 <code>go build</code>，例如，直接在 go 目錄中執行 <code>go build src/main/main.go</code>，就會在執行指令的目錄下，產生一個名稱為 main.exe 的可執行檔，可執行檔的名稱是來自己指定的原始碼檔案主檔名，執行產生出來的可執行檔就會顯示 Hello, World。</p>
+<p>你也可以建立一個 bin 目錄，然後執行 <code>go build -o bin/main.exe src/main/main.go</code>，這樣產生出來的可執行檔，就會被放在 bin 底下。</p>
+<h1 id="go-install"><a class="header" href="#go-install">go install</a></h1>
+<p>每次使用 <code>go build</code>，都是從原始碼編譯為可執行檔，這比較沒有效率，如果想要編譯時更有效率一些，可以使用 <code>go install</code>，例如，在目前既有的目錄與原始碼架構之下，於 go 目錄中執行 <code>go install hello</code> 的話，你就會發現有以下的內容：</p>
+<pre><code class="language-prettyprint">go-exercise
+        ├─bin
+        │      main.exe
+        │
+        ├─pkg
+        │  └─windows_amd64
+        │          hello.a
+        │
+        └─src
+            ├─hello
+            │      hello.go
+            │
+            └─main
+                    main.go
+</code></pre>
+<p><code>go install packageName</code> 表示要安裝指定名稱的套件，如果是 <code>main</code> 套件，那麼會在 bin 中產生可執行檔，如果是公用套件，那麼會在 pkg 目錄的 <code>$GOOS</code>_<code>$GOARCH</code> 目錄中產生 .a 檔案，你可以使用 <code>go env</code> 來查看 Go 使用到的環境變數，例如：</p>
+<pre><code class="language-prettyprint">set GO111MODULE=
+set GOARCH=amd64
+set GOBIN=
+set GOCACHE=C:\Users\Justin\AppData\Local\go-build
+set GOENV=C:\Users\Justin\AppData\Roaming\go\env
+set GOEXE=.exe
+set GOFLAGS=
+set GOHOSTARCH=amd64
+set GOHOSTOS=windows
+set GONOPROXY=
+set GONOSUMDB=
+set GOOS=windows
+set GOPATH=C:\Users\Justin\go
+set GOPRIVATE=
+set GOPROXY=https://proxy.golang.org,direct
+set GOROOT=C:\Winware\Go
+set GOSUMDB=sum.golang.org
+set GOTMPDIR=
+set GOTOOLDIR=C:\Winware\Go\pkg\tool\windows_amd64
+set GCCGO=gccgo
+set AR=ar
+set CC=gcc
+set CXX=g++
+set CGO_ENABLED=1
+set GOMOD=
+set CGO_CFLAGS=-g -O2
+set CGO_CPPFLAGS=
+set CGO_CXXFLAGS=-g -O2
+set CGO_FFLAGS=-g -O2
+set CGO_LDFLAGS=-g -O2
+set PKG_CONFIG=pkg-config
+set GOGCCFLAGS=-m64 -mthreads -fno-caret-diagnostics -Qunused-arguments -fmessage-length=0 -fdebug-prefix-map=C:\Users\Justin\AppData\Local\Temp\go-build282125542=/tmp/go-build -gno-record-gcc-switches
+</code></pre>
+<p>.a 檔案是編譯過後的套件，因此，你看到的 hello.a，就是 hello.go 編譯之後的結果，如果編譯時需要某個套件，而對應的 .a 檔案存在，且原始碼自上次編譯後未曾經過修改，那麼就會直接使用 .a 檔案，而不是從原始碼開始編譯起。</p>
+<h1 id="osargs"><a class="header" href="#osargs">os.Args</a></h1>
+<p>那麼，如果想在執行 Go 程式時使用命令列引數呢？可以使用 <code>os</code> 套件的 <code>Args</code>，例如，寫一個 main.go：</p>
+<pre><code class="language-prettyprint">package main
+
+import "os"
+import "fmt"
+
+func main() {
+    fmt.Printf("Command: %s\n", os.Args[0])
+    fmt.Printf("Hello, %s\n", os.Args[1])
+}
+</code></pre>
+<p><code>os.Args</code> 是個陣列，索引從 0 開始，索引 0 會是編譯後的可執行檔名稱，索引 1 開始會是你提供的引數，例如，在執行過 go build 或 go install 之後，如下直接執行編譯出來的執行檔，會產生的訊息是…</p>
+<pre><code class="language-prettyprint">$ ./bin/main Justin
+Command: ./bin/main
+Hello, Justin
+</code></pre>
+<h1 id="go-doc"><a class="header" href="#go-doc">go doc</a></h1>
+<p><code>fmt</code> 的 Printf，就像是 C 的 <code>printf</code>，可用的格式控制可參考 <a href="https://golang.org/pkg/fmt/">Package fmt</a> 的說明。實際上，Go 本身附帶了說明文件，可以執行 <code>go doc &lt;pkg&gt; &lt;sym&gt;[.&lt;method&gt;]</code> 來查詢說明。例如：</p>
+<pre><code class="language-prettyprint">$ go doc fmt.Printf
+func Printf(format string, a ...interface{}) (n int, err error)
+
+    Printf formats according to a format specifier and writes to standard
+    output. It returns the number of bytes written and any write error
+    encountered.
+</code></pre>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Package.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Package.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

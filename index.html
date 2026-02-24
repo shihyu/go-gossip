@@ -1,0 +1,490 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>首頁</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="layout" style="height: auto !important;">
+<p><a href="#menu" id="menuLink" class="menu-link"><span></span></a></p>
+<div id="menu">
+<div class="pure-menu">
+<p><a href="../" class="pure-menu-heading">回 OPENHOME 首頁</a></p>
+</div>
+</div>
+<div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="語言技術go-語言"><a class="header" href="#語言技術go-語言">語言技術：Go 語言</a></h1>
+</div>
+<p>使用 Go 1.13 … XD</p>
+<div class="ad-2" style="text-align: center;">
+<div id="aswift_2_host" style="border: none; height: 280px; width: 800px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block; overflow: visible;">
+<div class="iframe">
+</div>
+</div>
+</div>
+<p>起步走</p>
+<p>語言的起步走，需要的時間最好是長一些，因為慢一點才會快一點 ...</p>
+<ul>
+<li>Go 平台概要</li>
+</ul>
+<p>在開始認識語言本身之前，先來瞭解 Go 提供的基本工具集，這是 Go 的一大特色。</p>
+<ul>
+<li>
+<ul>
+<li><a href="HelloWorld.html">來個 Hello, World</a></li>
+<li><a href="Package.html">Go 套件管理</a></li>
+<li><a href="gofmt.html">gofmt 格式化原始碼</a></li>
+<li><a href="godoc.html">go doc 文件即註解</a></li>
+<li><a href="Testing.html">Go 測試套件</a></li>
+</ul>
+</li>
+</ul>
+<!-- -->
+<ul>
+<li>型態、變數、常數、運算子</li>
+</ul>
+<p>也許看似基本，然而沒你想像中的那麼簡單。</p>
+<ul>
+<li>
+<ul>
+<li><a href="PreDeclaredType.html">認識預定義型態</a></li>
+<li><a href="VariableConstantDeclaration.html">變數宣告、常數宣告</a></li>
+<li><a href="String.html">位元組構成的字串</a></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><a href="Array.html">身為複合值的陣列</a></li>
+<li><a href="Slice.html">底層為陣列的 slice</a></li>
+<li><a href="Map.html">成對鍵值的 map</a></li>
+</ul>
+</li>
+</ul>
+<!-- -->
+<ul>
+<li>運算與流程控制</li>
+</ul>
+<p><code>Go 有指標，switch</code> 很有彈性，沒有 <code>while</code>，存在 <code>goto</code> ... XD</p>
+<ul>
+<li>
+<ul>
+<li><a href="Operator.html">運算子</a></li>
+<li><a href="IfElseSwitch.html">if ... else、switch 條件式</a></li>
+<li><a href="For.html">for 迴圈</a></li>
+<li><a href="BreakContinueGoto.html">break、continue、goto</a></li>
+</ul>
+</li>
+</ul>
+<p>函式、結構與介面</p>
+<p>        封裝演算、定義行為、組織程式元件。</p>
+<ul>
+<li>
+<p>函式</p>
+</li>
+<li>
+<ul>
+<li><a href="Function.html">函式入門</a></li>
+<li><a href="FirstClassFunction.html">一級函式</a></li>
+<li><a href="Closure.html">匿名函式與閉包</a></li>
+<li><a href="DeferPanicRecover.html">defer、panic、recover</a></li>
+</ul>
+</li>
+</ul>
+<!-- -->
+<ul>
+<li>結構</li>
+</ul>
+<p>把相關的東西放在一起。</p>
+<ul>
+<li>
+<ul>
+<li><a href="Struct.html">結構入門</a></li>
+<li><a href="Method.html">結構與方法</a></li>
+<li><a href="StructComposition.html">結構組合</a></li>
+</ul>
+</li>
+</ul>
+<!-- -->
+<ul>
+<li>介面</li>
+</ul>
+<p>將行為定義出來。</p>
+<ul>
+<li>
+<ul>
+<li><a href="Interface.html">介面入門</a></li>
+<li><a href="TypeAssertion.html">型態斷言</a></li>
+<li><a href="InterfaceComposition.html">介面組合</a></li>
+</ul>
+</li>
+</ul>
+<p>常用 API</p>
+<p>        從常用 API 中學習如何撰寫 Go 程式碼。</p>
+<ul>
+<li>基本 IO</li>
+</ul>
+<p>從 <code>io.Reader</code>、<code>io.Writer</code> 開始認識。</p>
+<ul>
+<li>
+<ul>
+<li><a href="StdOutInErr.html">從標準輸入、輸出認識 io</a></li>
+<li><a href="ReaderWriter.html">io.Reader、io.Writer</a></li>
+<li><a href="bufio.html">bufio 套件</a></li>
+<li><a href="File.html">檔案操作</a></li>
+</ul>
+</li>
+</ul>
+<!-- -->
+<ul>
+<li>error 處理</li>
+</ul>
+<p>到處都在 <code>if err != nil</code>？</p>
+<ul>
+<li>
+<ul>
+<li><a href="ErrNil.html">err 是否 nil？</a></li>
+<li><a href="ErrorComparison.html">錯誤的比對</a></li>
+<li><a href="errors.html">errors 套件</a></li>
+</ul>
+</li>
+</ul>
+<!-- -->
+<ul>
+<li>資料結構</li>
+</ul>
+<p><code>sort</code>、<code>list</code>、<code>heap</code> 與 <code>ring</code> 套件。</p>
+<ul>
+<li>
+<ul>
+<li><a href="Sort.html">sort 套件</a></li>
+<li><a href="List.html">list 套件</a></li>
+<li><a href="Heap.html">heap 套件</a></li>
+<li><a href="Ring.html">ring 套件</a></li>
+</ul>
+</li>
+</ul>
+<!-- -->
+<ul>
+<li>文字</li>
+</ul>
+<p>有關字串、位元組、規則表示式等的處理。</p>
+<ul>
+<li>
+<ul>
+<li><a href="StrconvStrings.html">strconv、strings 套件</a></li>
+<li><a href="Bytes.html">bytes 套件</a></li>
+<li><a href="Unicode.html">unicode 套件</a></li>
+<li><a href="XText.html">編碼轉換</a></li>
+<li><a href="https://openhome.cc/Gossip/Regex/MatchGo.html">Match 比對</a></li>
+<li><a href="https://openhome.cc/Gossip/Regex/RegexpGo.html">Regexp 實例</a></li>
+</ul>
+</li>
+</ul>
+<!-- -->
+<ul>
+<li>反射</li>
+</ul>
+<p>探測資料的結構與相關數值。</p>
+<ul>
+<li>
+<ul>
+<li><a href="Reflect.html">反射入門</a></li>
+<li><a href="FieldTag.html">結構欄位標籤</a></li>
+</ul>
+</li>
+</ul>
+<!-- -->
+<ul>
+<li>並行</li>
+</ul>
+<p>簡單的並行模型。</p>
+<ul>
+<li>
+<ul>
+<li><a href="Goroutine.html">Goroutine</a></li>
+<li><a href="Channel.html">Channel</a></li>
+</ul>
+</li>
+</ul>
+<p>其他</p>
+<p>        一些雜七雜八的東西，暫時放這分類。</p>
+<ul>
+<li>相依管理</li>
+</ul>
+<p>go module 能終結混亂嗎？</p>
+<ul>
+<li>
+<ul>
+<li><a href="Vendor.html">vendor</a></li>
+<li><a href="Module.html">模組入門</a></li>
+</ul>
+</li>
+</ul>
+<!-- -->
+<ul>
+<li>WebAssembly 支援</li>
+</ul>
+<p>Go 也可以在瀏覽器裏跳舞？</p>
+<ul>
+<li>
+<ul>
+<li><a href="WebAssembly.html">哈囉！WebAssembly！</a></li>
+<li><a href="JavaScript.html">Go 呼叫 JavaScript</a></li>
+<li><a href="Callback.html">JavaScript 回呼 Go</a></li>
+</ul>
+</li>
+</ul>
+<p>附錄</p>
+<ul>
+<li><a href="http://c-faq.com/">Go 官方套件說明文件</a></li>
+<li><a href="https://golang.org/doc/code.html">How to Write Go Code</a></li>
+<li><a href="https://golang.org/cmd/">Go Commands</a></li>
+<li><a href="https://golang.org/doc/effective_go.html">Effective Go</a></li>
+<li>...</li>
+</ul>
+<div class="ad336-280" style="text-align: center;">
+<div id="aswift_3_host" style="border: none; height: 280px; width: 336px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block;">
+</div>
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+<div id="aswift_4_host" style="border: none; height: 480px; width: 800px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block;">
+</div>
+</div>
+</div>
+</div>
+<div class="analytics">
+</div>
+<div id="aswift_0_host" style="border: none; height: 0px; width: 0px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block;">
+<div class="iframe">
+</div>
+</div>
+<div class="table-wrapper"><table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td></td><td></td></tr>
+</tbody></table>
+</div><div class="ad-300-flex ad_zone external-add leaderboard_ad_top_responsive logoutAd" style="width: 1px; height: 1px; position: absolute; left: -10000px; top: -10006px;">
+</div>
+<div class="iframe">
+</div>
+<div id="aswift_5_host" style="border: none !important; height: 100vh !important; width: 100vw !important; margin: 0px !important; padding: 0px !important; position: relative !important; visibility: visible !important; background-color: transparent !important; display: inline-block !important; inset: auto !important; clear: none !important; float: none !important; max-height: none !important; max-width: none !important; opacity: 1 !important; overflow: visible !important; vertical-align: baseline !important; z-index: auto !important;">
+<div class="iframe">
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+                            <a rel="next prefetch" href="HelloWorld.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+                    <a rel="next prefetch" href="HelloWorld.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>err 是否 nil？</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="err-是否-nil"><a class="header" href="#err-是否-nil">err 是否 nil？</a></h1>
+</div>
+<p>對於錯誤，Go 不採取例外處理機制，而是透過傳回 <code>error</code> 值來表示是否發生了什麼錯誤，最基本的做法就是：</p>
+<pre><code class="language-prettyprint">if err != nil {
+    // 做些什麼
+}
+</code></pre>
+<p>然而，接觸 Go 不用多久就會發現，若要認真地檢查、處理錯誤，<code>if err != nil</code> 之類的程式碼就會到處充斥，特別是在進行 IO 之類的操作時更是如此，單純地 <code>if err != nil</code> 寫法最後會寫到懷疑人生，這麼寫真的是對的嗎？</p>
+<p>這時可能會做的選擇之一是：就別檢查了吧！如果寫的是特定目的之程式、不太需要考慮太多狀況、不用考慮過多的穩固性、想要很快地寫出原型之類的，這個選擇可能是正確的，畢竟真要認真寫 Go 中的錯誤檢查，某些程度上就像 Java 中常被人嫌的受檢例外（Checked exception）一樣囉嗦，還好 Go 可以選擇不檢查…XD</p>
+<p>只不過，如果想寫出較通用、具有穩固性的程式，錯誤檢查就是必需的，Go 也鼓勵開發者積極地檢查錯誤；那麼…乾脆全 <code>panic</code> 好了？</p>
+<pre><code class="language-prettyprint">func check(err) {
+    if err != nil {
+        panic(err)
+    }
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>這麼一來，遇到要檢查錯誤時，就呼叫 <code>check</code> 來檢查，這樣就能少寫些 <code>if err != nil</code> 了吧！這種做法其實並不建議，因為 <code>panic</code> 是 <code>panic</code>，<code>error</code> 是 <code>error</code>，<code>panic</code> 的場合，應該用在適用 <code>panic</code> 的場合，也就是那些實際上真的無法處理的錯誤，發生這類錯誤最重要的引發開發者恐慌，讓開發者知道要修改程式的演算，避免發生 <code>panic</code>。</p>
+<p><code>panic</code> 就像 Java 中發生 <code>RuntimeException</code>，其實不建議捕捉，而是停下程式，修正演算上的錯誤。</p>
+<p>不過，可以想想為什麼會有人想在發生錯誤時，一律引發 <code>panic</code>，因為可以從目前的執行處中斷，就像例外處理機制中例外發生時，後續程式碼就不會執行那樣。</p>
+<p>這就是以檢查是否有錯誤的方式，沒辦法直接做到的事，因為不在檢查出錯誤的時候進行 <code>return</code>、<code>break</code> 之類的動作，程式碼就會往下執行。</p>
+<p>為了能在錯誤發生時中斷流程，就有可能寫出這類的程式碼：</p>
+<pre><code class="language-prettyprint">_, err = fd.Write(p0[a:b])
+if err != nil {
+    return err
+}
+_, err = fd.Write(p1[c:d])
+if err != nil {
+    return err
+}
+_, err = fd.Write(p2[e:f])
+if err != nil {
+    return err
+}
+// 諸如此類
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>這段程式碼摘自〈<a href="https://blog.golang.org/errors-are-values">Errors are values</a>〉，該文章中提到一個解決的方式是：</p>
+<pre><code class="language-prettyprint">var err error
+write := func(buf []byte) {
+    if err != nil {
+        return
+    }
+    _, err = w.Write(buf)
+}
+write(p0[a:b])
+write(p1[c:d])
+write(p2[e:f])
+// 諸如此類
+if err != nil {
+    return err
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>這麼一來，每一次 <code>write</code> 呼叫時，就都會檢查 <code>err</code> 是否為 <code>nil</code>，如果不是 <code>nil</code> 就 <code>return</code>，實際上也就不會執行 <code>w.Write</code>，雖然程式碼上呼叫了 <code>write</code> 多次；然而，某次呼叫若發生了錯誤，後續的 <code>write</code> 並不會真正執行寫出的動作，而透過這個方式，可以將發生錯誤時要進行的動作，統整在最後檢查並執行。</p>
+<p>匿名函式的方式建立了 Closure，捕捉了 <code>err</code> 變數，這麼一來就得做些迴避同名變數的問題，另外匿名函式的寫法也不是那麼簡明，因此文章中定義了：</p>
+<pre><code class="language-prettyprint">type errWriter struct {
+    w   io.Writer
+    err error
+}
+
+func (ew *errWriter) write(buf []byte) {
+    if ew.err != nil {
+        return
+    }
+    _, ew.err = ew.w.Write(buf)
+}
+</code></pre>
+<p>這麼一來，每個 <code>io.Writer</code> 可以有個別的 <code>err</code> 可以使用，而原本的程式就可以改寫為：</p>
+<pre><code class="language-prettyprint">ew := &amp;errWriter{w: fd}
+ew.write(p0[a:b])
+ew.write(p1[c:d])
+ew.write(p2[e:f])
+// 諸如此類
+if ew.err != nil {
+    return ew.err
+}
+</code></pre>
+<p>在〈<a href="bufio.html">bufio 套件</a>〉中看過的 <code>bufio.Writer</code> 就是這類的設計：</p>
+<pre><code class="language-prettyprint">type Writer struct {
+    err error
+    buf []byte
+    n   int
+    wr  io.Writer
+}
+
+...略
+
+func (b *Writer) Write(p []byte) (nn int, err error) {
+    for len(p) &gt; b.Available() &amp;&amp; b.err == nil {
+        var n int
+        if b.Buffered() == 0 {
+            // Large write, empty buffer.
+            // Write directly from p to avoid copy.
+            n, b.err = b.wr.Write(p)
+        } else {
+            n = copy(b.buf[b.n:], p)
+            b.n += n
+            b.Flush()
+        }
+        nn += n
+        p = p[n:]
+    }
+    if b.err != nil {
+        return nn, b.err
+    }
+    n := copy(b.buf[b.n:], p)
+    b.n += n
+    nn += n
+    return nn, nil
+}
+
+... 略
+
+func (b *Writer) Flush() error {
+    if b.err != nil {
+        return b.err
+    }
+    if b.n == 0 {
+        return nil
+    }
+    n, err := b.wr.Write(b.buf[0:b.n])
+    if n &lt; b.n &amp;&amp; err == nil {
+        err = io.ErrShortWrite
+    }
+    if err != nil {
+        if n &gt; 0 &amp;&amp; n &lt; b.n {
+            copy(b.buf[0:b.n-n], b.buf[n:b.n])
+        }
+        b.n -= n
+        b.err = err
+        return err
+    }
+    b.n = 0
+    return nil
+}
+</code></pre>
+<p>在 <code>b.err</code> 不為 <code>nil</code> 的情況下，實際上不會有實際的寫出，而 <code>Flush</code> 時，若 <code>b.err</code> 不為 <code>nil</code> 就會被 <code>return</code>，因此在使用 <code>bufio.Writer</code> 時，可以如下撰寫，在最後檢查</p>
+<pre><code class="language-prettyprint">b := bufio.NewWriter(fd)
+b.Write(p0[a:b])
+b.Write(p1[c:d])
+b.Write(p2[e:f])
+// 諸如此類
+if b.Flush() != nil {
+    return b.Flush()
+}
+</code></pre>
+<p>這個模式可以進一步應用，例如在〈<a href="bufio.html">bufio 套件</a>〉中看過 <code>bufio.Scanner</code> 的使用，語意上比較高階：</p>
+<pre><code class="language-prettyprint">scanner := bufio.NewScanner(f)
+for scanner.Scan() {
+    fmt.Println(scanner.Text())
+}
+if err := scanner.Err(); err != nil {
+    panic(err)
+}
+</code></pre>
+<p><code>scanner.Scan()</code> 傳回布林值，表示是否掃描到下一行，沒有下一行或中途發生錯誤，就會傳回 <code>false</code>；然而迴圈檢查就只在乎有沒有下一行，離開迴圈後再來檢查錯誤，兩個程式區塊各司其職。</p>
+<p><code>bufio.Scanner</code> 本身的組成中有 <code>io.Reader</code> 與 <code>err</code>：</p>
+<pre><code class="language-prettyprint">type Scanner struct {
+    r            io.Reader 
+    ...略
+    err          error
+    ...略
+}
+</code></pre>
+<p>若你查看 <code>Scan</code> 方法的實作，會傳回 <code>false</code> 的情況之一，就是 <code>Scanner</code> 的 <code>err</code> 不是 <code>nil</code>：</p>
+<pre><code class="language-prettyprint">    ...略
+    if s.err != nil {
+        // Shut it down.
+        s.start = 0
+        s.end = 0
+        return false
+    }
+    ...略
+</code></pre>
+<p>Go 不以特定語法處理錯誤（例如 Java 使用 <code>try..catch</code>），正因為錯誤發生是傳回錯誤，也就會有許多方式可以檢查錯誤，這邊只是談到幾個可用的設計，重點在於觀察程式碼的需求，適時地重構，看看如何以設計的方式，優雅地處理錯誤，而不是避免檢查錯誤，如果一開始沒什麼方向，可以多觀察 Go 程式庫的原始碼實作中是怎麼處理錯誤的。</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="File.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ErrorComparison.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="File.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ErrorComparison.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

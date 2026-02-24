@@ -1,0 +1,446 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>defer、panic、recover</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="deferpanicrecover"><a class="header" href="#deferpanicrecover">defer、panic、recover</a></h1>
+</div>
+<p>就許多現代語言而言，例外處理機制是基本特性之一，然而，例外處理是好是壞，一直以來存在著各種不同的意見，在 Go 語言中，沒有例外處理機制，取而代之的，是運用 <code>defer</code>、<code>panic</code>、<code>recover</code> 來滿足類似的處理需求。</p>
+<h1 id="defer-延遲執行"><a class="header" href="#defer-延遲執行">defer 延遲執行</a></h1>
+<p>在 Go 語言中，可以使用 <code>defer</code> 指定某個函式延遲執行，那麼延遲到哪個時機？簡單來說，在函式 <code>return</code> 之前，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func deferredFunc() {
+    fmt.Println("deferredFunc")    
+}
+
+func main() {
+    defer deferredFunc()
+    fmt.Println("Hello, 世界")    
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>這個範例執行時，<code>deferredFunc()</code> 前加上了 <code>defer</code>，因此，會在 <code>main()</code> 函式 <code>return</code> 前執行，結果就是先顯示了 <code>"Hello, 世界"</code>，才顯示 <code>"deferredFunc"</code>。</p>
+<p>如果有多個函式被 <code>defer</code>，那麼在函式 <code>return</code> 前，會依 <code>defer</code> 的相反順序執行，也就是 LIFO，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func deferredFunc1() {
+    fmt.Println("deferredFunc1")
+}
+
+func deferredFunc2() {
+    fmt.Println("deferredFunc2")
+}
+
+func main() {
+    defer deferredFunc1()
+    defer deferredFunc2()
+    fmt.Println("Hello, 世界")
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>由於先 <code>defer</code> 了 <code>deferredFunc1()</code>，才 <code>defer</code> 了 <code>deferredFunc2()</code>，因此執行結果會是 <code>"Hello, 世界"</code>、<code>"deferredFunc2"</code>、<code>"deferredFunc1"</code> 的顯示順序。</p>
+<p>上頭是為了清楚表示出 <code>defer</code> 與函式的關係，實際上，你也可以寫成這樣就好：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    defer fmt.Println("deffered 1")    
+    defer fmt.Println("deffered 2")
+    fmt.Println("Hello, 世界")    
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>執行結果會是 <code>"Hello, 世界"</code>、<code>"deferred 2"</code>、<code>"deferred 1"</code> 的顯示順序。</p>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>有趣的一點是，被 <code>defer</code> 的函式若有接受某變數作為引數，那麼會是被 <code>defer</code> 當時的變數值，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    i := 10
+    defer fmt.Println(i)    
+    i++
+    fmt.Println(i) 
+}
+</code></pre>
+<p>在上面的例子中，會顯示 11 與 10，這是因為第一個 <code>fmt.Println(i)</code> 被 <code>defer</code> 時，保有 <code>i</code> 當時的值 10。</p>
+<h1 id="使用-defer-清除資源"><a class="header" href="#使用-defer-清除資源">使用 defer 清除資源</a></h1>
+<p>那麼要用在何處？記得 <code>defer</code> 的特性是在函式 <code>return</code> 前執行，而且一定會被執行，因此，對於以下的這個程式：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "os"
+)
+
+func main() {
+    f, err := os.Open("/tmp/dat")
+    if err != nil {
+        fmt.Println(err)
+    } else {
+        b1 := make([]byte, 5)
+        n1, err := f.Read(b1)
+        if err != nil {
+            fmt.Println(err)
+        } else {
+            fmt.Printf("%d bytes: %s\n", n1, string(b1))
+            // 處理讀取的內容....
+            f.Close()
+        }
+    }
+}
+</code></pre>
+<p>這是一個讀取檔案的例子，<code>os.Open</code> 與 <code>f.Read</code> 的風格是傳回兩個值，第二個值代表著有無錯誤發生，因此程式中進行了錯誤的檢查，在沒有錯誤的情況下才進行檔案的讀取與內容處理，而最後透過 <code>f.Close()</code> 關閉檔案。</p>
+<p>基本上，這個範例的問題在於，<code>f.Close()</code> 不一定會被執行，因為 Go 語言中還有其他展現錯誤的方式，例如使用 <code>panic</code> 函式。假設在「處理讀取的內容」過程中因為呼叫了 <code>panic</code> 來表示有錯誤發生，那麼會立即中斷函式的執行（在這個例子就是直接離開 <code>main</code> 函式），這時 <code>f.Close()</code> 就不會被執行。</p>
+<p>你可以使用 <code>defer</code> 來執行函式的關閉：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "os"
+)
+
+func main() {
+    f, err := os.Open("/tmp/dat")
+    if err != nil {
+        fmt.Println(err)
+        return;
+    }
+
+    defer func() { // 延遲執行，而且函式 return 前一定會執行
+        if f != nil {
+            f.Close()
+        }
+    }()
+
+    b1 := make([]byte, 5)
+    n1, err := f.Read(b1)
+    if err != nil {
+        fmt.Printf("%d bytes: %s\n", n1, string(b1))
+        // 處理讀取的內容....
+    }
+}
+</code></pre>
+<p>這麼一來，若 <code>Read</code> 發生錯誤，最後一定會執行被 <code>defer</code> 的函式，從而保證了 <code>f.Close()</code> 一定會關閉檔案。</p>
+<p>（就某些意義來說，<code>defer</code> 的角色類似於例外處理機制中 <code>finally</code> 的機制，將資源清除的函式，藉由 <code>defer</code> 來處理，一方面大概也是為了在程式碼閱讀上，強調出資源清除的重要性吧！）</p>
+<h1 id="panic-恐慌中斷"><a class="header" href="#panic-恐慌中斷">panic 恐慌中斷</a></h1>
+<p>方才稍微提過，如果在函式中執行 <code>panic</code>，那麼函式的流程就會中斷，若 A 函式呼叫了 B 函式，而 B 函式中呼叫了 <code>panic</code>，那麼 B 函式會從呼叫了 <code>panic</code> 的地方中斷，而 A 函式也會從呼叫了 B 函式的地方中斷，若有更深層的呼叫鏈，<code>panic</code> 的效應也會一路往回傳播。</p>
+<p>（如果你有例外處理的經驗，這就相當於被拋出的例外都沒有處理的情況。）</p>
+<p>可以將方才的範例改寫為以下：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "os"
+)
+
+func check(err error) {
+    if err != nil {
+        panic(err)
+    }
+}
+
+func main() {
+    f, err := os.Open("/tmp/dat")
+    check(err)
+
+    defer func() {
+        if f != nil {
+            f.Close()
+        }
+    }()
+
+    b1 := make([]byte, 5)
+    n1, err := f.Read(b1)
+    check(err)
+
+    fmt.Printf("%d bytes: %s\n", n1, string(b1))
+}
+</code></pre>
+<p>如果在開啟檔案時，就發生了錯誤，假設這是在一個很深的呼叫層次中發生，若你直接想撰寫程式，將 <code>os.Open</code> 的 <code>error</code> 逐層傳回，那會是一件很麻煩的事，此時直接發出 <code>panic</code>，就可以達到想要的目的。</p>
+<h1 id="recover-恢復流程"><a class="header" href="#recover-恢復流程">recover 恢復流程</a></h1>
+<p>如果發生了 <code>panic</code>，而你必須做一些處理，可以使用 <code>recover</code>，這個函式必須在被 <code>defer</code> 的函式中執行才有效果，若在被 <code>defer</code> 的函式外執行，<code>recover</code> 一定是傳回 <code>nil</code>。</p>
+<p>如果有設置 <code>defer</code> 函式，在發生了 <code>panic</code> 的情況下，被 <code>defer</code> 的函式一定會被執行，若當中執行了 <code>recover</code>，那麼 <code>panic</code> 就會被捕捉並作為 <code>recover</code> 的傳回值，那麼 <code>panic</code> 就不會一路往回傳播，除非你又呼叫了 <code>panic</code>。</p>
+<p>因此，雖然 Go 語言中沒有例外處理機制，也可使用 <code>defer</code>、<code>panic</code> 與 <code>recover</code> 來進行類似的錯誤處理。例如，將上頭的範例，再修改為：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "os"
+)
+
+func check(err error) {
+    if err != nil {
+        panic(err)
+    }
+}
+
+func main() {
+    f, err := os.Open("/tmp/dat")
+    check(err)
+
+    defer func() {
+        if err := recover(); err != nil {
+            fmt.Println(err) // 這已經是頂層的 UI 介面了，想以自己的方式呈現錯誤
+        }
+
+        if f != nil {
+            if err := f.Close(); err != nil {
+                panic(err) // 示範再拋出 panic
+            }
+        }
+    }()
+
+    b1 := make([]byte, 5)
+    n1, err := f.Read(b1)
+    check(err)
+
+    fmt.Printf("%d bytes: %s\n", n1, string(b1))
+}
+</code></pre>
+<p>在這個例子中，假設已經是最頂層的 UI 介面了，因此使用 <code>recover</code> 嘗試捕捉 <code>panic</code>，並以自己的方式呈現錯誤，附帶一題的是，關閉檔案也有可能發生錯誤，程式中也檢查了 <code>f.Close()</code>，視需求而定，你可以像這邊重新拋出 <code>panic</code>，或者也可以單純地設計一個 UI 介面來呈現錯誤。</p>
+<p>什麼時候該用 <code>error</code>？什麼時候該用 <code>panic</code>？在 Go 的慣例中，鼓勵你使用 <code>error</code>，明確地進行錯誤檢查，然而，就如方才所言，巢狀且深層的呼叫時，使用 <code>panic</code> 會比較便於傳播錯誤，就 Go 的慣例來說，是以套件為界限，於套件之中，必要時可以使用 <code>panic</code>，而套件公開的函式，建議以 <code>error</code> 來回報錯誤，若套件公開的函式可能會收到 <code>panic</code>，建議使用 <code>recover</code> 捕捉，並轉換為 <code>error</code>。</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Closure.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Struct.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Closure.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Struct.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

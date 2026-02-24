@@ -1,0 +1,355 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>break、continue、goto</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="breakcontinuegoto"><a class="header" href="#breakcontinuegoto">break、continue、goto</a></h1>
+</div>
+<p><code>break</code> 可以離開目前 <code>switch</code>、<code>for</code> 以及 <code>select</code>（之後介紹）；<code>continue</code> 只用於 <code>for</code> 迴圈，略過之後陳述句，並回到迴圈開頭進行下一次迴圈，而不是離開迴圈。<code>goto</code> 可以在函式中，讓流程直接跳至指定標籤；實際上，<code>break</code>、<code>continue</code> 在迴圈中，也可以搭配標籤來使用。</p>
+<h1 id="break"><a class="header" href="#break">break</a></h1>
+<p>在〈<a href="http://openhome.cc/Gossip/Go/IfSElsewitch.html">if … else、switch 條件式</a>〉中說明過，<code>switch</code> 的 <code>case</code> 中不必特別使用 <code>break</code>，因為 <code>switch</code> 中預設不會 <code>fallthrough</code>，但 <code>case</code> 中若必要，還是可以使用 <code>break</code>，中斷 <code>break</code> 之後與下個 <code>case</code> 前的流程。</p>
+<p><code>break</code> 使用於 <code>for</code> 迴圈時，會結束迴圈，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    for i := 1; i &lt; 10; i++ {
+        if i == 5 {
+            break
+        }
+        fmt.Printf("i = %d\n", i)
+    }
+}
+</code></pre>
+<p>這段程式會顯示 i = 1 到 i = 4，因為在 i 等於 5 時就會執行 <code>break</code> 而離開 <code>for</code> 迴圈。</p>
+<p><code>break</code> 可以配合標籤使用，例如本來 <code>break</code> 只會離開一層 <code>for</code> 迴圈，若設定標籤，並於 <code>break</code> 時指定標籤，就可以直接離開多層 <code>for</code> 迴圈：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+
+BACK:
+    for j := 1; j &lt; 10; j++ {
+        for i := 1; i &lt; 10; i++ {
+            if i == 5 {
+                break BACK
+            }
+            fmt.Printf("i = %d, j = %d\n", i, j)
+        }
+        fmt.Println("test")
+    }
+}
+</code></pre>
+<p>你可以執行看看上面的範例，之後將 <code>BACK:</code> 與 <code>BACK</code> 拿掉看看，前者 <code>break BACK</code> 時會離開兩層 <code>for</code> 迴圈，後者只會離開內層 <code>for</code> 迴圈。</p>
+<h1 id="continue"><a class="header" href="#continue">continue</a></h1>
+<p><code>continue</code> 只用於 <code>for</code> 迴圈，略過之後陳述句，並回到迴圈開頭進行下一次迴圈，例如將先前第一個範例程式的 <code>break</code> 改成 <code>continue</code>：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    for i := 1; i &lt; 10; i++ {
+        if i == 5 {
+            continue
+        }
+        fmt.Printf("i = %d\n", i)
+    }
+}
+</code></pre>
+<p>這段程式會顯示 i = 1 到 4，以及 6 到 9，當 <code>i</code> 等於 5 時，會執行 <code>continue</code> 直接略過之後陳述句，也就是該次的 <code>fmt.Printf()</code> 該行並沒有被執行，直接從 <code>for</code> 開頭執行下一次迴圈，所以 i = 5 沒有被顯示。</p>
+<p><code>continue</code> 也有搭配標籤的用法：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+BACK:
+    for j := 1; j &lt; 10; j++ {
+        for i := 1; i &lt; 10; i++ {
+            if i == 5 {
+                continue BACK
+            }
+            fmt.Printf("i = %d, j = %d\n", i, j)
+        }
+        fmt.Println("test")
+    }
+}
+</code></pre>
+<h1 id="goto"><a class="header" href="#goto">goto</a></h1>
+<p>在 C/C++ 中，<code>goto</code> 是一個很方便，但是常不建議使用的語法，因為濫用它的話，經常會破壞程式的架構、使得程式的邏輯混亂，然而，在 Go 中，亦有提供有 <code>goto</code> 語法。</p>
+<p>相對於 <code>break</code> 與 <code>continue</code> 跳躍時，只能前往 <code>for</code> 迴圈開頭處設定的標籤，<code>goto</code> 可以在函式中，從某區塊內跳躍至區塊外任何位置，一個簡單的例子如下：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    var input int
+
+RETRY:
+    fmt.Printf("輸入數字")
+    fmt.Scanf("%d", &amp;input)
+
+    if input == 0 {
+        fmt.Println("除數不得為 0")
+        goto RETRY
+    }
+    fmt.Printf("100 / %d = %f\n", input, 100/float32(input))
+}
+</code></pre>
+<p>如果你輸入 0，程式會顯示錯誤訊息後跳至 <code>RETRY:</code>，再執行一次提示與輸入。</p>
+<p>注意，<code>goto</code> 可以在函式中，從某區塊內跳躍至區塊外任何位置，但不能從某區塊跳入另一區塊內，例如，以下是錯誤的，會發生 goto TEST jumps into block 的錯誤：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    var input int
+
+RETRY:
+    fmt.Printf("輸入數字")
+    fmt.Scanf("%d", &amp;input)
+
+    if input == 0 {
+    TEST:
+        fmt.Println("除數不得為 0")
+        goto RETRY
+    }
+    fmt.Printf("100 / %d = %f\n", input, 100/float32(input))
+    goto TEST
+}
+</code></pre>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="For.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Function.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="For.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Function.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

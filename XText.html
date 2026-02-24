@@ -1,0 +1,353 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>編碼轉換</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="編碼轉換"><a class="header" href="#編碼轉換">編碼轉換</a></h1>
+</div>
+<p>不論從哪個面向，都可以看出 Go 獨厚 UTF-8，這可能是因為 Go 的設計者之一 Ken Thompson，也曾經參與了 UTF-8 的設計。</p>
+<p>如果文字資料的來源並非 UTF-8 呢？例如，儲存時並非使用 UTF-8 的檔案？解決的方法之一，是將檔案另行儲存為 UTF-8，再使用 Go 來讀取，當然，並非所有的的場合都可以這麼做，另一個方式是，使用 <a href="https://godoc.org/golang.org/x/text"><code>golang.org/x/text</code></a> 套件。</p>
+<p>Go 除了本身自帶的標準套件之外，還有另外一系列官方的擴充套件，這些擴充套件組織在 <a href="https://godoc.org/-/subrepo"><code>golang/x</code></a> 底下，依文件上的說明，這些套件也是 Go 專案的一部份，只不過在相容性的維護上比較沒那麼嚴格。</p>
+<p>在官方擴充套件中，<code>golang.org/x/text</code> 主要包含了文字編碼、轉換、國際化、本地化等文字性任務的套件，可以透過 <code>go get</code> 來取得、安裝：</p>
+<pre><code class="language-prettyprint">go get golang.org/x/text
+</code></pre>
+<p>文字編碼的轉換主要由 <a href="https://godoc.org/golang.org/x/text/transform"><code>golang.org/x/text/transform</code></a> 套件來處理，看看其中的函式或結構方法，都會需要 <code>Transformer</code> 介面的實現，例如最基本的 <code>String</code>：</p>
+<pre><code class="language-prettyprint">func String(t Transformer, s string) (result string, n int, err error)
+</code></pre>
+<p><code>Transformer</code> 定義的主要是 <code>Transform</code> 方法，代表著編碼的轉換：</p>
+<pre><code class="language-prettyprint">type Transformer interface {
+    Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error)
+    Reset()
+}
+</code></pre>
+<p><code>dst</code>、<code>src</code> 代表著同一文字兩個不同編碼的位元組，由於 Go 使用 UTF-8，從 UTF-8 轉換為其他編碼，這個動作稱為 <code>Encode</code>，從其他編碼轉換為 UTF-8，這個動作稱為 Decode。</p>
+<p>Encode、Decode 的動作，分別由 <a href="https://godoc.org/golang.org/x/text/encoding"><code>golang.org/x/text/encoding</code></a> 套件的 <code>Encoder</code>、<code>Decoder</code> 來處理，它們都是 <code>transform.Transformer</code> 的實現：</p>
+<pre><code class="language-prettyprint">type Encoder struct {
+    transform.Transformer
+    ...
+}
+
+type Decoder struct {
+    transform.Transformer
+    ...
+}
+</code></pre>
+<p>為了便於使用，<code>encoding</code> 定義了 <code>Encoding</code> 的行為：</p>
+<pre><code class="language-prettyprint">type Encoding interface {
+    NewDecoder() *Decoder
+    NewEncoder() *Encoder
+}
+</code></pre>
+<p><a href="https://godoc.org/golang.org/x/text/encoding"><code>golang.org/x/text/encoding</code></a> 套件之中，定義了不同的編碼轉換套件，例如，想處理 Big5（Code Page 950） 編碼轉換的話，需要 <code>golang.org/x/text/encoding/traditionalchinese</code> 套件，它的 <code>Big5</code> 就實現了 <code>Encoding</code>，因此想要獲得 UTF-8 &lt;-&gt; Big5 的 <code>Encoder</code>、<code>Decoder</code>，可以如下：</p>
+<pre><code class="language-prettyprint">utf8ToBig5 := traditionalchinese.Big5.NewEncoder()
+big5ToUtf8 := traditionalchinese.Big5.NewDecoder()
+</code></pre>
+<p>因此，若要讀取一個底層為 Big5 編碼的字串，轉換為 UTF-8 編碼字串，可以如下：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "golang.org/x/text/encoding/traditionalchinese"
+    "golang.org/x/text/transform"
+    "fmt"
+)
+
+func main() {
+    big5ToUTF8 := traditionalchinese.Big5.NewDecoder()
+    big5Test := "\xb4\xfa\xb8\xd5" // 測試的 Big5 編碼
+    utf8, _, _ := transform.String(big5ToUTF8, big5Test)
+    fmt.Println(utf8) // 顯示「測試」
+}
+</code></pre>
+<p>要將一個 UTF-8 編碼字串，轉換為 Big5 編碼的字串，可以如下：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "golang.org/x/text/encoding/traditionalchinese"
+    "golang.org/x/text/transform"
+    "fmt"
+)
+
+func main() {
+    utf8ToBig5 := traditionalchinese.Big5.NewEncoder()
+    big5, _, _ := transform.String(utf8ToBig5, "測試")
+    fmt.Printf("%q", big5)  // 顯示 "\xb4\xfa\xb8\xd5"
+}
+</code></pre>
+<p><code>transform</code> 也定義了 <code>Reader</code>、<code>Writer</code>，可以用來將 <code>Transformer</code> 與 <code>io.Reader</code>、<code>io.Writer</code> 包裹在一起：</p>
+<pre><code class="language-prettyprint">type Reader
+    func NewReader(r io.Reader, t Transformer) *Reader
+    func (r *Reader) Read(p []byte) (int, error)
+
+type Writer
+    func NewWriter(w io.Writer, t Transformer) *Writer
+    func (w *Writer) Close() error
+    func (w *Writer) Write(data []byte) (n int, err error)
+</code></pre>
+<p>例如，想要讀取 Big5 文件的話，底下是個示範：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "golang.org/x/text/encoding/traditionalchinese"
+    "golang.org/x/text/transform"
+    "fmt"
+    "io"
+    "os"
+    "io/ioutil"
+)
+
+func printBig5(r io.Reader) error {
+    var big5R = transform.NewReader(r, traditionalchinese.Big5.NewDecoder())
+
+    b, err := ioutil.ReadAll(big5R)
+    fmt.Println(string(b))
+
+    return err
+}
+
+func main() {
+    fmt.Print("檔案來源：")
+    var filename string
+    fmt.Scanf("%s", &amp;filename)
+
+    f, err := os.Open(filename)
+    if err != nil {
+        panic(err)
+    }
+    defer f.Close()
+
+    printBig5(f)
+}
+</code></pre>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Unicode.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Reflect.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Unicode.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Reflect.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>身為複合值的陣列</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="身為複合值的陣列"><a class="header" href="#身為複合值的陣列">身為複合值的陣列</a></h1>
+</div>
+<p>在 Go 中，陣列的長度固定，是個複合值，元素的型態及個數決定了陣列的型態，在記憶體中使用連續空間配置。</p>
+<h1 id="建立與存取陣列"><a class="header" href="#建立與存取陣列">建立與存取陣列</a></h1>
+<p>建立陣列的方式是 <code>[n]type</code>，其中 <code>n</code> 為陣列的元素數量，<code>type</code> 是元素的型態。例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    var scores [10]int
+    scores[0] = 90
+    scores[1] = 89
+    fmt.Println(scores)      // [90 89 0 0 0 0 0 0 0 0]
+    fmt.Println(len(scores)) // 10
+}
+</code></pre>
+<p>在上面的程式中，建立了具有 10 個元素的陣列，可以用來儲存 <code>int</code> 型態的值，可透過 <code>scores</code> 變數指定索引來存取元素，<code>scores</code> 變數的型態為 <code>[10]int</code>，記得，長度也是陣列的型態的一部份，若一個陣列為 <code>[10]int</code>，而另一個陣列為 <code>[5]int</code>，這兩個陣列會是不同的型態，像上頭這樣宣告陣列，預設每個元素都會初始為 0。</p>
+<p>陣列使用索引存取，如同其他語言的慣例，索引從 0 開始，<code>len</code> 函式可以取得陣列的長度，如果想在建立陣列時指定初始，可以如下：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    arr1 := [3]int{1, 2, 3}
+    arr2 := [5]int{1, 2, 3}
+    arr3 := [...]int{1, 2, 3, 4, 5}
+    fmt.Println(arr1) // [1 2 3]
+    fmt.Println(arr2) // [1 2 3 0 0]
+    fmt.Println(arr3) // [1 2 3 4 5]
+}
+</code></pre>
+<p>在上頭可以看到，如果宣告的元素數量不足 <code>[]</code> 中指定的數量，那麼會自動給予初值，也可以使用 <code>...</code>，或者只寫 <code>[]</code>，讓編譯器自動判斷數量，如果宣告的元素數量超過 <code>[]</code> 中指定的數量，那麼會有 out of bounds 的編譯錯誤。</p>
+<h1 id="陣列指定與比較"><a class="header" href="#陣列指定與比較">陣列指定與比較</a></h1>
+<p>在 Go 中，陣列指定會逐一複製值，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    arr1 := [...]int{1, 2, 3}
+    arr2 := arr1
+    fmt.Println(arr1) // [1 2 3]
+    fmt.Println(arr2) // [1 2 3]
+    arr1[0] = 10
+    fmt.Println(arr1) // [10 2 3]
+    fmt.Println(arr2) // [1 2 3]
+}
+</code></pre>
+<p>在呼叫函式時若傳遞陣列給參數，或者是傳回陣列，也是做複製的動作。陣列可以使用 <code>==</code> 與 <code>!=</code> 進行比較，由於長度也是陣列型態的一部份，因此，只要長度與元素型態相同的陣列才可以做比較，如果將 <code>[3]int</code> 與 <code>[5]int</code> 做比較，會發生 mismatched types 編譯錯誤，同樣的，指定陣列給另一陣列時，也必須是相同型態的陣列。</p>
+<h1 id="巢狀陣列"><a class="header" href="#巢狀陣列">巢狀陣列</a></h1>
+<p>Go 的陣列是線性的，如果想模擬多維，可以使用巢狀陣列。例如，建立一個二維陣列：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    var arr [2][3]int
+    fmt.Println(arr)   // [[0 0 0] [0 0 0]]
+}
+</code></pre>
+<p>顯然地，第一個 <code>[]</code> 中數字指定了陣列中會有兩個 <code>[3]int</code> 陣列，因此，若要同時宣告陣列中的元素，可以如下：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func change(arr [3]int) [3]int {
+    arr[0] = 10
+    return arr
+}
+
+func main() {
+    arr1 := [2][3]int{[3]int{1, 2, 3}, [3]int{4, 5, 6}}
+    fmt.Println(arr1) // [[1 2 3] [4 5 6]]
+
+    arr2 := [...][3]int{[...]int{1, 2, 3}, [...]int{4, 5, 6}}
+    fmt.Println(arr2) // [[1 2 3] [4 5 6]]
+
+    arr3 := [2][3]int{{1, 2, 3}, {4, 5, 6}}
+    fmt.Println(arr3) // [[1 2 3] [4 5 6]]
+
+    arr4 := [...][3]int{{1, 2, 3}, {4, 5, 6}}
+    fmt.Println(arr4) // [[1 2 3] [4 5 6]]
+}
+</code></pre>
+<p>上頭一口氣示範了幾種巢狀陣列的宣告方式，基本上後兩種應該是比較容易撰寫的，由於陣列的長度是型態的一部份，必須在宣告時指定，因此，就二維陣列來說，一定都是方陣。</p>
+<h1 id="走訪陣列"><a class="header" href="#走訪陣列">走訪陣列</a></h1>
+<p>想要逐一走訪陣列的話，基本上可以使用 <code>for</code> 迴圈，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    arr := [...]int{1, 2, 3}
+    for i := 0; i &lt; len(arr); i++ {
+        fmt.Printf("%d\n", arr[i])
+    }
+}
+</code></pre>
+<p>另一個方式是使用 <code>for range</code>：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    arr := [...]int{1, 2, 3}
+    for index, element := range arr {
+        fmt.Printf("%d: %d\n", index, element)
+    }
+}
+</code></pre>
+<p>在不需要索引的情況下，可以使用 <code>_</code> 忽略傳回的索引值，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    arr := [...]int{1, 2, 3}
+    for _, element := range arr {
+        fmt.Printf("%d\n", element)
+    }
+}
+</code></pre>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="String.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Slice.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="String.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Slice.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

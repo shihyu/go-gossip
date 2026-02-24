@@ -1,0 +1,429 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>運算子</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="運算子"><a class="header" href="#運算子">運算子</a></h1>
+</div>
+<p>Go 語言中的運算子，大致上與 C 語系的語言中提供的運算子差不多，其中 <code>&amp;</code>、<code>*</code> 也用來作為指標（Pointer）運算子。</p>
+<h1 id="算術運算子"><a class="header" href="#算術運算子">算術運算子</a></h1>
+<p>算術運算子作用於數值，產生與第一個運算元相同型態的結果。<code>+</code>、<code>-</code>、<code>*</code>、<code>/</code> 四個運算子，可用於整數、浮點數與複數；<code>+</code> 也用於字串串接；<code>%</code> 餘除運算子，只用於整數，<code>&amp;</code>、<code>|</code>、<code>^</code>、<code>&amp;^</code> 位元運算子只用於整數，<code>&lt;&lt;</code>、<code>&gt;&gt;</code> 位移運算子只用於整數。</p>
+<p><code>+</code>、<code>-</code>、<code>*</code>、<code>/</code> 使用上應該沒什麼問題，主要就是注意運算的順序是先乘除後加減，必要時使用括號讓順序清楚，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    fmt.Println(1 + 2*3)         // 7
+    fmt.Println(2 + 2 + 8/4)     // 6
+    fmt.Println((2 + 2 + 8) / 4) // 3
+    fmt.Println(10 % 3)          // 1
+}
+</code></pre>
+<p><code>%</code>運算子計算的結果是除法後的餘數，例如上頭 <code>10 % 3</code> 會得到餘數 1。</p>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>對於遞增與遞減 1 的操作，Go 可以使用 <code>++</code> 與 <code>--</code> 的操作，不過，<code>++</code> 與 <code>--</code> 只能置於變數後方，而且是個陳述，因此，對於 <code>i := 1</code>，你可以在一行陳述中寫 <code>i++</code> 或 <code>i--</code>，不過，不能寫 <code>fmt.Println(i++)</code>，這樣就能避免是要先傳回 <code>i</code> 值再遞增 <code>i</code>，還是先遞增 <code>i</code> 再傳回 1 的問題。</p>
+<p>在二進位運算上有 AND、OR、XOR 等運算，底下是 Go 中的一些例子：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("AND運算：")
+    fmt.Printf("0 AND 0 %5d\n", 0&amp;1)
+    fmt.Printf("0 AND 1 %5d\n", 0&amp;1)
+    fmt.Printf("1 AND 0 %5d\n", 1&amp;0)
+    fmt.Printf("1 AND 1 %5d\n", 1&amp;1)
+
+    fmt.Println("\nOR運算：")
+    fmt.Printf("0 OR 0 %6d\n", 0|0)
+    fmt.Printf("0 OR 1 %6d\n", 0|1)
+    fmt.Printf("1 OR 0 %6d\n", 1|0)
+    fmt.Printf("1 OR 1 %6d\n", 1|1)
+
+    fmt.Println("\nXOR運算：")
+    fmt.Printf("0 XOR 0 %5d\n", 0^0)
+    fmt.Printf("0 XOR 1 %5d\n", 0^1)
+    fmt.Printf("1 XOR 0 %5d\n", 1^0)
+    fmt.Printf("1 XOR 1 %5d\n", 1^1)
+
+    fmt.Println("\nAND NOT運算：")
+    fmt.Printf("0 AND NOT 0 %5d\n", 0&amp;^0)
+    fmt.Printf("0 AND NOT 1 %5d\n", 0&amp;^1)
+    fmt.Printf("1 AND NOT 0 %5d\n", 1&amp;^0)
+    fmt.Printf("1 AND NOT 1 %5d\n", 1&amp;^1)
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>執行結果如下：</p>
+<pre><code class="language-prettyprint">AND運算：
+0 AND 0     0
+0 AND 1     0
+1 AND 0     0
+1 AND 1     1
+
+OR運算：
+0 OR 0      0
+0 OR 1      1
+1 OR 0      1
+1 OR 1      1
+
+XOR運算：
+0 XOR 0     0
+0 XOR 1     1
+1 XOR 0     1
+1 XOR 1     0
+
+AND NOT運算：
+0 AND NOT 0     0
+0 AND NOT 1     0
+1 AND NOT 0     1
+1 AND NOT 1     0
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>位元運算是逐位元運算，例如 10010001 與 01000001 作 AND 運算，是一個一個位元對應運算，答案就是 00000001。補數運算是將所有位元 0 變 1，1 變 0。例如 00000001 經補數運算就會變為 11111110。Go 的補數運算子是 <code>^</code>，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    number := 0
+    fmt.Println(^number)  // -1
+}
+</code></pre>
+<p>上面的程式片段會顯示 -1，因為 number 在記憶體中全部位元都是 0，經補數運算全部位元就都變成 1，這個數在電腦中用整數表示則是 -1。</p>
+<p><code>&lt;&lt;</code> 左移運算子會將所有位元往左移指定位數，左邊被擠出去的位元會被丟棄，而右邊補上 0；<code>&gt;&gt;</code> 右移運算則是相反，會將所有位元往右移指定位數，右邊被擠出去的位元會被丟棄，至於最左邊補上原來的位元，如果左邊原來是 0 就補0，1 就補 1。</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    number := 1
+    fmt.Printf("2 的 0 次方: %d\n", number)        // 1
+    fmt.Printf("2 的 1 次方: %d\n", number &lt;&lt; 1)   // 2
+    fmt.Printf("2 的 2 次方: %d\n", number &lt;&lt; 2)   // 4
+    fmt.Printf("2 的 3 次方: %d\n", number &lt;&lt; 3)   // 8
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>實際來左移看看就知道為何可以如此作次方運算了：</p>
+<pre><code class="language-prettyprint">00000001 -&gt; 1 
+00000010 -&gt; 2 
+00000100 -&gt; 4 
+00001000 -&gt; 8
+</code></pre>
+<p>對於一個算術運算 <code>x = x op y</code>，可以寫成 <code>x op= y</code>，<code>op</code> 是指算術運算子，例如 <code>x = x + y</code>，可以寫成 <code>x += y</code>，這也就是所謂的指定運算子。</p>
+<h1 id="比較運算"><a class="header" href="#比較運算">比較運算</a></h1>
+<p>數學上有大於、等於、小於的比較運算，Go 中也提供了這些運算子，它們有大於（<code>&gt;</code>）、不小於（<code>&gt;=</code>）、小於（<code>&lt;</code>）、不大於（<code>&lt;=</code>）、等於（<code>==</code>）以及不等於（<code>!=</code>），比較條件成立時用 <code>true</code> 表示，比較條件不成立用 <code>false</code> 表示。以下程式片段示範了幾個比較運算的使用：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    fmt.Printf("10 &gt;  5 結果 %t\n", 10 &gt; 5)   // true
+    fmt.Printf("10 &gt;= 5 結果 %t\n", 10 &gt;= 5)  // true
+    fmt.Printf("10 &lt;  5 結果 %t\n", 10 &lt; 5)   // false
+    fmt.Printf("10 &lt;= 5 結果 %t\n", 10 &lt;= 5)  // false
+    fmt.Printf("10 == 5 結果 %t\n", 10 == 5)  // false
+    fmt.Printf("10 != 5 結果 %t\n", 10 != 5)  // true
+}
+</code></pre>
+<p><code>==</code> 與 <code>!=</code> 只能用在 comparable 的運算元上，這有一套嚴格規則，Go 語言中哪些值是可以比較的，可以參考規格書中〈<a href="https://golang.org/ref/spec#Comparison_operators">Comparison operators</a>〉的說明。</p>
+<p>Go 中沒有 <code>?:</code> 三元條件運算子。</p>
+<h1 id="邏輯運算"><a class="header" href="#邏輯運算">邏輯運算</a></h1>
+<p>在邏輯上有所謂的「且」、「或」與「反相」，在 Go 中提供對應的邏輯運算子（Logical operator），分別為 <code>&amp;&amp;</code>、<code>||</code>及 <code>!</code>。看看以下的程式片段會輸出什麼結果？</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    number := 75
+    fmt.Println(number &gt; 70 &amp;&amp; number &lt; 80)     // true
+    fmt.Println(number &gt; 80 || number &lt; 75)     // false
+    fmt.Println(!(number &gt; 80 || number &lt; 75))  // true
+}
+</code></pre>
+<p><code>&amp;&amp;</code> 與 <code>||</code> 有捷徑運算（Short-Circuit Evaluation）。因為 <code>&amp;&amp;</code> 只要其中一個為假，就可以判定結果為假，所以只要左運算元評估為 <code>false</code>，就會直接傳回 <code>false</code>，不會再去運算右運算元。因為 <code>||</code> 只要其中一個為真，就可以判定結果為真，所以只要左運算元評估為 <code>true</code>，就會直接傳回 <code>true</code>，就不會再去運算右運算元。</p>
+<p>來舉個運用捷徑運算的例子，在 Go 中兩個整數相除，若除數為 0 會發生 integer divide by zero 的錯誤，以下運用 <code>&amp;&amp;</code> 捷徑運算避免了這個問題：</p>
+<pre><code class="language-prettyprint">if(number2 != 0 &amp;&amp; number1 / number2 &gt; 1) {
+    fmt.Println(number1 / number2)
+}
+</code></pre>
+<p>在這個程式片段中，變數 number1 與 number2 都是 <code>int</code> 型態，如果 <code>number2</code> 為 0 的話，<code>&amp;&amp;</code> 左邊運算元結果就是 <code>false</code>，直接判斷整個 <code>&amp;&amp;</code> 的結果應是 <code>false</code>，不用再去評估右運算元，從而避免了 <code>number1 / number2</code> 而 <code>number2</code> 等於 <code>0</code> 時的除零錯誤。</p>
+<h1 id="指標"><a class="header" href="#指標">指標</a></h1>
+<p>Go 語言中有指標（Pointer），你可以在宣告變數時於型態前加上 <code>*</code>，這表示建立一個指標，例如：</p>
+<pre><code class="language-prettyprint">var i *int
+</code></pre>
+<p>這時 <code>i</code> 是個空指標，也就是值為 <code>nil</code>，上頭等同於 <code>var i *int = nil</code>，目前並沒有儲存任何位址，如果想讓它儲存另一個變數的記憶體位址，可以使用 <code>&amp;</code> 取得變數位址並指定給 <code>i</code>，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    var i *int
+    j := 1
+
+    i = &amp;j
+    fmt.Println(i)  // 0x104382e0 之類的值
+    fmt.Println(*i) // 1
+
+    j = 10
+    fmt.Println(*i) // 10
+
+    *i = 20
+    fmt.Println(j) // 20
+}
+</code></pre>
+<p><code>j</code> 的位置儲存了 1，那麼具體來說，<code>j</code> 的位置到底是在哪？這就是 <code>&amp;</code> 取址運算的目的，<code>&amp;j</code> 具體取得了 <code>j</code> 的位置，然後指定給 <code>i</code>。</p>
+<p>如上所示，如果想存取指標位址處的變數儲存的值，可以使用 <code>*</code>，因而，你改變 <code>j</code> 的值，<code>*i</code> 取得的就是改變後的值，透過 <code>*i</code> 改變值，從 <code>j</code> 取得的也會是改變後的值。</p>
+<p>其應用的實例之一是使用 <code>fmt.Scanf</code> 取得標準輸入時，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    var input int
+    fmt.Printf("輸入數字")
+    fmt.Scanf("%d", &amp;input)
+    fmt.Println(input)
+}
+</code></pre>
+<p>這邊使用 <code>&amp;input</code> 取出 <code>input</code> 的記憶體位址值，並傳入 <code>fmt.Scanf</code> 函式，函式中會取得使用者的標準輸入，並儲存至 <code>input</code> 變數的記憶體位址，因而，再度取得 <code>input</code> 的值時，就會是使用者輸入的值。</p>
+<p>Go 雖然有指標，不過不能如同 C/C++ 那樣對指標做運算，之後有機會用到指標時，會再做相關說明。</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Map.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="IfElseSwitch.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Map.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="IfElseSwitch.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

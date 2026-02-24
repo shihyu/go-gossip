@@ -1,0 +1,375 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>list 套件</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="list-套件"><a class="header" href="#list-套件">list 套件</a></h1>
+</div>
+<p>如果想連續地看待一組資料，可以使用 slice，優點是可以透過索引快速存取，透過 <code>append</code> 也可以附加元素，若偶而需要安插、刪除元素，可以透過切片等操作來實現。</p>
+<p>然而，如果經常性地需要安插、刪除元素，透過 slice 實現缺乏效率時，Go 提供了 <code>container/list</code> 套件，可讓開發者基於雙向鏈結的 <code>list.List</code> 實作來達成需求。</p>
+<p>想要建立 <code>list.List</code> 實例，可以透過 <code>list.New</code>，實例可使用的方法有：</p>
+<pre><code class="language-prettyprint">func (l *List) Back() *Element
+func (l *List) Front() *Element
+func (l *List) Init() *List
+func (l *List) InsertAfter(v interface{}, mark *Element) *Element
+func (l *List) InsertBefore(v interface{}, mark *Element) *Element
+func (l *List) Len() int
+func (l *List) MoveAfter(e, mark *Element)
+func (l *List) MoveBefore(e, mark *Element)
+func (l *List) MoveToBack(e *Element)
+func (l *List) MoveToFront(e *Element)
+func (l *List) PushBack(v interface{}) *Element
+func (l *List) PushBackList(other *List)
+func (l *List) PushFront(v interface{}) *Element
+func (l *List) PushFrontList(other *List)
+func (l *List) Remove(e *Element) interface{}
+</code></pre>
+<p>從 <code>PushBack</code>、<code>PushFront</code> 方法的參數型態 <code>interface{}</code> 就能知道，<code>list.List</code> 可以保存任意型態的資料，它們會傳回 <code>*Element</code>，<code>Element</code> 是個結構，公開的欄位有 <code>Value</code>，公開的方法為 <code>Next</code> 與 <code>Prev</code>：</p>
+<pre><code class="language-prettyprint">type Element struct {
+    Value interface{}
+}
+
+func (e *Element) Next() *Element
+
+func (e *Element) Prev() *Element
+</code></pre>
+<p>因此，若你保留傳回的 <code>*Element</code>，可以透過 <code>Value</code> 取得放入 <code>list.List</code> 的值，必要時也可以透過 <code>Next</code> 或 <code>Prev</code> 方法，往後探尋下一元素或往前探尋前一元素，<code>Next</code> 與 <code>Prev</code> 方法傳回的也是 <code>*Element</code>，因此隨時可以往前探尋元素前或後全部的清單。</p>
+<p><code>Back</code>、<code>Front</code> 方法，分別傳回 <code>list.List</code> 最後、最前一個元素，因此，若要從清單頭走訪至尾，基本的模式就是：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "container/list"
+)
+
+func printAll(lt *list.List) {
+    for e := lt.Front(); e != nil; e = e.Next() {
+        fmt.Println(e.Value)
+    }
+}
+
+func main() {
+    lt := list.New()
+    for i := 1; i &lt;= 10; i++ {
+        lt.PushBack(i)
+    }
+
+    printAll(lt)
+}
+</code></pre>
+<p>你可能會有問題，<code>Element</code> 的 <code>Value</code> 型態是 <code>interface{}</code>，那麼想操作保存的元素值上的欄位、方法時，不就要知道型態嗎？就目前來說，Go 不支援泛型，必須透過型態斷言：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "container/list"
+)
+
+type Person struct {
+    Name string
+    Age  int
+}
+
+func printAllPerson(persons *list.List) {
+    for e := persons.Front(); e != nil; e = e.Next() {
+        p := e.Value.(*Person)
+        fmt.Printf("姓名：%s\t年齡：%d\n", p.Name, p.Age)
+    }
+}
+
+func main() {
+    persons := list.New()
+
+    persons.PushBack(&amp;Person{"Irene", 12})
+    persons.PushBack(&amp;Person{"Justin", 45})
+    persons.PushBack(&amp;Person{"Monica", 42})
+
+    printAllPerson(persons)
+}
+</code></pre>
+<p>你可能還會有其他問題，例如 <code>list.List</code> 怎麼不支援索引？要怎麼進行排序等？…唔…<code>list.List</code> 提供的方法怎麼這麼少？</p>
+<p>嚴格來說，不會直接使用 <code>list.List</code> 來保存資料，而是如果某資料結構底層需要雙向鏈結的特性，可以透過 <code>list.List</code> 來實現。例如，實現一個 <code>PersonQueue</code>：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "container/list"
+)
+
+type Person struct {
+    Name string
+    Age  int
+}
+
+type PersonQueue struct {
+    list *list.List
+}
+
+func NewPersonQueue() *PersonQueue {
+    return &amp;PersonQueue{list.New()}
+}
+
+func (q *PersonQueue) Len() int {
+    return q.list.Len()
+}
+
+func (q *PersonQueue) Offer(p *Person) {
+    q.list.PushBack(p)
+}
+
+func (q *PersonQueue) Peek() *Person {
+    if q.list.Len() == 0 {
+        return nil
+    }
+
+    e := q.list.Remove(q.list.Front())
+    return e.(*Person)
+}
+
+func main() {
+    q := NewPersonQueue()
+
+    q.Offer(&amp;Person{"Irene", 12})
+    q.Offer(&amp;Person{"Justin", 45})
+    q.Offer(&amp;Person{"Monica", 42})
+
+    for p := q.Peek(); p != nil; p = q.Peek() {
+        fmt.Printf("姓名：%s\t年齡：%d\n", p.Name, p.Age)
+    }
+}
+</code></pre>
+<p>因此，並不是 <code>list.List</code> 不常用，而是你可能很少自行實現資料結構（都拿別人寫好的來用？）；另一種說法「每當想使用 <code>list.List</code> 時，都該思考一下是否優先使用 slice。」的說法也不是完全正確…</p>
+<p>若想使用 <code>list.List</code>，應該問的是，你的資料結構在實現上需要雙向鏈結的特性嗎？例如，也許你會需要有個具索引的資料結構，同時底層實現必須是雙向鏈結（像是 Java 的 <code>LinkedList</code>）？那麼就可以考慮透過 <code>list.List</code> 來實現。</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Sort.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Heap.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Sort.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Heap.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

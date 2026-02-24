@@ -1,0 +1,350 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>模組入門</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="模組入門"><a class="header" href="#模組入門">模組入門</a></h1>
+</div>
+<p>Go 在 1.11 時內建了實驗性的模組管理功能，並藉由 <code>GO111MODULE</code> 來決定是否啟用，可設定的值是 <code>auto</code>（1.11 ~ 1.13 預設）、<code>on</code> 與 <code>off</code>。</p>
+<p>若使用 Go 1.13，當設定值是 <code>auto</code>，執行建構指令時，會看看是否有個 go.mod 檔案（用來定義依賴的模組），若有就使用 Go 模組功能，如果沒有 go.mod 檔案，就採用舊式 <code>GOPATH</code>、vendor 的特性。</p>
+<p>當設定值為 <code>on</code> 時，就是始終使用 Go 模組功能（從 1.12 之後，go.mod 可以在必要時再新增），模組下載後會自動安裝至 <code>GOPATH</code>。</p>
+<p>go.mod 不可以在 <code>GOPATH</code> 之中。</p>
+<p>設定值為 <code>off</code> 時就是不使用 Go 模組功能。</p>
+<p>例如，現在有個 pkgfoo 釋出了 <a href="https://github.com/JustinSDK/pkgfoo/tree/v1.0.0">v1.0.0</a> 版，而你打算基於它寫個 go-exercise，go-exercise 資料夾中有個 src/main/main.go：</p>
+<pre><code class="language-prettyprint">package main
+
+import "github.com/JustinSDK/pkgfoo"
+
+func main() {
+    kgfoo.Hi()
+    pkgfoo.Hello()
+}
+</code></pre>
+<p>現在進入你的 go-exercise 資料夾底下，執行 <code>go mod init go-exercise</code>，這會建立一個 go.mod，使用 Go 1.13 的話，預設內容是：</p>
+<pre><code class="language-prettyprint">module go-exercise
+
+go 1.13
+</code></pre>
+<p>從 Go 1.12 開始，預設的 go.mod 中會有版本字段，放置了 go.mod 的資料夾稱為模組根（module root）目錄，通常就是一個 repository 的根目錄，該目錄下的全部套件都屬於該模組（除了那些本身包含 go.mod 檔案的子目錄之外）。</p>
+<p>接著執行 <code>go build -o bin/main.exe src/main/main.go</code>，這時會自動找出 <code>import</code> 陳述，執行了套件的下載並完成建構，此時會顯示以下訊息：</p>
+<pre><code class="language-prettyprint">go: finding github.com/JustinSDK/pkgfoo v1.0.0
+go: downloading github.com/JustinSDK/pkgfoo v1.0.0
+go: extracting github.com/JustinSDK/pkgfoo v1.0.0
+</code></pre>
+<p>而 go.mod 也有了底下內容：</p>
+<pre><code class="language-prettyprint">module exercise
+
+go 1.13
+
+require github.com/JustinSDK/pkgfoo v1.0.0
+</code></pre>
+<p>go.mod 定義了相依的套件與版本，若是第一次執行 <code>go build</code>，那麼總是會下載最新版本，你也可以自行編輯 go.mod 的內容，來取得想要的版本，另外你也會發現多了個 go.sum，其中包含了套件的 hash 等訊息，這用來確認取得的是正確的版本：</p>
+<pre><code class="language-prettyprint">github.com/JustinSDK/pkgfoo v1.0.0 h1:XOi67njsT9pcRrsT40Oi3LCA3b1TyIxHd6+9ceGwa0U=
+github.com/JustinSDK/pkgfoo v1.0.0/go.mod h1:5PAHGmqvfj2XbzxxOeiJJjOflE/p6zTVRFfaiEeSn1w=
+</code></pre>
+<p>接著在執行建構出來的可執行檔時會看到：</p>
+<pre><code class="language-prettyprint">Hi
+Helo
+</code></pre>
+<p>喔！Hello 少了一個小寫的 l，這是一個小 bug，在修正之後，發佈了 <a href="https://github.com/JustinSDK/pkgfoo/tree/v1.0.1">v1.0.1</a>：</p>
+<p>現在 appfoo 為了要能取得更新，可以使用 <code>go get -u</code>，這會昇級到最新的 MINOR 或 PATCH 版本，像是從 1.0.0 到 1.0.1，或者是 1.0.0 到 1.1.0，是的，這採用的是 <a href="https://semver.org/">Semantic Versioning</a>；若是使用 <code>go get -u=patch all</code>，會將用到的套件昇級至最新的 PATCH 版本，像是從 1.0.0 到 1.0.1；若是使用 <code>go get package@version</code>，可以指定昇級至某個版本號，例如 <code>go get github.com/JustinSDK/pkgfoo@v1.0.1</code>，然而，不建議以此方式昇級至新的 MAJOR 版本，原因後述。</p>
+<p>在這邊因為只是小 bug 更新，就使用 <code>go get -u=patch all</code>，這會看到底下的訊息：</p>
+<pre><code class="language-prettyprint">go: finding github.com/JustinSDK/pkgfoo v1.0.1
+go: downloading github.com/JustinSDK/pkgfoo v1.0.1
+go: extracting github.com/JustinSDK/pkgfoo v1.0.1
+</code></pre>
+<p>go.mod 的內容也更新了（go.sum 也會更新）：</p>
+<pre><code class="language-prettyprint">module go-exercise
+
+go 1.13
+
+require github.com/JustinSDK/pkgfoo v1.0.1
+</code></pre>
+<p>重新執行 <code>go build</code>，就會顯示正確的訊息了：</p>
+<pre><code class="language-prettyprint">Hi
+Hello
+</code></pre>
+<p>假設現在 pkgfoo 中的訊息都改成中文，並更新為 v2.0.0 了，雖然可以使用 <code>go get github.com/JustinSDK/pkgfoo@v2.0.0</code> 來下載最新版本，然而會出現 +incompatible 字樣：</p>
+<pre><code class="language-prettyprint">go: finding github.com/JustinSDK/pkgfoo v2.0.0
+go: downloading github.com/JustinSDK/pkgfoo v2.0.0+incompatible
+</code></pre>
+<p>雖然可以順利建構，執行時也會是最新版本的結果，然而，若要昇級至最新的 MAJOR 版本，依賴的套件，必須明確地屬於某個模組，因此，pkgfoo 中必須有個 go.mod，並定義版本資訊：</p>
+<pre><code class="language-prettyprint">module github.com/JustinSDK/pkgfoo/v2
+</code></pre>
+<p>go.mod 在加入了 pkgfoo 之後，發佈了 <a href="https://github.com/JustinSDK/pkgfoo/tree/v2.0.0">v2.0.0</a> ，現在 appfoo 打算使用這 v2.0.0，可以在 <code>import</code> 時指定：</p>
+<pre><code class="language-prettyprint">package main
+
+import "github.com/JustinSDK/pkgfoo/v2"
+
+func main() {
+    pkgfoo.Hi()
+    pkgfoo.Hello()
+}
+</code></pre>
+<p>直接 <code>go build -o bin/main.exe src/main/main.go</code>，就會看到下載了 v2.0.0：</p>
+<pre><code class="language-prettyprint">go: finding github.com/JustinSDK/pkgfoo/v2 v2.0.0
+go: downloading github.com/JustinSDK/pkgfoo/v2 v2.0.0
+go: extracting github.com/JustinSDK/pkgfoo/v2 v2.0.0
+</code></pre>
+<p>而且你可以看到 appfoo 的 go.mod 更新為：</p>
+<pre><code class="language-prettyprint">module go-exercise
+
+go 1.13
+
+require (
+    github.com/JustinSDK/pkgfoo v1.0.1
+    github.com/JustinSDK/pkgfoo/v2 v2.0.0
+)
+</code></pre>
+<p>現在它依賴在…兩個版本？是的，事實上，你也可以同時在 appfoo 中使用：</p>
+<pre><code class="language-prettyprint">package main
+
+import "github.com/JustinSDK/pkgfoo/v2"
+import pkgfooV1 "github.com/JustinSDK/pkgfoo"
+
+func main() {
+    pkgfoo.Hi()
+    pkgfoo.Hello()
+    pkgfooV1.Hi()
+    pkgfooV1.Hello()        
+}
+</code></pre>
+<p>不同模組版本的套件，被視為不同的套件，上面的程式執行過時會顯示：</p>
+<pre><code class="language-prettyprint">嗨
+哈囉
+Hi
+Hello
+</code></pre>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Vendor.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="WebAssembly.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Vendor.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="WebAssembly.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

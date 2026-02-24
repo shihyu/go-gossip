@@ -1,0 +1,426 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>匿名函式與閉包</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="匿名函式與閉包"><a class="header" href="#匿名函式與閉包">匿名函式與閉包</a></h1>
+</div>
+<p>除了作為值傳遞之外，Go 的函式還可以是匿名函式，且具有閉包（Closure）的特性，由於 Go 具有指標，在理解閉包時反而容易一些了。</p>
+<h1 id="匿名函式"><a class="header" href="#匿名函式">匿名函式</a></h1>
+<p>在〈<a href="http://openhome.cc/Gossip/Go/FirstClassFunction.html">一級函式</a>〉中，我們看過函式可作為值傳遞的一個應用是，可將函式傳入另一函式作為回呼（Callback），除了傳遞具名的函式之外，有時會想要臨時建立一個函式進行傳遞，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Predicate = func(int) bool
+
+func filter(origin []int, predicate Predicate) []int {
+    filtered := []int{}
+    for _, elem := range origin {
+        if predicate(elem) {
+            filtered = append(filtered, elem)
+        }
+    }
+    return filtered
+}
+
+func main() {
+    data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+    fmt.Println(filter(data, func(elem int) bool {
+        return elem &gt; 5
+    }))
+    fmt.Println(filter(data, func(elem int) bool {
+        return elem &lt;= 6
+    }))
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>這個函式與〈<a href="http://openhome.cc/Gossip/Go/FirstClassFunction.html">一級函式</a>〉中最後一個範例的作用相同，不過這次傳遞了匿名函式給 <code>filter</code>，可以看到，匿名函式可使用 <code>func</code> 建立，同樣必須指定參數與傳回值型態。</p>
+<p>在 Go 中，不允許在函式中又宣告函式，例如，以下是不允許的：</p>
+<pre><code class="language-prettyprint">func funcA() {
+    func funcB() {
+        ...
+    }
+    ...
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>這會出現 “nested func not allowed” 的錯誤，然而，你可以建立匿名函式，然後將之指定給某個變數：</p>
+<pre><code class="language-prettyprint">func funcA() {
+    funcB := func() {
+       ...
+    }
+    ...
+}
+</code></pre>
+<p>你也可以在函式中建立匿名函式，並將之傳回：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Func1 = func(int) int
+
+func funcA() Func1 {
+    x := 10
+    return func(n int) int {
+        return x + n
+    }
+}
+
+func main() {
+    fmt.Println(funcA()(2)) // 12
+}
+</code></pre>
+<p>在上面的範例中，執行 <code>funcA</code> 會傳回一個函式，這個傳回的函式會將接受的引數指定給參數 <code>n</code>，並與 <code>x</code> 的值進行相加，因此最後顯示結果為 12。</p>
+<h1 id="閉包"><a class="header" href="#閉包">閉包</a></h1>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>可以在函式中建立匿名函式，引發了一個有趣的事實，先來看個例子：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Consumer = func(int)
+
+func forEach(elems []int, consumer Consumer) {
+    for _, elem := range elems {
+        consumer(elem)
+    }
+}
+
+func main() {
+    numbers := []int{1, 2, 3, 4, 5}
+    sum := 0
+    forEach(numbers, func(elem int) {
+        sum += elem
+    })
+    fmt.Println(sum) // 15
+}
+</code></pre>
+<p>乍看之下，似乎有點像是：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Consumer = func(int)
+
+func forEach(elems []int, consumer Consumer) {
+    for _, elem := range elems {
+        consumer(elem)
+    }
+}
+
+func main() {
+    numbers := []int{1, 2, 3, 4, 5}
+    sum := 0
+    for _, elem := range numbers {
+        sum += elem
+    }
+    fmt.Println(sum) // 15
+}
+</code></pre>
+<p>然而意義完全不同。在使用 <code>forEach</code> 函式的範例中，<code>sum</code> 變數被匿名函式包覆並傳入 <code>forEach</code> 之中，在 <code>forEach</code> 執行迴圈的過程中，每次呼叫傳入的函式（被 <code>consumer</code> 參考），就會改變 <code>sum</code> 的值，因此，最後得到的是加總後的值 15。</p>
+<p>實際上，使用 <code>forEach</code> 函式的範例中，建立了一個閉包，閉包本質上就是一個匿名函式，<code>sum</code> 變數被閉包包覆，讓 <code>sum</code> 變數可以存活於閉包的範疇中，其實，更之前從 <code>funcA</code> 傳回函式的範例中，也建立了閉包，<code>funcA</code> 的 <code>x</code> 區域變數被閉包包覆，因此，你執行傳回的函式時，即使 <code>funcA</code> 已執行完畢，<code>x</code> 變數依然是存活著在傳回的閉包範疇中，所以，你指定的引數總是會與 <code>x</code> 的值進行相加。</p>
+<p>重點在於，閉包將<strong>變數本身</strong>關閉在自己的範疇中，而不是變數的值，可以用以下這個範例來做個示範：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Getter = func() int
+type Setter = func(int)
+
+func x_getter_setter(x int) (Getter, Setter) {
+    getter := func() int {
+        return x
+    }
+    setter := func(n int) {
+        x = n
+    }
+    return getter, setter
+}
+
+func main() {
+    getX, setX := x_getter_setter(10)
+
+    fmt.Println(getX()) // 10
+    setX(20)
+    fmt.Println(getX()) // 20
+}
+</code></pre>
+<p>對 <code>x_getter_setter</code> 來說，<code>x</code> 參數也是變數，<code>x_getter_setter</code> 傳回了兩個匿名函式，這兩個匿名函式都形成了閉包，將 <code>x</code> 變數關閉在自己的範疇中，因此，你使用了 <code>setX(20)</code> 改變了 <code>x</code> 的值，使用 <code>getX()</code> 時取得的值，就會是修改後的值。</p>
+<h1 id="閉包與指標"><a class="header" href="#閉包與指標">閉包與指標</a></h1>
+<p>如果你寫過 JavaScript，對於方才的範例，應該不會陌生，也因為 JavaScript 的普及，現在開發者多半對閉包不會覺得神秘難解了，而對於「閉包將變數本身關閉在自己的範疇中，而不是變數的值」，也比較瞭解其應用所在。</p>
+<p>由於 Go 語言有指標，我們可以將指標的值顯示出來，這代表著變數的位址值，來看看被閉包關閉的變數，到底是怎麼一回事好了：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Getter = func() int
+type Setter = func(int)
+
+func x_getter_setter(x int) (Getter, Setter) {
+    fmt.Printf("the parameter :\tx (%p) = %d\n", &amp;x, x)
+
+    getter := func() int {
+        fmt.Printf("getter invoked:\tx (%p) = %d\n", &amp;x, x)
+        return x
+    }
+    setter := func(n int) {
+        x = n
+        fmt.Printf("setter invoked:\tx (%p) = %d\n", &amp;x, x)
+    }
+    return getter, setter
+}
+
+func main() {
+    getX, setX := x_getter_setter(10)
+
+    fmt.Println(getX())
+    setX(20)
+    fmt.Println(getX())
+}
+</code></pre>
+<p>這個範例與前一個範例類似，只不過呼叫函式時，都會顯示 <code>x</code> 變數的位址值與儲存值，一個執行結果是：</p>
+<pre><code class="language-prettyprint">the parameter : x (0x104382e0) = 10
+getter invoked: x (0x104382e0) = 10
+10
+setter invoked: x (0x104382e0) = 20
+getter invoked: x (0x104382e0) = 20
+20
+</code></pre>
+<p>看到了嗎？顯示的變數的位址值都是相同的，閉包將<strong>變數本身</strong>關閉在自己的範疇中，而不是變數的值，就是這麼一回事。</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="FirstClassFunction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="DeferPanicRecover.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="FirstClassFunction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="DeferPanicRecover.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

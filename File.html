@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>檔案操作</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="檔案操作"><a class="header" href="#檔案操作">檔案操作</a></h1>
+</div>
+<p>想要進行目錄、檔案等的操作，基本上就是查看 <code>os</code> 套件，可以使用的函式很多，逐一談好像也沒太大意義，基本上若對目錄、檔案以及權限等有所認識，應該查查文件、搜尋一些範例，大致就知道怎麼用吧！</p>
+<p>無論如何，輸入輸出中最基本的就是檔案讀寫，至今為止看過，要開啟檔案進行讀取的話，使用的是 <code>os.Open</code> 函式，這會以唯讀方式開啟既有的檔案（否則會有 <code>PathError</code>）：</p>
+<pre><code class="language-prettyprint">func Open(name string) (*File, error)
+</code></pre>
+<p>如果要指定讀寫方式與權限的話，要使用 <code>os.OpenFile</code>：</p>
+<pre><code class="language-prettyprint">func OpenFile(name string, flag int, perm FileMode) (*File, error)
+</code></pre>
+<p><code>flag</code> 可以指定的常數有：</p>
+<pre><code class="language-prettyprint">const (
+    // 必須指定 O_RDONLY、O_WRONLY 或 O_RDWR
+    O_RDONLY int = syscall.O_RDONLY // 唯讀
+    O_WRONLY int = syscall.O_WRONLY // 唯寫
+    O_RDWR   int = syscall.O_RDWR   // 讀寫
+    // 接下來這些可以用 | 的方式附加行為
+    O_APPEND int = syscall.O_APPEND // 寫入時使用附加方式
+    O_CREATE int = syscall.O_CREAT  // 檔案不存在時建立新檔
+    O_EXCL   int = syscall.O_EXCL   // 與 O_CREATE 併用，檔案必須不存在
+    O_SYNC   int = syscall.O_SYNC   // 以同步 I/O 開啟
+    O_TRUNC  int = syscall.O_TRUNC  // 檔案開啟時清空文件
+)
+</code></pre>
+<p><code>perm</code> 的話是檔案<a href="https://en.wikipedia.org/wiki/Chmod#Octal_modes">八進位權限</a>，例如 0777；另外，還有個 <code>os.Create</code>，實現上就是使用 <code>OpenFile</code> 以 0666 的方式建立可讀寫的檔案（清空文件）：</p>
+<pre><code class="language-prettyprint">func Create(name string) (*File, error) {
+    return OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, 0666)
+}
+</code></pre>
+<p><code>Open</code>、<code>OpenFile</code> 或 <code>Create</code> 都會傳回 <code>*os.File</code>；另外還有個 <code>NewFile</code>，多數情況下用不到，主要是在將檔案描述（File descriptor）以 <code>*os.File</code> 來表示，例如，<code>os.Stdin</code>、<code>os.Stdout</code>、<code>os.Stderr</code>，在〈<a href="StdOutInErr.html">從標準輸入、輸出認識 io</a>〉看過它的使用：</p>
+<pre><code class="language-prettyprint">var (
+    Stdin  = NewFile(uintptr(syscall.Stdin), "/dev/stdin")
+    Stdout = NewFile(uintptr(syscall.Stdout), "/dev/stdout")
+    Stderr = NewFile(uintptr(syscall.Stderr), "/dev/stderr")
+)
+</code></pre>
+<p><code>syscall.Stdin</code>、<code>syscall.Stdout</code>、<code>syscall.Stderr</code> 分別是標準輸入、輸出、錯誤的檔案描述，這在 <a href="https://golang.org/pkg/syscall/#pkg-variables"><code>syscall</code> 的文件</a>可以看到：</p>
+<pre><code class="language-prettyprint">var (
+    Stdin  = 0
+    Stdout = 1
+    Stderr = 2
+)
+</code></pre>
+<p><code>os.File</code> 實作了 <code>io.Reader</code>、<code>io.Writer</code> 等行為，因此只要知道〈<a href="ReaderWriter.html">io.Reader、io.Writer</a>〉，剩下的就是查詢文件，看看有哪些方法可以使用，沒什麼特別需要示範的了，倒是若需要簡單的檔案讀寫，可以看看 <a href="https://golang.org/pkg/io/ioutil/"><code>ioutil</code> 套件</a>，其中有些簡便的函式：</p>
+<pre><code class="language-prettyprint">func NopCloser(r io.Reader) io.ReadCloser
+func ReadAll(r io.Reader) ([]byte, error)
+func ReadDir(dirname string) ([]os.FileInfo, error)
+func ReadFile(filename string) ([]byte, error)
+func TempDir(dir, prefix string) (name string, err error)
+func TempFile(dir, pattern string) (f *os.File, err error)
+func WriteFile(filename string, data []byte, perm os.FileMode) error
+</code></pre>
+<p><code>ReadFile</code>、<code>WriteFile</code> 只要指定檔案名稱等，程式碼上不需要自行建立檔案、緩衝區之類的，這些函式在 <a href="https://golang.org/pkg/io/ioutil/"><code>ioutil</code> 套件</a> 的文件中，都有範例可以參考。</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="bufio.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ErrNil.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="bufio.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ErrNil.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

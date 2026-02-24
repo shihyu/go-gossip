@@ -1,0 +1,504 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Channel</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="channel"><a class="header" href="#channel">Channel</a></h1>
+</div>
+<p>在〈<a href="http://openhome.cc/Gossip/Go/Goroutine.html">Goroutine</a>〉中提到，想要通知主流程 Goroutine 已經結束，使用 Channel 是一種方式，實際上，Channel 是 Groutine 間的溝通管道。</p>
+<h1 id="使用-channel"><a class="header" href="#使用-channel">使用 Channel</a></h1>
+<p>Channel 就像是個佇列，可以對它發送值，也可以從它上頭取得值，想要建立一個 Channel，要在型態之前加上個 <code>chan</code>，每個 <code>chan</code> 都要宣告可容納的型態。</p>
+<p>舉例來說，使用 Channel 來修改之前的龜兔賽跑程式：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+func random(min, max int) int {
+    rand.Seed(time.Now().Unix())
+    return rand.Intn(max-min) + min
+}
+
+func tortoise(totalStep int, goal chan string) {
+    for step := 1; step &lt;= totalStep; step++ {
+        fmt.Printf("烏龜跑了 %d 步...\n", step)
+    }
+    goal &lt;- "烏龜"
+}
+
+func hare(totalStep int, goal chan string) {
+    flags := [...]bool{true, false}
+    step := 0
+    for step &lt; totalStep {
+        isHareSleep := flags[random(1, 10)%2]
+        if isHareSleep {
+            fmt.Println("兔子睡著了zzzz")
+        } else {
+            step += 2
+            fmt.Printf("兔子跑了 %d 步...\n", step)
+        }
+    }
+    goal &lt;- "兔子"
+}
+
+func main() {
+    goal := make(chan string)
+
+    totalStep := 10
+
+    go tortoise(totalStep, goal)
+    go hare(totalStep, goal)
+
+    fmt.Printf("%s 抵達終點\n", &lt;-goal)
+    fmt.Printf("%s 抵達終點\n", &lt;-goal)
+}
+</code></pre>
+<p>在這個範例中，使用 <code>make</code> 建立了一個 Channel，當烏龜或兔子抵達終點時，使用 <code>goal &lt;-</code> 發送一個字串至 Channel 中，而在主流程中，使用 <code>&lt;- goal</code> 從 Channel 取得字串，若 Channel 中無法取得資料，這時會發生阻斷，直到可從 Channel 中取得字串為止。實際上，使用 <code>goal &lt;-</code> 發送資料至 Channel 時，若 Channel 中已有資料，也會發生阻斷，直到該資料被取走為止。</p>
+<h1 id="buffered-channel"><a class="header" href="#buffered-channel">Buffered Channel</a></h1>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>上頭的範例建立 Channel 時並沒有指定 Channel 中可以容納多少資料，Channel 中預設只能容納一個資料，你可以在建立 Channel 時指定當中可以容納的資料數量。例如，建立一個生產者、消費者的程式：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func producer(clerk chan int) {
+    fmt.Println("生產者開始生產整數......")
+    for product := 1; product &lt;= 10; product++ {
+        clerk &lt;- product
+        fmt.Printf("生產了 (%d)\n", product)
+    }
+}
+
+func consumer(clerk chan int) {
+    fmt.Println("消費者開始消耗整數......")
+    for i := 1; i &lt;= 10; i++ {
+        fmt.Printf("消費了 (%d)\n", &lt;-clerk)
+    }
+}
+
+func main() {
+    clerk := make(chan int, 2)
+
+    go producer(clerk)
+    consumer(clerk)
+}                                                                                                       
+</code></pre>
+<div class="google-auto-placed ap_container" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>在這個程式中，建立的 Channel 的容量為 2，因此在 Channel 的容量未滿前，發送數據至 Channel 並不會發生阻斷。</p>
+<h1 id="close-與-range"><a class="header" href="#close-與-range">close 與 range</a></h1>
+<p>在這篇文件的第一個範例中，由於預期只會從 Channel 中收到兩個字串，因此主流程中使用了兩次 <code>&lt;- goal</code>，然而有時，我們無法事先知道，能從 Channel 得到幾筆資料。</p>
+<p>舉例來說，你也許想寫個猜數字遊戲，在隨機猜測數字的情況下，你無法事先知道要猜幾次才會猜中，而你想將先前猜測的數字透過 Channel 傳送：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+func random(min, max int) int {
+    rand.Seed(time.Now().Unix())
+    return rand.Intn(max-min) + min
+}
+
+func guess(n int, ch chan int) {
+    for {
+        number := random(1, 10)
+        ch &lt;- number
+        if number == n {
+            close(ch)
+        }
+        time.Sleep(time.Second)
+    }
+}
+
+func main() {
+    ch := make(chan int)
+
+    go guess(5, ch)
+
+    for i := range ch {
+        fmt.Println(i)
+    }
+
+    fmt.Println("I hit 5....Orz")
+}
+</code></pre>
+<div class="google-auto-placed ap_container" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>在這個範例中，每次猜測的數字，都會使用 <code>ch &lt;- number</code> 傳至 Channel 中，而最後猜中數字時，使用 <code>close()</code> 關閉 Channel，Go 的 <code>range</code> 可以搭配 Channel 使用，在 Channel 尚未關閉前，搭配 <code>for</code> 就可以持續從 Channel 中取出資料。</p>
+<h1 id="select"><a class="header" href="#select">select</a></h1>
+<p>如果有多個 Channel 需要協調，可以使用 <code>select</code>，直接來看個多個生產者與一個消費者的例子：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func producer(clerk chan int) {
+    fmt.Println("生產者開始生產整數......")
+    for product := 1; product &lt;= 10; product++ {
+        clerk &lt;- product
+        fmt.Printf("生產了 (%d)\n", product)
+    }
+}
+
+func consumer(clerk1 chan int, clerk2 chan int) {
+    fmt.Println("消費者開始消耗整數......")
+    for i := 1; i &lt;= 20; i++ {
+        select {
+        case p1 := &lt;-clerk1:
+            fmt.Printf("消費了生產者一的 (%d)\n", p1)
+        case p2 := &lt;-clerk2:
+            fmt.Printf("消費了生產者二的 (%d)\n", p2)
+        }
+
+    }
+}
+
+func main() {
+    clerk1 := make(chan int)
+    clerk2 := make(chan int)
+
+    go producer(clerk1)
+    go producer(clerk2)
+
+    consumer(clerk1, clerk2)
+}
+</code></pre>
+<p>在 <code>select</code> 的 <code>case</code> 中，會監看哪個 Channel 可以取得資料（或發送資料至 Channel），如果都有資料的話，就會隨機選取，如果都無法取得資料（或發送資料至 Channel）就會發生 panic，這可以設置 <code>default</code> 來解決，也就是監看的 Channel 中都沒有資料的話就會執行，或者利用 <code>select</code> 來做些超時設定。例如：</p>
+<div class="google-auto-placed ap_container" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+func random(min, max int) int {
+    rand.Seed(time.Now().Unix())
+    return rand.Intn(max-min) + min
+}
+
+func producer(clerk chan int) {
+    fmt.Println("生產者開始生產整數......")
+    for product := 1; product &lt;= 10; product++ {
+        time.After(time.Duration(random(1, 5)) * time.Second)
+        clerk &lt;- product
+        fmt.Printf("生產了 (%d)\n", product)
+    }
+}
+
+func consumer(clerk1 chan int, clerk2 chan int) {
+    fmt.Println("消費者開始消耗整數......")
+    for i := 1; i &lt;= 20; i++ {
+        select {
+        case p1 := &lt;-clerk1:
+            fmt.Printf("消費了生產者一的 (%d)\n", p1)
+        case p2 := &lt;-clerk2:
+            fmt.Printf("消費了生產者二的 (%d)\n", p2)
+        case &lt;-time.After(3 * time.Second):
+            fmt.Printf("消費者抱怨中…XD")
+        }
+
+    }
+}
+
+func main() {
+    clerk1 := make(chan int)
+    clerk2 := make(chan int)
+
+    go producer(clerk1)
+    go producer(clerk2)
+
+    consumer(clerk1, clerk2)
+}
+</code></pre>
+<p>如果過了 3 秒鐘，另兩個 Channel 都還是阻斷，<code>case &lt;- time.After(3 * time.Second)</code> 該行就會成立，因此就可以看到消費者的抱怨了…XD</p>
+<p>在 <code>select</code> 中若有相同的 Channel，會隨機選取。例如底下會顯示哪個結果是不一定的：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    ch := make(chan int, 1)
+
+    ch &lt;- 1
+    select {
+    case &lt;-ch:
+        fmt.Println("隨機任務 1")
+    case &lt;-ch:
+        fmt.Println("隨機任務 2")
+    case &lt;-ch:
+        fmt.Println("隨機任務 3")        
+    }
+}
+</code></pre>
+<h1 id="單向-channel"><a class="header" href="#單向-channel">單向 Channel</a></h1>
+<p>可以將 Channel 轉為只可發送或只可取值的 Channel，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func producer(clerk chan&lt;- int) {
+    fmt.Println("生產者開始生產整數......")
+    for product := 1; product &lt;= 10; product++ {
+        clerk &lt;- product
+        fmt.Printf("生產了 (%d)\n", product)
+    }
+}
+
+func consumer(clerk &lt;-chan int) {
+    fmt.Println("消費者開始消耗整數......")
+    for i := 1; i &lt;= 10; i++ {
+        fmt.Printf("消費了 (%d)\n", &lt;-clerk)
+    }
+}
+
+func main() {
+    clerk := make(chan int, 2)
+
+    go producer(clerk)
+    consumer(clerk)
+}   
+</code></pre>
+<p><code>clerk chan&lt;- int</code> 是只能發送的 Channel，而 <code>clerk &lt;-chan int</code> 是只能接收的 Channel，從一個只能發送的 Channel 接收資料，或者是對一個只能接收的 Channel 發送資料，都會引發 invalid operation 的錯誤。</p>
+<p>透過 Channel 來作為 Goroutine 間的溝通機制，是 Go 中比較建議的方式，如果你真的不想要透過 Channel，而想要直接共用某些資料結構，就必須注意有無 Race condition的問題，若必要，可透過鎖定資源的方式來避免相關問題，有關鎖定的方式，可以參考 <a href="https://tour.golang.org/concurrency/9">sync.Mutex</a> 的使用。</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Goroutine.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Vendor.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Goroutine.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Vendor.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

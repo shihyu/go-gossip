@@ -1,0 +1,551 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>反射入門</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="反射入門"><a class="header" href="#反射入門">反射入門</a></h1>
+</div>
+<p>反射（Reflection）是探知資料自身結構的一種能力，不同的語言提供不同的反射機制，在 Go 語言中，反射的能力主要由 <code>reflect</code> 套件提供。</p>
+<h1 id="資料的-type"><a class="header" href="#資料的-type">資料的 Type</a></h1>
+<p>在先前的文件中，有時會用到 <code>reflect.TypeOf()</code> 來顯示資料的型態名稱，實際上，<code>reflect.TypeOf()</code> 傳回 <code>Type</code> 的實例，<code>Type</code> 是個介面定義，目前包含了以下的方法定義：</p>
+<pre><code class="language-prettyprint">type Type interface {
+    Align() int
+    FieldAlign() int
+    Method(int) Method
+    MethodByName(string) (Method, bool)
+    NumMethod() int
+    Name() string
+    PkgPath() string
+    Size() uintptr
+    String() string
+    Kind() Kind
+    Implements(u Type) bool
+    AssignableTo(u Type) bool
+    ConvertibleTo(u Type) bool
+    Comparable() bool
+    Bits() int
+    ChanDir() ChanDir
+    IsVariadic() bool
+    Elem() Type
+    Field(i int) StructField
+    FieldByIndex(index []int) StructField
+    FieldByName(name string) (StructField, bool)
+    FieldByNameFunc(match func(string) bool) (StructField, bool)
+    In(i int) Type
+    Key() Type
+    Len() int
+    NumField() int
+    NumIn() int
+    NumOut() int
+    Out(i int) Type
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>因此，你可以透過 <code>Type</code> 的方法定義，取得某個型態的相關結構資訊，舉例來說：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "reflect"
+)
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func main() {
+    account := Account{"X123", "Justin Lin", 1000}
+    t := reflect.TypeOf(account)
+    fmt.Println(t.Kind())   // struct
+    fmt.Println(t.String()) // main.Account
+    /*
+       底下顯示
+       id string
+       name string
+       balance float64
+    */
+    for i, n := 0, t.NumField(); i &lt; n; i++ {
+        f := t.Field(i)
+        fmt.Println(f.Name, f.Type)
+    }
+}
+</code></pre>
+<p>如果 <code>reflect.TypeOf()</code> 接受的是個指標，因為指標實際上只是個位址值，必須要透過 <code>Type</code> 的 <code>Elem</code> 方法取得指標的目標 <code>Type</code>，才能取得型態的相關成員：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "errors"
+    "fmt"
+    "reflect"
+)
+
+type Savings interface {
+    Deposit(amount float64) error
+    Withdraw(amount float64) error
+}
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func (ac *Account) Deposit(amount float64) error {
+    if amount &lt;= 0 {
+        return errors.New("必須存入正數")
+    }
+    ac.balance += amount
+    return nil
+}
+
+func (ac *Account) Withdraw(amount float64) error {
+    if amount &gt; ac.balance {
+        return errors.New("餘額不足")
+    }
+    ac.balance -= amount
+    return nil
+}
+
+func main() {
+    var savings Savings = &amp;Account{"X123", "Justin Lin", 1000}
+    t := reflect.TypeOf(savings)
+
+    for i, n := 0, t.NumMethod(); i &lt; n; i++ {
+        f := t.Method(i)
+        fmt.Println(f.Name, f.Type)
+    }
+
+    if t.Kind() == reflect.Ptr {
+        t = t.Elem()
+    }
+
+    fmt.Println(t.Kind())
+    fmt.Println(t.String())
+    for i, n := 0, t.NumField(); i &lt; n; i++ {
+        f := t.Field(i)
+        fmt.Println(f.Name, f.Type)
+    }
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>有上面的範例中，也示範了如何取得介面定義的方法資訊，這個範例會顯示以下的結果：</p>
+<pre><code class="language-prettyprint">Deposit func(*main.Account, float64) error
+Withdraw func(*main.Account, float64) error
+struct
+main.Account
+id string
+name string
+</code></pre>
+<h1 id="資料的-kind"><a class="header" href="#資料的-kind">資料的 Kind</a></h1>
+<p>上面的範例中，使用了 <code>Type</code> 的 <code>Kind()</code> 方法，這會傳回 <code>Kind</code> 列舉值：</p>
+<pre><code class="language-prettyprint">type Kind uint
+
+const (
+    Invalid Kind = iota
+    Bool
+    Int
+    Int8
+    Int16
+    Int32
+    Int64
+    Uint
+    Uint8
+    Uint16
+    Uint32
+    Uint64
+    Uintptr
+    Float32
+    Float64
+    Complex64
+    Complex128
+    Array
+    Chan
+    Func
+    Interface
+    Map
+    Ptr
+    Slice
+    String
+    Struct
+    UnsafePointer
+)
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>以下是個簡單的型態測試：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "reflect"
+)
+
+type Duck struct {
+    name string
+}
+
+func main() {
+    values := [...](interface{}){
+        Duck{"Justin"},
+        Duck{"Monica"},
+        [...]int{1, 2, 3, 4, 5},
+        map[string]int{"caterpillar": 123456, "monica": 54321},
+        10,
+    }
+
+    for _, value := range values {
+        switch t := reflect.TypeOf(value); t.Kind() {
+        case reflect.Struct:
+            fmt.Println("it's a struct.")
+        case reflect.Array:
+            fmt.Println("it's a array.")
+        case reflect.Map:
+            fmt.Println("it's a map.")
+        case reflect.Int:
+            fmt.Println("it's a integer.")
+        default:
+            fmt.Println("非預期之型態")
+        }
+    }
+}
+</code></pre>
+<h1 id="資料的-value"><a class="header" href="#資料的-value">資料的 Value</a></h1>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>如果想實際獲得資料的值，可以使用 <code>reflect.ValueOf()</code> 函式，這會傳回 <code>Value</code> 實例，<code>Value</code> 是個結構，定義了一些方法可以使用，可用來取得實際的值，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "reflect"
+)
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func main() {
+    x := 10
+    vx := reflect.ValueOf(x)
+    fmt.Printf("x = %d\n", vx.Int())
+
+    account := Account{"X123", "Justin Lin", 1000}
+    vacct := reflect.ValueOf(account)
+    fmt.Printf("id = %s\n", vacct.FieldByName("id").String())
+    fmt.Printf("name = %s\n", vacct.FieldByName("name").String())
+    fmt.Printf("balance = %.2f\n", vacct.FieldByName("balance").Float())
+}
+</code></pre>
+<p>如果是個指標，一樣也是要透過 <code>Elem()</code> 方法取得目標值，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "reflect"
+)
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func main() {
+    x := 10
+    vx := reflect.ValueOf(&amp;x)
+    fmt.Printf("x = %d\n", vx.Elem().Int())
+
+    account := &amp;Account{"X123", "Justin Lin", 1000}
+    vacct := reflect.ValueOf(account).Elem()
+    fmt.Printf("id = %s\n", vacct.FieldByName("id").String())
+    fmt.Printf("name = %s\n", vacct.FieldByName("name").String())
+    fmt.Printf("balance = %.2f\n", vacct.FieldByName("balance").Float())
+}
+</code></pre>
+<p>可以透過 <code>Value</code> 對值進行變動，不過，<code>Value</code> 必須是可定址的，具體來說，就是 <code>reflect.ValueOf()</code> 必須接受指標：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "reflect"
+)
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func main() {
+    x := 10
+    vx := reflect.ValueOf(&amp;x).Elem()
+    fmt.Printf("x = %d\n", vx.Int()) // x = 10
+
+    vx.SetInt(20)
+    fmt.Printf("x = %d\n", x) // x = 20
+}
+</code></pre>
+<p>上面的例子若改成以下，就會出現錯誤：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "reflect"
+)
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func main() {
+    x := 10
+    vx := reflect.ValueOf(x)
+    fmt.Printf("x = %d\n", vx.Int())
+
+    vx.SetInt(20) // panic: reflect: reflect.Value.SetInt using unaddressable value
+    fmt.Printf("x = %d\n", x)
+}
+</code></pre>
+<p>技術上來說，上面的例子，只是傳了 <code>x</code> 的值複本給 <code>reflect.ValueOf()</code>，因此，對其設值並無意義。</p>
+<p>若對反射想進一步研究，可以參考〈<a href="http://blog.golang.org/laws-of-reflection">The Laws of Reflection</a>〉。</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="XText.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="FieldTag.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="XText.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="FieldTag.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,444 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>sort 套件</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="sort-套件"><a class="header" href="#sort-套件">sort 套件</a></h1>
+</div>
+<p>Go 提供了 <code>sort</code> 套件來協助排序、搜尋任務，對於 <code>[]int</code>、<code>[]float64</code> 與 <code>[]string</code>，可以透過 <code>Ints</code>、<code>Float64s</code>、<code>Strings</code> 來由小而大排序，可以使用 <code>IntsAreSorted</code>、<code>Float64sAreSorted</code>、<code>StringsAreSorted</code> 來看看是否已經排序。</p>
+<p>若想在已由小而大排序的 <code>[]int</code>、<code>[]float64</code> 與 <code>[]string</code> 中進行搜尋，可以使用 <code>SearchInts</code>、<code>SearchFloat64s</code>、<code>SearchStrings</code> 函式，搜尋結果將傳回找到搜尋值的索引位置，<strong>沒有搜尋到的話，傳回的會是可以安插搜尋值的索引位置</strong>。例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "sort"
+)
+
+func main() {
+    s := []int{8, 2, 6, 3, 1, 4} 
+    sort.Ints(s)
+    fmt.Println(sort.IntsAreSorted(s)) // true
+    fmt.Println(s)                     // [1 2 3 4 6 8]
+    fmt.Println(sort.SearchInts(s, 7)) // 5
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>如果想要由大而小排序呢？可以透過 <code>Slice</code>、<code>SliceStable</code>，指定一個 <code>less</code> 函式，該函式接受兩個索引，你要傳回布林值表示 <code>i</code> 處的值順序上是否小於 <code>j</code>：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "sort"
+)
+
+func main() {
+    s := []int{8, 2, 6, 3, 1, 4} 
+    sort.Slice(s, func(i, j int) bool {
+        return s[i] &gt; s[j]
+    })
+    fmt.Println(s)  // [8 6 4 3 2 1]
+}
+</code></pre>
+<p>實際上，<code>Slice</code>、<code>SliceStable</code> 可用於任意的結構，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "sort"
+)
+
+func main() {
+    family := []struct {
+        Name string
+        Age  int
+    } {{"Irene", 12}, {"Justin", 45}, {"Monica", 42}}
+
+    // 依年齡由小而大排序
+    sort.SliceStable(family, func(i, j int) bool {
+        return family[i].Age &lt; family[j].Age
+    })
+
+    fmt.Println(family) // [{Irene 12} {Monica 42} {Justin 45}]
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>那麼怎麼搜尋上面的 <code>family</code> 呢？例如，找出年齡 45 歲的資料？這可以用 <code>Search</code>，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "sort"
+)
+
+func main() {
+    family := []struct {
+        Name string
+        Age  int
+    } {{"Irene", 12}, {"Justin", 45}, {"Monica", 42}}
+
+    // 依年齡由小而大排序
+    sort.SliceStable(family, func(i, j int) bool {
+        return family[i].Age &lt; family[j].Age
+    })
+
+    fmt.Println(family) // [{Irene 12} {Monica 42} {Justin 45}]
+
+    idx := sort.Search(len(family), func (i int) bool {
+        return family[i].Age == 45
+    })
+    fmt.Println(idx)
+}
+</code></pre>
+<p><code>Search</code> 會使用二分搜尋，第二個參數指定的函式要傳回布林值，表示是否符合搜尋條件，若找到第一個符合的話傳回索引位置，否則傳回第一個參數指定的值。</p>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>在 <a href="https://golang.org/pkg/sort/#Search">Search</a> 說明中，還有個猜數字的有趣範例，由程式猜出你心中想的數字：</p>
+<pre><code class="language-prettyprint">func GuessingGame() {
+    var s string
+    fmt.Printf("Pick an integer from 0 to 100.\n")
+    answer := sort.Search(100, func(i int) bool {
+        fmt.Printf("Is your number &lt;= %d? ", i)
+        fmt.Scanf("%s", &amp;s)
+        return s != "" &amp;&amp; s[0] == 'y'
+    })
+    fmt.Printf("Your number is %d.\n", answer)
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p><code>sort</code> 還提供了 <code>Sort</code>、<code>Stable</code> 函式，乍看很奇怪：</p>
+<pre><code class="language-prettyprint">func Sort(data Interface)
+func Stable(data Interface)
+</code></pre>
+<p><code>Interface</code> 的定義是：</p>
+<pre><code class="language-prettyprint">type Interface interface {
+    Len() int
+    Less(i, j int) bool
+    Swap(i, j int)
+}
+</code></pre>
+<p>這是給有序、具索引的資料結構實現的行為，任何具有 <code>Interface</code> 行為的資料結構，都可以透過 <code>Sort</code>、<code>Stable</code> 函式排序，<code>sort</code> 套件提供的實作有 <code>IntSlice</code>、<code>Float64Slice</code>、<code>StringSlice</code>，以 <code>IntSlice</code> 的原始碼實現為例：</p>
+<pre><code class="language-prettyprint">type IntSlice []int
+
+func (p IntSlice) Len() int           { return len(p) }
+func (p IntSlice) Less(i, j int) bool { return p[i] &lt; p[j] }
+func (p IntSlice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+</code></pre>
+<p>因此，若要對整數排序，也可以如下：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "sort"
+)
+
+func main() {
+    s := sort.IntSlice([]int{8, 2, 6, 3, 1, 4})
+    sort.Sort(s)
+    fmt.Println(s)                     // [1 2 3 4 6 8]
+}
+</code></pre>
+<p>實際上，<code>Ints</code>、<code>Float64s</code>、<code>Strings</code> 函式，內部也只是轉換為 <code>IntSlice</code>、<code>Float64Slice</code>、<code>StringSlice</code>，然後呼叫 <code>Sort</code> 罷了：</p>
+<pre><code class="language-prettyprint">func Ints(a []int) { Sort(IntSlice(a)) }
+func Float64s(a []float64) { Sort(Float64Slice(a)) }
+func Strings(a []string) { Sort(StringSlice(a)) }
+</code></pre>
+<p>對於一個實現了 <code>Interface</code> 的資料結構，除了可以使用 <code>Sort</code>、<code>Stable</code> 函式外，若需要反向排序，可以有個簡單方式，透過 <code>Reverse</code> 來包裹。例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "sort"
+)
+
+func main() {
+    s := sort.IntSlice([]int{8, 2, 6, 3, 1, 4})
+    sort.Sort(sort.Reverse(s))
+    fmt.Println(s)                     // [8 6 4 3 2 1]
+}
+</code></pre>
+<p>有趣的是 <code>Reverse</code> 的實作，它不過就是將給原本資料結構 <code>Less</code> 方法的 <code>i</code>、<code>j</code> 對調罷了：</p>
+<pre><code class="language-prettyprint">type reverse struct {
+    Interface
+}
+
+func (r reverse) Less(i, j int) bool {
+    return r.Interface.Less(j, i)
+}
+
+func Reverse(data Interface) Interface {
+    return &amp;reverse{data}
+} 
+</code></pre>
+<p>來自己實現一下 <code>Interface</code>，使用家人的年齡來排序：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "sort"
+)
+
+type Person struct {
+    Name string
+    Age  int
+}
+
+type Family []Person
+
+func (f Family) Len() int {
+    return len(f)
+}
+
+func (f Family) Less(i, j int) bool {
+    return f[i].Age &lt; f[j].Age
+}
+
+func (f Family) Swap(i, j int) {
+    f[i], f[j] = f[j], f[i]
+}
+
+func main() {
+    family := Family{{"Irene", 12}, {"Justin", 45}, {"Monica", 42}}
+
+    sort.Sort(family)
+    fmt.Println(family)  // [{Irene 12} {Monica 42} {Justin 45}]
+
+    sort.Sort(sort.Reverse(family))
+    fmt.Println(family)  // [{Justin 45} {Monica 42} {Irene 12}]
+}
+</code></pre>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="errors.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="List.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="errors.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="List.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

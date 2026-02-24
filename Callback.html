@@ -1,0 +1,432 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>JavaScript 回呼 Go</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="javascript-回呼-go"><a class="header" href="#javascript-回呼-go">JavaScript 回呼 Go</a></h1>
+</div>
+<p>在〈<a href="JavaScript.html">Go 呼叫 JavaScript</a>〉看過如何在 Go 中取得 JavaScript 的函式，然後予以呼叫，若你曾稍微瞭解過〈<a href="https://openhome.cc/Gossip/WebAssembly/">WebAssembly</a>〉，就會發覺，這跟 WebAssembly 匯入函式至 WebAssembly 的方式不同。</p>
+<p>這是 JavaScript 的 wasm_exec.js 以及 Go 的 <code>syscall/js</code> 居中之緣故，在 wasm_exec.html 中你也可以看到載入、編譯、實例化 WebAssembly 的過程：</p>
+<pre><code class="language-prettyprint">if (!WebAssembly.instantiateStreaming) { // polyfill
+    WebAssembly.instantiateStreaming = async (resp, importObject) =&gt; {
+        const source = await (await resp).arrayBuffer();
+        return await WebAssembly.instantiate(source, importObject);
+    };
+}
+
+const go = new Go();
+let mod, inst;
+WebAssembly.instantiateStreaming(fetch("test.wasm"), go.importObject).then((result) =&gt; {
+    mod = result.module;
+    inst = result.instance;
+    document.getElementById("runButton").disabled = false;
+});
+
+async function run() {
+    console.clear();
+    await go.run(inst);
+    inst = await WebAssembly.instantiate(mod, go.importObject); // reset instance
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>Go 有自己的匯入物件，也就是 <code>go.importObject</code>，這個物件主要是 JavaScript 環境與 Go 編譯出來的 WebAssembly 之橋樑，將 JavaScript 的值與 Go 的結構實例作了個對應，因此，不用自己匯入某個函式，只要取得某個作為名稱空間的 JavaScript 物件，取得上頭對應的特性，像是函式，就可以在 Go 中操作。</p>
+<p>也就是說，如果想要在 Go 中定義函式，然後在 JavaScript 中呼叫，就是將 Go 中定義的函式，設定給某個對應的 JavaScript 物件，之後就可以在 JavaScript 環境中使用了，只不過在定義時，必須留意 JavaScript 與 Go 的型態對應。</p>
+<p>可以被 JavaScript 環境呼叫的 Go 函式，必須被包裝為 <code>js.Callback</code> 型態，這個結構型態內嵌 <code>js.Value</code>，也就是它也是一種值，想要建立 <code>js.Callback</code> 實例，可以透過 <code>js.NewCallback</code> 函式（定義在 callback.go）。</p>
+<p>要能被 JavaScript 呼叫的 Go 函式，參數型態是 <code>[]js.Value</code>，也就是 <code>js.Value</code> 的 <code>slice</code>，<code>slice</code> 的元素代表著呼叫函式時傳入的引數，你可以想像 JavaScript 函式中 <code>arguments</code> 的對應型態。</p>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>例如，顯示加總至某個指定 DOM 物件的函式，可以如下定義：</p>
+<pre><code class="language-prettyprint">package main
+
+import "syscall/js"
+
+func main() {
+    // 註冊在 JavaScript 全域
+    js.Global().Set("printSumTo", js.NewCallback(printSum))
+    // 阻斷 main 流程
+    select {}   
+}
+
+func printSum(args []js.Value) {
+    c1 := args[0]         // 結果顯示到這個 div 
+    numbers := args[1:]   // 接下來是要加總的數字
+    c1.Set("innerHTML", sum(numbers))
+}
+
+func sum(numbers []js.Value) int {
+    var sum int
+    for _, val := range numbers {
+        sum += val.Int()
+    }
+    return sum
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>目前 Go 給 JavaScript 回呼用的函式不支援傳回值，未來也許會進一步支援，如果你想將結果帶回 JavaScript 環境，就是以副作用的方式實現，例如改變某個 JavaScript 物件的狀態，像是這邊是改變某個 DOM 的 <code>innerHTML</code>。</p>
+<p>因為 Go 的 <code>main</code> 執行完，模組的程式就結束了，這樣 Go 中定義的函式就沒有了，然而，事件會是在之後才發生，因而要被回呼的函式必須存活著，為了這個目的，範例中使用 <code>select {}</code> 來阻斷流程，視需求而定，你也可以用別的方式來設計某種阻斷。</p>
+<p>至於 JavaScript 的部份，來稍微修改一下 wasm_exec.html：</p>
+<pre><code class="language-prettyprint">&lt;!doctype html&gt;
+&lt;!--
+Copyright 2018 The Go Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+--&gt;
+&lt;html&gt;
+
+&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Go wasm&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+
+    &lt;script src="wasm_exec.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        if (!WebAssembly.instantiateStreaming) { // polyfill
+            WebAssembly.instantiateStreaming = async (resp, importObject) =&gt; {
+                const source = await (await resp).arrayBuffer();
+                return await WebAssembly.instantiate(source, importObject);
+            };
+        }
+
+        const go = new Go();
+        let mod, inst;
+        WebAssembly.instantiateStreaming(fetch("test.wasm"), go.importObject).then((result) =&gt; {
+            mod = result.module;
+            inst = result.instance;
+            document.getElementById("runButton").disabled = false;
+        }).then(_ =&gt; {   // 實例化模組之後就執行
+            console.clear();
+            go.run(inst);       
+        });
+    &lt;/script&gt;   
+
+    &lt;script&gt;
+        function run() {
+            // 呼叫 Go 定義的回呼函式
+            printSumTo(document.getElementById('c1'), 
+                1, 2, 3, 4, 5);
+        }
+    &lt;/script&gt;
+
+    &lt;button onClick="run();" id="runButton" disabled&gt;Run&lt;/button&gt;
+    &lt;div id="c1"&gt;&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<p>按下 Run 之後，會呼叫 <code>runAndPrintSum</code>，這會先執行 <code>run</code> 函式，執行 WebAssembly 模組實例，對應的就是執行 Go 定義的 <code>main</code>，因為 <code>run</code> 是非同步的，接下來就會執行 <code>printSumTo</code>，因此 1 到 5 的加總結果，就會顯示到 <code>id</code> 為 <code>c1</code> 的 <code>div</code> 元素之中。</p>
+<p>至於 WebAssembly API 的調整，想要瞭解這部份的話，可以看看〈<a href="https://openhome.cc/Gossip/WebAssembly/">WebAssembly</a>〉中前三篇的說明。</p>
+<p>故且不討論 WebAssembly API 怎麼寫，在自定義的 JavaScript 程式碼中，想要呼叫 Go 中定義的函式，其實感覺就是多了些額外的手續，而且不自然。</p>
+<p>如果把一切都帶到 Go 中做，將 Go 中定義的函式，當成是某事件的回呼，會比較單純一些，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "strconv"
+    "syscall/js"
+)
+
+func main() {
+    // 註冊按鈕事件
+    dom("runButton").Call("addEventListener", "click", js.NewCallback(cal))
+    select {}
+}
+
+// 根據 id 取得 DOM 物件
+func dom(id string) js.Value {
+    return js.Global().Get("document").Call("getElementById", id)
+}
+
+// 按下 Run 的事件處理器
+func cal(args []js.Value) {
+    n1, _ := inputValue("n1")
+    n2, _ := inputValue("n2")
+    dom("r").Set("innerHTML", n1+n2)
+}
+
+// 取得輸入欄位值
+func inputValue(id string) (int, error) {
+    return strconv.Atoi(dom(id).Get("value").String())
+}
+</code></pre>
+<p>至於 wasm_exec.html 可以如下調整：</p>
+<pre><code class="language-prettyprint">&lt;!doctype html&gt;
+&lt;!--
+Copyright 2018 The Go Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+--&gt;
+&lt;html&gt;
+
+&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Go wasm&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;input id="n1"&gt; + &lt;input id="n2"&gt; = &lt;span id="r"&gt;&lt;/span&gt;&lt;br&gt;
+    &lt;button id="runButton" disabled&gt;Run&lt;/button&gt;
+
+
+    &lt;script src="wasm_exec.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        if (!WebAssembly.instantiateStreaming) { // polyfill
+            WebAssembly.instantiateStreaming = async (resp, importObject) =&gt; {
+                const source = await (await resp).arrayBuffer();
+                return await WebAssembly.instantiate(source, importObject);
+            };
+        }
+
+        const go = new Go();
+        let mod, inst;
+        WebAssembly.instantiateStreaming(fetch("test.wasm"), go.importObject).then((result) =&gt; {
+            mod = result.module;
+            inst = result.instance;
+            document.getElementById("runButton").disabled = false;
+        }).then(_ =&gt; {
+            console.clear();
+            go.run(inst);       
+        });
+    &lt;/script&gt;   
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<p>這樣就可以進行頁面操作，就是個簡單的加法器：</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/Callback-1.JPG" class="pure-img-responsive" alt="JavaScript 回呼 Go" />
+</div>
+</div>
+<p>（這也許才是 Go 希望的，要你把東西都帶入 Go 中來做，JavaScript 環境的事件會呼叫 Go 的函式，然後在 Go 中計算，在 Go 中改變物件狀態、畫面等。）</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="JavaScript.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="JavaScript.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

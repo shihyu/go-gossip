@@ -1,0 +1,613 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>介面入門</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="介面入門"><a class="header" href="#介面入門">介面入門</a></h1>
+</div>
+<p>在〈<a href="StructComposition.html">結構組合</a>〉的最後討論到了多型，倘若現在需要有個函式，可以接受 <code>Account</code> 與 <code>CheckingAccount</code> 實例，或者是有個陣列或 slice，可以收集 <code>Account</code> 與 <code>CheckingAccount</code>實例，那該怎麼辦呢？</p>
+<h1 id="介面定義行為"><a class="header" href="#介面定義行為">介面定義行為</a></h1>
+<p>在 Go 語言中，可以使用 <code>interface</code> 定義行為，舉例來說，若現在想要定義儲蓄的行為，可以如下：</p>
+<pre><code class="language-prettyprint">type Savings interface {
+    Deposit(amount float64)
+    Withdraw(amount float64) error
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>注意，不必使用 <code>func</code> 關鍵字，也不用宣告接受者型態，只需要定義行為的名稱、參數與傳回值。接著該怎麼實現這個介面呢？實際上，就〈<a href="StructComposition.html">結構組合</a>〉，已經實現了這個介面，也就是說，結構上不用任何關鍵字，只要有函式實現這兩個行為就可以了。</p>
+<p>因此，現在可以寫個函式，同時接受 <code>Account</code> 與 <code>CheckingAccount</code> 實例，在提款後顯示餘額：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+type Savings interface {
+    Deposit(amount float64)
+    Withdraw(amount float64) error
+}
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func (ac *Account) Deposit(amount float64) {
+    if amount &lt;= 0 {
+        panic("必須存入正數")
+    }
+    ac.balance += amount
+}
+
+func (ac *Account) Withdraw(amount float64) error {
+    if amount &gt; ac.balance {
+        return errors.New("餘額不足")
+    }
+    ac.balance -= amount
+    return nil
+}
+
+type CheckingAccount struct {
+    Account
+    overdraftlimit float64
+}
+
+func (ac *CheckingAccount) Withdraw(amount float64) error {
+    if amount &gt; ac.balance+ac.overdraftlimit {
+        return errors.New("超出信用額度")
+    }
+    ac.balance -= amount
+    return nil
+}
+
+func Withdraw(savings Savings) {
+    if err := savings.Withdraw(500); err != nil {
+        fmt.Println(err)
+    } else {
+        fmt.Println(savings)
+    }
+}
+
+func main() {
+    account1 := Account{"1234-5678", "Justin Lin", 1000}
+    account2 := CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 30000}
+    Withdraw(&amp;account1) // 顯示 &amp;{1234-5678 Justin Lin 500}
+    Withdraw(&amp;account2) // 顯示 &amp;{{1234-5678 Justin Lin 500} 30000}
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>雖然沒有定義接收者為 <code>*CheckingAccount</code> 的 <code>Deposit</code> 方法，然而，作為內部型態的 <code>Account</code> 有定義 <code>Deposit</code>（並且沒有使用到 <code>CheckingAccount</code> 定義的值域），這個實現被提昇至外部型態，也就滿足了 <code>Savings</code> 要求的行為規範。</p>
+<p>注意！由於在實作 <code>Withdraw</code> 與 <code>Deposit</code> 方法時，都是用指標 <code>(ac *Account)</code> 或 <code>(ac *CheckingAccount)</code> 宣告了接受者型態，因此傳遞實例給 <code>func Withdraw(savings Savings)</code> 時，也就必須傳遞指標。</p>
+<p>如果在實作<code>Withdraw</code> 與 <code>Deposit</code> 方法時，是使用 <code>(ac Account)</code> 或 <code>(ac CheckingAccount)</code> 宣告了接受者型態，那麼傳遞實例給接受 <code>Savings</code> 的函式時，就可以不用取指標，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+type Savings interface {
+    Deposit(amount float64)
+    Withdraw(amount float64) error
+}
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func (ac Account) Deposit(amount float64) {
+    if amount &lt;= 0 {
+        panic("必須存入正數")
+    }
+    ac.balance += amount
+}
+
+func (ac Account) Withdraw(amount float64) error {
+    if amount &gt; ac.balance {
+        return errors.New("餘額不足")
+    }
+    ac.balance -= amount
+    return nil
+}
+
+type CheckingAccount struct {
+    Account
+    overdraftlimit float64
+}
+
+func (ac CheckingAccount) Withdraw(amount float64) error {
+    if amount &gt; ac.balance+ac.overdraftlimit {
+        return errors.New("超出信用額度")
+    }
+    ac.balance -= amount
+    return nil
+}
+
+func Withdraw(savings Savings) {
+    if err := savings.Withdraw(500); err != nil {
+        fmt.Println(err)
+    } else {
+        fmt.Println(savings)
+    }
+}
+
+func main() {
+    account1 := Account{"1234-5678", "Justin Lin", 1000}
+    account2 := CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 30000}
+    Withdraw(account1) // 顯示 {1234-5678 Justin Lin 1000}
+    Withdraw(account2) // 顯示 {{1234-5678 Justin Lin 1000} 30000}
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>當然，就這個例子來說，結果並不是正確的，就算改成 <code>Withdraw(&amp;account1)</code> 與 <code>&amp;Withdraw(account2)</code>，也不會是正確的結果，因為就 <code>Withdraw</code> 與 <code>Deposit</code> 的接收者來說，會是複製結構的值域，而不是修改原結構實例的值域，這純綷只是示範。</p>
+<h1 id="介面實例的型態與值"><a class="header" href="#介面實例的型態與值">介面實例的型態與值</a></h1>
+<p>如果你定義了一個變數：</p>
+<pre><code class="language-prettyprint">var savings Savings
+</code></pre>
+<p>那麼 <code>savings</code> 變數儲存了什麼？技術上來說，<code>savings</code> 變數儲存兩個資訊：型態與值。就方才的<code>savings</code> 被指定為 <code>nil</code> 來說，代表著 <code>savings</code> 在底層儲存的型態為 <code>nil</code>，而值沒有指定，這樣的介面實例稱為 nil interface，因為沒有型態資訊，也就不能透過 nil interface 呼叫方法。</p>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>如果接收者是定義為 <code>(ac *Account)</code>，而且有底下的程式，那麼 <code>savings</code> 底層儲存的型態會 <code>*Account</code>，而值是 <code>Account</code> 結構實例的位址值：</p>
+<pre><code class="language-prettyprint">var savings Savings = &amp;Account{"1234-5678", "Justin Lin", 1000}
+</code></pre>
+<p>當接收者是指標時，透過介面比對是否為 <code>nil</code> 時要留意，例如以下會是 <code>true</code>，這是因為 <code>savings</code> 在底層儲存的型態為 <code>nil</code>，而值沒有指定，介面宣告的變數只有在這個情況下，跟 <code>nil</code> 直接相等比較才會是 <code>true</code>：</p>
+<pre><code class="language-prettyprint">var savings Savings = nil
+fmt.Println(savings == nil)
+</code></pre>
+<p>然而以下會是 <code>false</code>，這是因為 <code>savings</code> 在底層儲存的型態為 <code>*Account</code>，而值是 <code>nil</code>（<br />
+這時透過 <code>savings</code> 是可以呼叫方法的，接收者會是 <code>nil</code>，就看你要不要在方法中處理 <code>nil</code> 了）：</p>
+<pre><code class="language-prettyprint">var acct *Account = nil
+var savings Savings = acct
+fmt.Println(savings == nil)
+</code></pre>
+<p>這是個 FAQ 了，在〈<a href="https://golang.org/doc/faq#nil_error">Why is my nil error value not equal to nil?</a>〉就提到了個例子：</p>
+<pre><code class="language-prettyprint">func returnsError() error {
+    var p *MyError = nil
+    if bad() {
+        p = ErrBad
+    }
+    return p
+}
+</code></pre>
+<p>如果對 <code>returnsError</code> 傳回值進行 <code>nil</code> 比較，結果會是 <code>false</code>：</p>
+<pre><code class="language-prettyprint">fmt.Println(returnsError() == nil) // false
+</code></pre>
+<p>因此如果傳回型態是個介面，值會是 <code>nil</code>，請記得直接傳 <code>nil</code>：</p>
+<pre><code class="language-prettyprint">func returnsError() error {
+    if bad() {
+        return ErrBad
+    }
+    return nil // 直接傳 nil
+}
+</code></pre>
+<p>如果接收者是定義為 <code>(ac Account)</code>，而你有底下的程式：</p>
+<pre><code class="language-prettyprint">var savings Savings = Account{"1234-5678", "Justin Lin", 1000}
+</code></pre>
+<p>這時 <code>savings</code> 在底層會儲存型態 <code>Account</code>，而值為結構實例，這時透過 <code>Savings</code> 來進行實例的指定時，底層也會是結構實例的指定，因此會發生複製：</p>
+<pre><code class="language-prettyprint">var savings1 Savings = Account{"1234-5678", "Justin Lin", 1000}
+var savings2 Savings = savings1
+
+savings2.name = "Monica Huang"
+fmt.Println(savings.name) // Justin Lin
+</code></pre>
+<h1 id="異質陣列或-slice"><a class="header" href="#異質陣列或-slice">異質陣列或 slice</a></h1>
+<p>Go 語言會檢查類型的實例，是否實現了介面中規範的行為，若是的話，就可以使用介面型態來接受不同型態實例的指定，因此，若要建立一個異質陣列或 slice，也是可以的：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+type Savings interface {
+    Deposit(amount float64)
+    Withdraw(amount float64) error
+}
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func (ac *Account) Deposit(amount float64) {
+    if amount &lt;= 0 {
+        panic("必須存入正數")
+    }
+    ac.balance += amount
+}
+
+func (ac *Account) Withdraw(amount float64) error {
+    if amount &gt; ac.balance {
+        return errors.New("餘額不足")
+    }
+    ac.balance -= amount
+    return nil
+}
+
+type CheckingAccount struct {
+    Account
+    overdraftlimit float64
+}
+
+func (ac *CheckingAccount) Withdraw(amount float64) error {
+    if amount &gt; ac.balance+ac.overdraftlimit {
+        return errors.New("超出信用額度")
+    }
+    ac.balance -= amount
+    return nil
+}
+
+func main() {
+    savingsArray := [...]Savings{
+        &amp;Account{"1234-5678", "Justin Lin", 1000},
+        &amp;CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 30000},
+    }
+
+    for _, savings := range savingsArray {
+        fmt.Println(savings)
+    }
+
+    savingsSlice := []Savings{
+        &amp;Account{"1234-5678", "Justin Lin", 1000},
+        &amp;CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 30000},
+    }
+
+    for _, savings := range savingsSlice {
+        fmt.Println(savings)
+    }
+}
+</code></pre>
+<p>在這邊雖然是以 <code>Account</code> 及 <code>CheckingAccount</code> 為例，不過，只要實現了 <code>Savings</code> 的行為，就算是一隻鴨子，也是可以的：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Savings interface {
+    Deposit(amount float64)
+    Withdraw(amount float64) error
+}
+
+type Duck struct{}
+
+func (d *Duck) Deposit(amount float64) {
+    fmt.Println("我是一隻鴨子，我沒帳戶")
+}
+
+func (d *Duck) Withdraw(amount float64) error {
+    fmt.Println("我是一隻鴨子，我沒錢")
+    return nil
+}
+
+func main() {
+    duckArray := [...]Savings{
+        &amp;Duck{},
+        &amp;Duck{},
+    }
+
+    for _, duck := range duckArray {
+        duck.Deposit(1000)
+    }
+
+    duckSlice := []Savings{
+        &amp;Duck{},
+        &amp;Duck{},
+    }
+
+    for _, duck := range duckSlice {
+        duck.Withdraw(500)
+    }
+}
+</code></pre>
+<h1 id="空介面"><a class="header" href="#空介面">空介面</a></h1>
+<p>那麼，如果想要建立一個實例容器，可以收集各種類型的實例，要怎麼做呢？答案就是透過空介面，也就是沒有定義任何行為的 <code>interface {}</code>。</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Duck struct{}
+
+func main() {
+    instances := [](interface{}){
+        &amp;Duck{},
+        [...]int{1, 2, 3, 4, 5},
+        map[string]int{"caterpillar": 123456, "monica": 54321},
+    }
+
+    for _, instance := range instances {
+        fmt.Println(instance)
+    }
+}
+</code></pre>
+<p>如果你查看 <code>fmt.Println</code> 的文件說明，可以發現，它的參數類型就是 <code>interface {}</code>：</p>
+<pre><code class="language-prettyprint">func Print(a ...interface{}) (n int, err error)
+func Printf(format string, a ...interface{}) (n int, err error)
+func Println(a ...interface{}) (n int, err error)
+</code></pre>
+<p>順便一提的是，就目前來說，在使用 <code>fmt.Println</code> 顯示結構時，都是使用預設的字串格式，如果想自訂字串格式，必須實現 <code>Stringer</code> 這個介面，這定義在 <code>fmt</code> 的 print.go 之中：</p>
+<pre><code class="language-prettyprint">type Stringer interface {
+        String() string
+}
+</code></pre>
+<p>在需要字串的場合中，會呼叫 <code>String()</code> 方法。例如，若你想要帳號顯示時，可以出現 Account 或 CheckingAccount 字樣的話，可以如下實作：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Account struct {
+    id      string
+    name    string
+    balance float64
+}
+
+func (ac *Account) String() string {
+    return fmt.Sprintf("Account(id = %s, name = %s, balance = %.2f)",
+        ac.id, ac.name, ac.balance)
+}
+
+type CheckingAccount struct {
+    Account
+    overdraftlimit float64
+}
+
+func (ac *CheckingAccount) String() string {
+    return fmt.Sprintf("CheckingAccount(id = %s, name = %s, balance = %.2f, overdraftlimit = %.2f)",
+        ac.id, ac.name, ac.balance, ac.overdraftlimit)
+}
+
+func main() {
+    account1 := Account{"1234-5678", "Justin Lin", 1000}
+    account2 := CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 30000}
+
+    // 顯示 Account(id = 1234-5678, name = Justin Lin, balance = 1000.00)
+    fmt.Println(&amp;account1)
+
+    // 顯示 CheckingAccount(id = 1234-5678, name = Justin Lin, balance = 1000.00, overdraftlimit = 30000.00)
+    fmt.Println(&amp;account2)
+}
+</code></pre>
+<h1 id="實作某介面的型態有哪些"><a class="header" href="#實作某介面的型態有哪些">實作某介面的型態有哪些？</a></h1>
+<p>來自 Java 之類語言的開發者，在認識 Go 的 <code>interface</code> 後可能會有些疑問，像是「如何知道某個介面的實現型態有哪些？」、「這個型態實現了哪些介面？」…並且會想在文件上尋找這類資訊，因為 Java 的文件中，會記錄某介面的實現類別有哪些。</p>
+<p>這是因為 Java 中，介面型態與行為是結合在一起的。</p>
+<p>在 Go 中不需要記錄這些，當開發者看到某 API 上定義可以接收某介面型態的值時，應該看看該介面定義了哪些行為，接著看看要傳入的值是否有實作這些行為，這樣就可以了，因為 Go 的介面重點是「行為」，不管 API 上定義的介面型態是什麼，只要行為符合都可以傳入。</p>
+<p>也就是說 Go 中，介面型態與行為是分開的，應該重視的只有行為本身，本質上與動態定型語言中只重行為而非型態相同，因此「如何知道某個介面的實現型態有哪些？」、「這個型態實現了哪些介面？」這類問題也就不重要了！</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="StructComposition.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="TypeAssertion.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="StructComposition.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="TypeAssertion.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

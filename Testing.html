@@ -1,0 +1,406 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Go 測試套件</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="go-測試套件"><a class="header" href="#go-測試套件">Go 測試套件</a></h1>
+</div>
+<p>Go 本身附帶了 <code>testing</code> 套件，搭配 <code>go test</code> 指令，可以自動對套件中的程式碼進行測試，在套件中，測試程式碼必須是 _test.go 結尾，一個套件中可以有多個 _test.go，例如，<a href="https://golang.org/src/fmt/">fmt 套件的原始碼</a> 中，可以看到 export_test.go、fmt_test.go 等，就是測試程式碼。</p>
+<h1 id="功能測試"><a class="header" href="#功能測試">功能測試</a></h1>
+<p>想要使用 Go 的 <code>testing</code> 套件撰寫測試程式碼，必須 <code>import "testing"</code>，在 _test.go 中撰寫形式 <code>func TestXxx(t *testing.T)</code> 的函式，Xxx 可以是任意名稱，例如，在 src/mymath 目錄中，寫個 basic_test.go：</p>
+<pre><code class="language-prettyprint">package mymath
+
+import "testing"
+
+func TestSomething(t *testing.T) {
+    // write some test
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>接著只要執行 <code>go test mymath</code>，就會自動尋找 <code>mymath</code> 套件中的 _test.go 中 Test 開頭的函式並執行，由於目前沒撰寫任何測試內容，測試是以 PASS 結束。</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/Testing-1.JPG" class="pure-img-responsive" alt="Go 測試套件" />
+</div>
+</div>
+<p>如果函式中使用了 <code>testing</code> 的 <code>Error</code>、<code>Fail</code> 等與失敗相關的方法，那麼測試就會失敗，例如：</p>
+<pre><code class="language-prettyprint">package mymath
+
+import "testing"
+
+func TestSomething(t *testing.T) {
+    t.Fail()
+}
+</code></pre>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/Testing-2.JPG" class="pure-img-responsive" alt="Go 測試套件" />
+</div>
+</div>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>如果想要在測試失敗時，留下一些訊息，可以使用 <code>Error</code> 方法，例如：</p>
+<pre><code class="language-prettyprint">package mymath
+
+import "testing"
+
+func TestSomething(t *testing.T) {
+    t.Error("something wrong")
+}
+</code></pre>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/Testing-3.JPG" class="pure-img-responsive" alt="Go 測試套件" />
+</div>
+</div>
+<p>來實際寫個測試，例如，測試一個 <code>Add</code> 函式：</p>
+<pre><code class="language-prettyprint">package mymath
+
+import "testing"
+
+func TestAdd(t *testing.T) {
+    if Add(1, 2) == 3 {
+        t.Log("mymath.Add PASS")
+    } else {
+        t.Error("mymath.Add FAIL")
+    }
+}
+</code></pre>
+<p>由於目前還沒有撰寫 <code>Add</code> 函式，因此若執行 <code>go test mymath</code> 的話，會以 [build failed] 收場，如果在 basic.go 撰寫了正確的 <code>Add</code> 函式：</p>
+<pre><code class="language-prettyprint">package mymath
+
+func Add(a, b int) int {
+    return a + b
+}
+</code></pre>
+<p>不過，如果直接執行 <code>go test mymath</code> 的話，只會顯示 ok 等字眼，不會顯示 <code>Log</code> 的訊息，想看到 <code>Log</code> 的訊息的話，必須加上 <code>-v</code> 引數（代表 verbose），例如：</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/Testing-4.JPG" class="pure-img-responsive" alt="Go 測試套件" />
+</div>
+</div>
+<p>如果 <code>Log</code> 之後接上 <code>Fail</code> 函式，那麼不加上 <code>-v</code>，也會顯示 <code>Log</code> 的訊息，實際上，<code>Error</code> 函式就是相當於先以 <code>Log</code> 顯示指定的訊息，然後再接上 <code>Fail</code> 函式。</p>
+<p>如果想要略過測試，那麼可以使用 <code>Skip</code> 函式，例如：</p>
+<pre><code class="language-prettyprint">package mymath
+
+import "testing"
+
+func TestSomething(t *testing.T) {
+    t.Skip()
+}
+
+func TestAdd(t *testing.T) {
+    if Add(1, 2) == 3 {
+        t.Log("mymath.Add PASS")
+    } else {
+        t.Error("mymath.Add FAIL")
+    }
+}
+</code></pre>
+<p><code>TestSomething</code> 中如果沒有執行 <code>Skip</code> 會是兩個 PASS 的測試結果，若如上執行了 <code>Skip</code>，會是一個 SKIP 與一個 PASS 的測試結果。例如：</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/Testing-5.JPG" class="pure-img-responsive" alt="Go 測試套件" />
+</div>
+</div>
+<p>如果你想指定某個測試，可以使用 <code>-run</code> 引數，這接受一個正則表示式，例如，若只想執行 <code>TestAdd</code>，那麼可以如下：</p>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/Testing-6.JPG" class="pure-img-responsive" alt="Go 測試套件" />
+</div>
+</div>
+<h1 id="效能評測"><a class="header" href="#效能評測">效能評測</a></h1>
+<p>如果想進行效能評測（Benchmark），那麼 _test.go 中，評測函式必須是 <code>func BenchmarkXxx(b *testing.B)</code> 形式，例如：</p>
+<pre><code class="language-prettyprint">package mymath
+
+import "testing"
+
+func TestSomething(t *testing.T) {
+    t.Skip()
+}
+
+func TestAdd(t *testing.T) {
+    if Add(1, 2) == 3 {
+        t.Log("mymath.Add PASS")
+    } else {
+        t.Error("mymath.Add FAIL")
+    }
+}
+
+func BenchmarkAdd(b *testing.B) {
+    for i := 0; i &lt; b.N; i++ {
+        Add(1, 2)
+    }
+}
+</code></pre>
+<p>為了進行評測，被測試的函式要執行多次，以求得每次執行的平均時間，要執行多次函式可以使用迴圈，並以 <code>b.N</code> 作為邊界，<code>b.N</code> 目標預設是 1000000000，評測預設會在一秒內，以越來越大的 <code>b.N</code> 執行迴圈，這是為了讓評測進入穩定狀態，以收集到可靠的評測資料；如果運行時間到了，<code>b.N</code> 目標值仍未達成，就以現有收集到的資料來回報評測結果。</p>
+<p>你可以在執行 <code>go test</code> 時，加上 <code>-bench</code> 引數，這個引數後可以使用正則表示式，來指定符合的評測函式名稱，例如，想執行所有評測函式，可以使用 <code>-bench="."</code>：</p>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/Testing-7.JPG" class="pure-img-responsive" alt="Go 測試套件" />
+</div>
+</div>
+<p>評測的結果中顯示，達到了 <code>b.N</code> 預設目標 100000000 次，平均每次迴圈花了 0.58 奈秒（nanosecond）。</p>
+<p>如果只想進行效能評測，可以使用 <code>-run</code> 引數，這本來是用來指定要執行的測試函式，只要指定一個不符合任何測試函式的正則表示式，就可以略過所有測試，只執行評測函式了，例如：</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/Testing-8.JPG" class="pure-img-responsive" alt="Go 測試套件" />
+</div>
+</div>
+<p>方才談到，評測預設的運行時間是一秒，如果在這個時間內，無法達到 <code>b.N</code> 的目標值，可以增加這個時間，這要使用 <code>-benchtime</code> 引數，指定的格式像是 1h30s，例如：</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/Testing-9.JPG" class="pure-img-responsive" alt="Go 測試套件" />
+</div>
+</div>
+<p>如果想固定 <code>b.N</code> 的值，Go 1.12 以後可以使用 <code>x</code> 後置，例如指定執行 100000000000 次（預設 <code>b.N</code> 目標的 10 倍）並收集結果：</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/Testing-10.JPG" class="pure-img-responsive" alt="Go 測試套件" />
+</div>
+</div>
+<p><code>-count</code> 可以指定評測重啟幾次：</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/Testing-11.JPG" class="pure-img-responsive" alt="Go 測試套件" />
+</div>
+</div>
+<p>想知道更多 Go 測試套件的細節，可以參考 <a href="https://golang.org/pkg/testing/">Package testing</a> 的說明。</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="godoc.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="PreDeclaredType.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="godoc.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="PreDeclaredType.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

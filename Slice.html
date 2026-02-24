@@ -1,0 +1,485 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>底層為陣列的 slice</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="底層為陣列的-slice"><a class="header" href="#底層為陣列的-slice">底層為陣列的 slice</a></h1>
+</div>
+<p>在〈<a href="http://openhome.cc/Gossip/Go/Array.html">身為複合值的陣列</a>〉中看過陣列，有的場合需要陣列，然而，若只想處理陣列中某片區域，或者以更高階的觀點看待一片資料（而不是從固定長度的陣列觀點），那麼可以使用 slice。</p>
+<h1 id="建立一個-slice"><a class="header" href="#建立一個-slice">建立一個 slice</a></h1>
+<p>如果需要一個 slice，可以使用 <code>make</code> 函式，舉個例子來說，可以如下建立一個長度與容量皆為 5 的 slice，並傳回 <code>slice</code> 的參考，型態為 <code>[]int</code>：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    s1 := make([]int, 5)
+    s2 := s1
+    fmt.Println(s1) // [0 0 0 0 0]
+    fmt.Println(s2) // [0 0 0 0 0]
+    s1[0] = 1
+    fmt.Println(s1) // [1 0 0 0 0]
+    fmt.Println(s2) // [1 0 0 0 0]
+    s2[1] = 2
+    fmt.Println(s1) // [1 2 0 0 0]
+    fmt.Println(s2) // [1 2 0 0 0]
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>如上所示，<code>s1</code>、<code>s2</code> 會是個參考（Reference），型態是 <code>[]int</code>，參考至同一個 slice 實例。</p>
+<p>透過 <code>s1</code> 或 <code>s2</code> 操作時，操作的對象是變數參考之實例，就底層來說，<code>make([]int, 5)</code> 在記憶體某位置建立了 slice 實例，而 <code>s1</code> 儲存了該位置，如果改變了 <code>s1</code> 儲存的位址值，那透過 <code>s1</code> 操作時，就會是另一個 slice 實例了。</p>
+<p>將變數的參考對象指定給另一個變數時，底層是將儲存的位址值指定給該變數，在上例中，<code>s2 := s1</code>，就是將 <code>s1</code> 儲存的位址值，指定給 <code>s2</code>，因此透過 <code>s2</code> 操作的對象，與 <code>s1</code> 操作的對象是相同的，透過其中一個名稱來改變 slice 的元素內容，透過另一個名稱取得 slice 的元素值，就會是改變後的值。</p>
+<p>上例也可以寫為：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    var s1 []int = make([]int, 5)
+    var s2 []int    // s2 這時是 nil
+    s2 = s1         // 將 s1 的參考對象指定給 s2
+    fmt.Println(s1) // [0 0 0 0 0]
+    fmt.Println(s2) // [0 0 0 0 0]
+    s1[0] = 1
+    fmt.Println(s1) // [1 0 0 0 0]
+    fmt.Println(s2) // [1 0 0 0 0]
+    s2[1] = 2
+    fmt.Println(s1) // [1 2 0 0 0]
+    fmt.Println(s2) // [1 2 0 0 0]
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>在 Go 中，參考的預設零值都是 <code>nil</code>。slice 無法進行 <code>==</code> 比較，slice 唯一可以用 <code>==</code> 比較的對象是 <code>nil</code>，儲存 slice 參考的變數也無法進行 <code>==</code> 比較，若真想知道兩個變數參考的是否同一 slice，可以如下透過<a href="Reflect.html">反射機制</a>來得知：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "reflect"
+)
+
+func main() {
+    s1 := make([]int, 5)
+    s2 := s1
+    fmt.Println(reflect.ValueOf(s1).Pointer() == reflect.ValueOf(s2).Pointer())
+}
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>若事先知道 slice 的值，也可以使用 slice 字面常量：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "reflect"
+)
+
+func main() {
+    s1 := []int{1, 2, 3, 4, 5}
+    a1 := [...]int{1, 2, 3, 4, 5}
+    fmt.Println(reflect.TypeOf(s1)) // []int
+    fmt.Println(reflect.TypeOf(a1)) // [5]int
+}
+</code></pre>
+<p>注意到，建立 slice 時，方括號中是沒有 <code>...</code> 的，如果方括號中有 <code>...</code>，那會是個陣列，而不是個 slice，如上可看到的，<code>s1</code> 的型態會是 <code>[]int</code>，然而，<code>a1</code> 的型態會是 <code>[5]int</code>，<code>s1</code> 是個參考，可以指向某個 slice 實例，<code>s1</code> 本身儲存的位址值可以改變，而 <code>a1</code> 本身就是陣列，從 <code>a1</code> 的位置開始，有連續 5 個 <code>int</code> 空間可用來儲存 <code>int</code> 值，<code>a1</code> 本身的位置是固定的，無法改變。</p>
+<p>使用 slice 字面常量時，還可以初始特定索引處的值。例如：</p>
+<pre><code class="language-prettyprint">slice := []int{10, 20, 30, 10: 100, 20: 200}
+// 顯示 [10 20 30 0 0 0 0 0 0 0 100 0 0 0 0 0 0 0 0 0 200]
+fmt.Println(slice)
+</code></pre>
+<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
+</div>
+<p>在上面的例子中，索引 0、1、2 被初始為 10、20、30，之後指定索引 10 為 100，索引 20 為 200，其餘未指定處初始為 <code>int</code> 零值 0。</p>
+<h1 id="從陣列或-slice-建立-slice"><a class="header" href="#從陣列或-slice-建立-slice">從陣列或 slice 建立 slice</a></h1>
+<p>如果有個現成的陣列，可以從陣列中建立 slice，例如，從陣列的索引 1 到 4（不包括）建立一個 slice 的話，可以如下：</p>
+<pre><code class="language-prettyprint">package main
+
+import (
+    "fmt"
+    "reflect"
+)
+
+func main() {
+    arr := [...]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+    slice := arr[1:4]
+    fmt.Println(reflect.TypeOf(arr))   // [10]int
+    fmt.Println(reflect.TypeOf(slice)) // []int
+    fmt.Println(len(slice))            // 3
+    fmt.Println(cap(slice))            // 9
+
+    fmt.Println(slice)   // [2 3 4]
+    fmt.Println(arr)     // [1 2 3 4 5 6 7 8 9 10]
+
+    slice[0] = 20
+    fmt.Println(slice)   // [20 3 4]
+    fmt.Println(arr)     // [1 20 3 4 5 6 7 8 9 10]
+}
+</code></pre>
+<p>在這邊可以看到，slice 的長度可以使用 <code>len</code> 得知，而容量可以使用 <code>cap</code> 函式得知，如果從陣列中切出 slice，長度是 slice 可參考的元素長度，而容量預設為從 slice 索引 0 處起算的底層陣列元素長度，如圖所示：</p>
+<div class="pure-g">
+<div class="pure-u-1">
+<img src="images/Slice-1.JPG" class="pure-img-responsive" alt="slice 與陣列" />
+</div>
+</div>
+<p>是的！slice 底層實際上還是個陣列，若兩個 slice 底層是共用同一個陣列，從一個 slice 操作，另一個 slice 取得的值也就會反映變化，也因此在上面的例子中，你透過 <code>slice[0]</code> 設定值為 20，底層的陣列也會因而反映出變化，透過 slice 指定索引取得元素值時，不能超出 slice 的長度，不然會出現 index out of range 的錯誤。</p>
+<p>注意，單是宣告 <code>var slice []int</code> 的話，<code>slice</code> 預設零值會是 <code>nil</code>，也就是相當於 <code>var slice []int = nil</code>，也就是 <code>slice</code> 參考至 <code>nil</code>，此時 <code>len(slice)</code> 與 <code>cap(slice)</code> 的結果都會是 0，<code>fmt.Println</code> 的顯示會是 []，<code>==</code> 用於 slice 時，唯一能用來比較的就是 <code>nil</code>。</p>
+<p>方才使用 <code>make([]int, 5)</code> 函式建立 slice 時，只指定了長度為 5，而容量就預設與長度相同，實際上，可以分別指定容量與長度，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    slice := make([]int, 5, 10)
+    fmt.Println(slice)       // [0 0 0 0 0]
+    fmt.Println(len(slice))  // 5
+    fmt.Println(cap(slice))  // 10
+}
+</code></pre>
+<p>指定索引從陣列中產生 slice時，若省略冒號之後的數字，則建立的 slice，預設可取得至陣列尾端的元素，也就是長度將等於容量，例如，若 <code>arr := [...]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}</code>，那麼 <code>arr[3:]</code> 的話，取得的 slice 可以存取的元素為 {4, 5, 6, 7, 8, 9, 10}，長度與容量皆為 7；如果省略冒號之前的數字，預設從索引 0 開始，例如 <code>arr[:2]</code> 會取得 {1, 2}，長度為 2，容量為 10；如果是 <code>arr[:]</code>，那麼就是取得全部陣列內容了，長度與容量皆為 10。</p>
+<p>Go 1.2 開始，可以在 <code>[]</code> 中指定三個數字，以冒號區隔，第三個數字指定的是 slice 以原陣列哪個索引作為邊界。例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    arr := [...]int{1, 2, 3, 4, 5}
+    slice1 := arr[0:2:4]
+    fmt.Println(slice1)      // [1 2]
+    fmt.Println(len(slice1)) // 2
+    fmt.Println(cap(slice1)) // 4
+}
+</code></pre>
+<p>第三個數字指定的索引不能超過陣列邊界，不然會發生 invalid slice index 的錯誤。</p>
+<p>也可以從 slice 中產生 slice，產生的 slice 底層還是同一個陣列。例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    arr := [...]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+    slice1 := arr[:5]
+    slice2 := slice1[:3]
+
+    fmt.Println(slice1) // [1 2 3 4 5]
+    fmt.Println(slice2) // [1 2 3]
+
+    slice2[0] = 10
+    fmt.Println(slice1) // [10 2 3 4 5]
+    fmt.Println(slice2) // [10 2 3]
+    fmt.Println(arr)    // [10 2 3 4 5 6 7 8 9 10]
+}
+</code></pre>
+<h1 id="slice-的-append"><a class="header" href="#slice-的-append">slice 的 append</a></h1>
+<p>可以使用 <code>append</code> 對 slice 附加元素，這會傳回一個 slice 的參考：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    arr := [...]int{1, 2, 3, 4, 5}
+    slice1 := arr[:2]
+    fmt.Println(slice1)      // [1 2]
+    fmt.Println(len(slice1)) // 2
+    fmt.Println(cap(slice1)) // 5
+
+    slice2 := append(slice1, 6)
+    fmt.Println(slice2)      // [1 2 6]
+    fmt.Println(len(slice2)) // 3
+    fmt.Println(cap(slice2)) // 5
+
+    slice2[0] = 10
+    fmt.Println(slice1) // [10 2]
+    fmt.Println(slice2) // [10 2 6]
+    fmt.Println(arr)    // [10 2 6 4 5]
+}
+</code></pre>
+<p>只要附加的元素沒有超出 slice 的容量，傳回的 slice 參考就會是相同的，底層也是同一陣列，因此，改變了 <code>slice2[0]</code> 的值，<code>slice1</code>、<code>arr</code> 取得結果都有了變化。</p>
+<p>如果 <code>append</code> 的時候，附加元素超出了 slice 的容量，那麼底層會建立一個新的陣列，容量為原 slice 容量的兩倍加 2，接著將舊陣列內容複製到新陣列，然後將指定的值附加上去，<code>append</code> 的結果也會傳回新的 slice 參考。例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    arr := [...]int{1, 2, 3, 4, 5}
+    slice1 := arr[:]
+    fmt.Println(slice1)      // [1 2 3 4 5]
+    fmt.Println(len(slice1)) // 5
+    fmt.Println(cap(slice1)) // 5
+
+    slice2 := append(slice1, 6)
+    fmt.Println(slice2)      // [1 2 3 4 5 6]
+    fmt.Println(len(slice2)) // 6
+    fmt.Println(cap(slice2)) // 12
+
+    slice2[0] = 10
+    fmt.Println(slice1) // [1 2 3 4 5]
+    fmt.Println(slice2) // [10 2 3 4 5 6]
+    fmt.Println(arr)    // [1 2 3 4 5]
+}
+</code></pre>
+<p>在上面的例子中，由於 <code>slice2</code> 底層的陣列，與 <code>slice1</code> 無關了，因此，透過 <code>slice2[0]</code> 修改了值，並不會影響到透過 <code>slice1</code> 或 <code>arr</code> 取得的值。</p>
+<p>如果想用 <code>append</code> 來直接附加另一個 slice，可以使用 <code>...</code>，將另一個 slice 擴展為一列引數，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    slice1 := []int{1, 2, 3}
+    slice2 := []int{4, 5, 6}
+    fmt.Println(append(slice1, slice2...))  // [1 2 3 4 5 6]
+}
+</code></pre>
+<h1 id="slice-的-copy"><a class="header" href="#slice-的-copy">slice 的 copy</a></h1>
+<p>可以使用 <code>copy</code> 函式，將一個 slice 的內容，複製至另一個 slice：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    src := []int{1, 2, 3, 4, 5}
+    dest := make([]int, len(src), (cap(src)+1)*2)
+    fmt.Println(copy(dest, src)) // 5
+    fmt.Println(src)             // [1 2 3 4 5]
+    fmt.Println(dest)            // [1 2 3 4 5]
+
+    src[0] = 10
+    fmt.Println(src)  // [10 2 3 4 5]
+    fmt.Println(dest) // [1 2 3 4 5]
+}
+</code></pre>
+<p>複製時，目的 slice 的容量必須足夠，否則會發生 cap out of range 的錯誤，<code>copy</code> 函式若執行成功，會傳回複製的元素個數。</p>
+<p>先前提到，可以從 slice 中產生 slice，然而，由於從 slice 中產生 slice，底層仍會是同一個陣列，因此，要小心一些應用場合，對於一個很大的陣列，若不斷地切出新的 slice，底層參考的陣列還是那麼大，想避免這類問題，應自行使用 <code>make</code> 建立適當大小的 slice，然後從舊 slice 使用 <code>copy</code> 複製元素值，或者使用 <code>append</code>，將舊 slice 的內容附加至新 slice，以避免這類問題。</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="Array.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Map.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="Array.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Map.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
