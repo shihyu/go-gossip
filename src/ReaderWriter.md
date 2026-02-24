@@ -10,7 +10,7 @@
 
 在〈[從標準輸入、輸出認識 io](StdOutInErr.html)〉中談到了 `io.Reader`、`io.Writer`，在 Go 中，這兩個介面抽象化了輸入、輸出，認識這兩個介面分別定義的 `Read`、`Write` 行為，是掌握 Go 中輸入、輸出的基礎。
 
-`io.Reader` 定義的 `Read` 行為，可以在 [`type Reader`](https://golang.org/pkg/io/#Reader) 查看：
+`io.Reader` 定義的 `Read` 行為，可以在 [`type Reader`](https://pkg.go.dev/io/#Reader) 查看：
 
 ``` prettyprint
 type Reader interface {
@@ -62,7 +62,7 @@ func main() {
 }
 ```
 
-`io.Writer` 定義的 `Write` 行為，可以在 [`type Writer`](https://golang.org/pkg/io/#Writer) 查看：
+`io.Writer` 定義的 `Write` 行為，可以在 [`type Writer`](https://pkg.go.dev/io/#Writer) 查看：
 
 ``` prettyprint
 type Writer interface {

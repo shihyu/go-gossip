@@ -64,7 +64,7 @@ if err != nil {
 
 </div>
 
-這段程式碼摘自〈[Errors are values](https://blog.golang.org/errors-are-values)〉，該文章中提到一個解決的方式是：
+這段程式碼摘自〈[Errors are values](https://go.dev/blog/errors-are-values)〉，該文章中提到一個解決的方式是：
 
 ``` prettyprint
 var err error

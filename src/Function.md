@@ -236,6 +236,57 @@ func main() {
 
 這次使用了 `&number` 取得 `number` 的位址值再傳遞給 `n`，也就是傳遞了**變數位址值**給 `n`，函式中使用 `*n` 取得位址處的值，加上 1 後再將值存回原位址處，因此，透過 `main` 函式中的 `number` 取得的值，也會是加 1 後的值。
 
+# Go 1.18+：泛型函式補充
+
+從 Go 1.18 開始，函式宣告可以帶有型別參數（type parameters），可讓同一個函式套用在多種型態上。例如，底下示範搜尋 slice 中第一個相等元素的位置：
+
+``` prettyprint
+package main
+
+import "fmt"
+
+func IndexOf[T comparable](elems []T, target T) int {
+    for i, elem := range elems {
+        if elem == target {
+            return i
+        }
+    }
+    return -1
+}
+
+func main() {
+    fmt.Println(IndexOf([]int{10, 20, 30}, 20))          // 1
+    fmt.Println(IndexOf([]string{"Go", "Rust"}, "Rust")) // 1
+}
+```
+
+`[T comparable]` 表示 `T` 是型別參數，而 `comparable` 是型別條件（constraint）；因為函式中用了 `==`，所以要求 `T` 必須可比較。
+
+多數情況下，編譯器可以根據引數自動推斷型別參數，因此通常不用寫成 `IndexOf[int](...)` 這麼完整。
+
+如果你剛接觸泛型，建議搭配〈[泛型入門（Go 1.18+）](Generics.html)〉一起閱讀；該章也會補充 `any`、`comparable`、型別集合與 Go 1.24/1.26 的相關更新。
+
+# Go 1.21+：新的內建函式
+
+雖然 `min`、`max`、`clear` 是內建函式（built-ins），不是一般套件函式，不過常會跟函式主題一起學習。從 Go 1.21 開始，可以直接使用：
+
+``` prettyprint
+package main
+
+import "fmt"
+
+func main() {
+    scores := []int{10, 20, 30}
+    fmt.Println(min(10, 3, 22)) // 3
+    fmt.Println(max(10, 3, 22)) // 22
+
+    clear(scores)
+    fmt.Println(scores) // [0 0 0]
+}
+```
+
+`clear` 對 slice 的效果是「清為零值」，長度不變；對 map 的效果則是刪除全部鍵值對。
+
   
   
 

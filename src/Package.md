@@ -8,7 +8,9 @@
 
   
 
-在〈[來個 Hello, World](http://openhome.cc/Gossip/Go/HelloWorld.html)〉中，你已經看到 Go 開發中，一個 workspace 的基本樣貌，你可以看到，裏頭會有 src、pkg、bin 目錄，你會設置 `GOPATH` 環境變數指向這個目錄，這些都是規範好的，也是強制的，正如〈[How to Write Go Code](https://golang.org/doc/code.html)〉中說到的：
+本章主要是早期 `GOPATH` 時代的套件管理方式（歷史脈絡）。在 Go 1.26 的新專案中，通常會優先使用 Go 模組（`go mod init`、`go mod tidy`），可搭配〈[模組入門](Module.html)〉閱讀。
+
+在〈[來個 Hello, World](http://openhome.cc/Gossip/Go/HelloWorld.html)〉中，你已經看到 Go 開發中，一個 workspace 的基本樣貌，你可以看到，裏頭會有 src、pkg、bin 目錄，你會設置 `GOPATH` 環境變數指向這個目錄，這些都是當時的規範，正如〈[How to Write Go Code](https://go.dev/doc/code.html)〉中說到的：
 
 > *The go tool is designed to work with open source code maintained in public repositories. Although you don't need to publish your code, the model for how the environment is set up works the same whether you do or not.*
 
@@ -81,13 +83,15 @@ func main() {
 }
 ```
 
-也就是說，你可以直接將 /src/github.com/JustinSDK/goexample 當作檔案庫（repository）發佈到 Github，那麼，其他人需要你的原始碼時，有個很方便的 `go get` 指令可以用，我將這個範例發佈在 Github 的 [JustinSDK/goexample](https://github.com/JustinSDK/goexample) 了，因此，你可以執行以下指令：
+也就是說，你可以直接將 /src/github.com/JustinSDK/goexample 當作檔案庫（repository）發佈到 Github，那麼，其他人需要你的原始碼時，在當時常會使用 `go get` 指令。我將這個範例發佈在 Github 的 [JustinSDK/goexample](https://github.com/JustinSDK/goexample) 了，因此，你可以執行以下指令：
 
 ``` prettyprint
 go get github.com/JustinSDK/goexample
 ```
 
 `go get` 會自行判斷該使用的協定，以這邊的例子來說，就會使用 `git` 來複製檔案庫至 src 目錄底下，結果就是 src/github.com/JustinSDK 底下，會有個 goexample 目錄，其中就是原始碼，`go get` 在下載原始碼之後，就會開始進行編譯，因此，你也會在 pkg 目錄中的 \$GOOS\_\$GOARCH 目錄底下，github.com/JustinSDK 中找到編譯好的 .a 檔案。
+
+補充（Go 1.26 現況）：在模組模式下，`go get` 主要用於調整目前模組的依賴版本；若是安裝命令列工具，請改用 `go install module/path/cmd@version`（例如 `@latest`）。
 
 接著，你就可以如上頭的程式撰寫 `import "github.com/JustinSDK/goexample"` 來使用這個套件。
 

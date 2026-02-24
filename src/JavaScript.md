@@ -8,7 +8,7 @@
 
   
 
-Go 社群中有不少人直言，Go 支援 WebAssembly 就是要取代 Javascript，雖然我個人覺得，這就姑且當成是個崇高的理想就好，不過這也表示，在編譯為 WebAssembly 之後，可以呼叫 JavaScript 或操作 DOM，自然也是 Go 應該照料之事，為此，Go 1.11 提供了個實驗性的 `syscall/js` 套件來負責這項任務。
+Go 社群中有不少人直言，Go 支援 WebAssembly 就是要取代 Javascript，雖然我個人覺得，這就姑且當成是個崇高的理想就好，不過這也表示，在編譯為 WebAssembly 之後，可以呼叫 JavaScript 或操作 DOM，自然也是 Go 應該照料之事。`syscall/js` 在 Go 1.11 時期以實驗性姿態登場，而在現代版本（例如 Go 1.26）的 `js/wasm` 開發中，仍是重要的橋接套件。
 
 Go 與 JavaScript 畢竟是兩個不同的語言，各擁有不同的資料型態與結構，因而必須先知道，兩個語言間的型態如何對應，這主要定義在 `syscall/js` 套件的 js.go 中。
 

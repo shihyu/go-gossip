@@ -82,7 +82,7 @@ func main() {
 
 # Comma-ok 型態斷言
 
-如果真的要通過編譯，可以使用[型態斷言（Type assertion）](https://golang.org/ref/spec#Type_assertions)：
+如果真的要通過編譯，可以使用[型態斷言（Type assertion）](https://go.dev/ref/spec#Type_assertions)：
 
 ``` prettyprint
 ...同前…略

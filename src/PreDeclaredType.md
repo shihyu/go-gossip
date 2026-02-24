@@ -12,7 +12,7 @@ Go 包括了一些預先定義型態（Pre-declared Type），這包括了布林
 
 # 布林型態
 
-預定義型態也是具有名稱的型態（Named Type），布林型態名稱為 `bool`，只有兩個預先定義的常數 `true` 與 `false`，由於只有兩個值，因此在 [Go 的規格書](https://golang.org/ref/spec#Boolean_types) 中，並沒有明確提及 `bool` 的大小，雖然在 Go 官方網站的 [The Go Playground](https://play.golang.org/) 執行以下程式碼，會告訴你 `bool` 大小是 1：
+預定義型態也是具有名稱的型態（Named Type），布林型態名稱為 `bool`，只有兩個預先定義的常數 `true` 與 `false`，由於只有兩個值，因此在 [Go 的規格書](https://go.dev/ref/spec#Boolean_types) 中，並沒有明確提及 `bool` 的大小，雖然在 Go 官方網站的 [The Go Playground](https://go.dev/play/) 執行以下程式碼，會告訴你 `bool` 大小是 1：
 
 ``` prettyprint
 package main
@@ -28,7 +28,7 @@ func main() {
 }
 ```
 
-附帶一提的是，Go 本身沒有提供 REPL 工具，不過 Go 官方網站的 [The Go Playground](https://play.golang.org/) 是個方便的介面，你也可以在 [Does Go provide REPL?](http://stackoverflow.com/questions/8513609/does-go-provide-repl) 找到一些其他開發者寫的 REPL。
+附帶一提的是，Go 本身沒有提供 REPL 工具，不過 Go 官方網站的 [The Go Playground](https://go.dev/play/) 是個方便的介面，你也可以在 [Does Go provide REPL?](http://stackoverflow.com/questions/8513609/does-go-provide-repl) 找到一些其他開發者寫的 REPL。
 
 # 數字型態
 
@@ -40,7 +40,7 @@ func main() {
 
 如果直接寫下一個整數實字（literal），例如 `10`，在沒有程式上下文（context）的情況下，`10` 是未定型態（Untyped），未定義型態整數的預設型態（Default type）為 `int` 型態，在必須得到一個型態而程式上下文未提供時（例如變數宣告與賦值要進行型態推斷時），就會使用預設型態。
 
-寫下 `10` 這樣的整數，預設是 10 進位制；可以在數字前加上 0，Go 1.13 後可使用 0o 來表示八進位制，加上 0x 表示 16 進位制，此時 a-f and A-F 都可以用來表示 10 到 15，例如 `0xBadFace`，G○ 1.13 後可以使用 `0x1.0p-1021` 來表示浮點數。
+寫下 `10` 這樣的整數，預設是 10 進位制；可以在數字前加上 0，Go 1.13 後可使用 0o 來表示八進位制，加上 0x 表示 16 進位制，此時 a-f and A-F 都可以用來表示 10 到 15，例如 `0xBadFace`，Go 1.13 後可以使用 `0x1.0p-1021` 來表示浮點數。
 
 Go 1.13 後，可以使用 `0b` 來定義二進位數字，例如 `0b00101101`；數字分隔底線在 Go 1.13 後可以使用，例如 `1_000_000`、`0b_1010_0110` 或 `3.1415_9265`。
 
@@ -119,7 +119,7 @@ func main() {
 
 浮點數的名稱為 `float32`、`float64`，分別為 IEEE-754 32 位元與 64 位元浮點數，如果直接寫下一個浮點數實字，預設型態是 `float64` 型態，可使用科學記號，例如 `1.e+0`、`6.67428e-11` 等，常數 `math.MaxFloat32`、`math.MaxFloat64` 分別代表著浮點數的最大儲存範圍。
 
-Go 還有複數（Complex number），其中 `complex64`、`complex128`，可由一個實部數字，加上一個虛部數字與 `i` 來表示複數，例如 `1 + 2i`，寫下一個複數實字，預設型態為 `complex128`，虛數的部份，在 Go 1.13 後，之前談到的數字表示法都可以使用，有三個函式可以用來處理複數，即 `complex`、`real` 與 `imag`，可參考〈[Manipulating complex numbers](https://golang.org/ref/spec#Complex_numbers)〉。
+Go 還有複數（Complex number），其中 `complex64`、`complex128`，可由一個實部數字，加上一個虛部數字與 `i` 來表示複數，例如 `1 + 2i`，寫下一個複數實字，預設型態為 `complex128`，虛數的部份，在 Go 1.13 後，之前談到的數字表示法都可以使用，有三個函式可以用來處理複數，即 `complex`、`real` 與 `imag`，可參考〈[Manipulating complex numbers](https://go.dev/ref/spec#Complex_numbers)〉。
 
 Go 還有個 `uintptr`，可以用來儲存指標值，這之後有機會再來談。
 

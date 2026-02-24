@@ -450,7 +450,7 @@ func main() {
 
 # 模擬建構式、初始式
 
-Go 沒有物件導向語言中建構式或初始式之類的概念，然而可以自行模擬，例如在 [container/list](https://golang.org/pkg/container/list/) 的[原始碼](https://golang.org/src/container/list/list.go)可以看到 `New` 作為一個工廠函式，用來建立新的 `List`，初始的流程寫在 `Init` 方法之中：
+Go 沒有物件導向語言中建構式或初始式之類的概念，然而可以自行模擬，例如在 [container/list](https://pkg.go.dev/container/list/) 的[原始碼](https://go.dev/src/container/list/list.go)可以看到 `New` 作為一個工廠函式，用來建立新的 `List`，初始的流程寫在 `Init` 方法之中：
 
 ``` prettyprint
 ...

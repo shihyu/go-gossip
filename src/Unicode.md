@@ -10,9 +10,9 @@
 
 `unicode`、`unicode/utf8`、`unicode/utf16` 是用來判斷、處理 Unicode 以及 UTF-8、UTF-16 編碼的套件，在使用這些套件之前，要先知道的是，Go 認為「字元」的定義過於模糊，在 Go 中使用 `rune` 儲存 Unicode 碼點（Code point），而 Go 中字串是 UTF-8 編碼的位元組組成。
 
-[`unicode`](https://golang.org/pkg/unicode/) 套件主要用來判斷 Unicode 碼點的特性（properties），在 Unicode 規範中，每個碼點會被指定某些特性，具有相同特性的一組碼點構成一個集合，以便於理解、判斷這組碼點。
+[`unicode`](https://pkg.go.dev/unicode/) 套件主要用來判斷 Unicode 碼點的特性（properties），在 Unicode 規範中，每個碼點會被指定某些特性，具有相同特性的一組碼點構成一個集合，以便於理解、判斷這組碼點。
 
-例如，[General Category](https://en.wikipedia.org/wiki/Template:General_Category_(Unicode)) 特性有 Letter/L 代表字母、Number/N 代表數字等，在 Go 的 [unicode 套件文件的 Variables](https://golang.org/pkg/unicode/#pkg-variables) 一開頭，列出的就是這類特性的變數：
+例如，[General Category](https://en.wikipedia.org/wiki/Template:General_Category_(Unicode)) 特性有 Letter/L 代表字母、Number/N 代表數字等，在 Go 的 [unicode 套件文件的 Variables](https://pkg.go.dev/unicode/#pkg-variables) 一開頭，列出的就是這類特性的變數：
 
 ``` prettyprint
 var (
@@ -42,7 +42,7 @@ type RangeTable struct {
 
 </div>
 
-碼點範圍表可以在 [tables.go](https://golang.org/src/unicode/tables.go) 找到。舉例來說，字母集合的碼點範圍：
+碼點範圍表可以在 [tables.go](https://go.dev/src/unicode/tables.go) 找到。舉例來說，字母集合的碼點範圍：
 
 ``` prettyprint
 var _L = &RangeTable{
@@ -78,9 +78,9 @@ func main() {
 }
 ```
 
-Unicode 將希臘文、漢字等以[文字（Script）](https://en.wikipedia.org/wiki/Script_(Unicode))特性標示，在 Go 的 [unicode 套件文件的 Variables](https://golang.org/pkg/unicode/#pkg-variables) 第二組列出的變數清單，就是對應的 `RangeTable`，例如 `unicode.Han` 是正體中文、簡體中文，以及日、韓、越南文的全部漢字範圍。
+Unicode 將希臘文、漢字等以[文字（Script）](https://en.wikipedia.org/wiki/Script_(Unicode))特性標示，在 Go 的 [unicode 套件文件的 Variables](https://pkg.go.dev/unicode/#pkg-variables) 第二組列出的變數清單，就是對應的 `RangeTable`，例如 `unicode.Han` 是正體中文、簡體中文，以及日、韓、越南文的全部漢字範圍。
 
-另外還有一些其他特性，列在 Go 的 [unicode 套件文件的 Variables](https://golang.org/pkg/unicode/#pkg-variables) 第三組變數清單，例如 `unicode.White_Space` 代表被標示為空白特性的碼點，這包括了半形、全形、Tab 等。
+另外還有一些其他特性，列在 Go 的 [unicode 套件文件的 Variables](https://pkg.go.dev/unicode/#pkg-variables) 第三組變數清單，例如 `unicode.White_Space` 代表被標示為空白特性的碼點，這包括了半形、全形、Tab 等。
 
 如果想要使用多個 RangeTable，`可以透過 IsOneOf`：
 

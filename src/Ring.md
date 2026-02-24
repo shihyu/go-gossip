@@ -43,7 +43,7 @@ func main() {
 }
 ```
 
-[`ring` 的官方文件](https://golang.org/pkg/container/ring/)有相關方法的範例，這邊就不重複列出了，實際應用上，`ring` 可以用來管理有限筆數的歷史記錄、輪播等。
+[`ring` 的官方文件](https://pkg.go.dev/container/ring/)有相關方法的範例，這邊就不重複列出了，實際應用上，`ring` 可以用來管理有限筆數的歷史記錄、輪播等。
 
 這邊的話拿來解一下 [約瑟夫問題（Josephus Problem）](https://openhome.cc/Gossip/AlgorithmGossip/) 好了：
 

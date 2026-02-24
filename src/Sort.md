@@ -117,7 +117,7 @@ func main() {
 
 </div>
 
-在 [Search](https://golang.org/pkg/sort/#Search) 說明中，還有個猜數字的有趣範例，由程式猜出你心中想的數字：
+在 [Search](https://pkg.go.dev/sort/#Search) 說明中，還有個猜數字的有趣範例，由程式猜出你心中想的數字：
 
 ``` prettyprint
 func GuessingGame() {

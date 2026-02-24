@@ -8,11 +8,13 @@
 
   
 
-我在這邊使用的是 Windows 中的 Go 1.13 版本，你可以至 [Go 的官方網站](https://golang.org/) 下載安裝 Go。
+我在這邊原本使用的是 Windows 中的 Go 1.13 版本；若你使用目前的 Go 1.26，可至 [Go 的官方網站](https://go.dev/dl/) 下載安裝。
 
 如果想來點不同的安裝方式，可以參考〈[門外漢的 Go 輕量開發環境](http://openhome.cc/Gossip/CodeData/DockerLayman/DockerLayman4.html)〉，在 Raspberry Pi 上的 Docker 容器中建立相關環境，就目前為止。
 
-你至少得設定 `GOROOT` 環境變數，這會是你的 Go 安裝目錄。
+本文後半段會示範傳統 `GOPATH` 工作方式，這在 Go 1.26 仍有助於理解套件與建構流程，不過新專案通常會優先使用 Go 模組（`go mod init`，可搭配〈[模組入門](Module.html)〉）。
+
+使用官方安裝程式時，通常不需要手動設定 `GOROOT`（安裝程式會處理）；實務上常見只要讓 Go 的 `bin` 目錄在 `PATH` 中即可。
 
 # go run
 
@@ -46,6 +48,8 @@ Hello, World
 ```
 
 # package 與 GOPATH
+
+以下示範的是傳統 `GOPATH` 目錄配置（`src/`、`pkg/`、`bin/`）。在 Go 1.26 的新專案中，通常不需要手動建立這種結構，也不需要把專案放在 `GOPATH` 內，改用模組即可。
 
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 
@@ -132,6 +136,8 @@ go-exercise
 
 `go install packageName` 表示要安裝指定名稱的套件，如果是 `main` 套件，那麼會在 bin 中產生可執行檔，如果是公用套件，那麼會在 pkg 目錄的 `$GOOS`\_`$GOARCH` 目錄中產生 .a 檔案，你可以使用 `go env` 來查看 Go 使用到的環境變數，例如：
 
+（補充：上面這段是以傳統 `GOPATH` 工作模式來理解；在現代模組模式下，編譯快取主要在 `GOCACHE`，模組原始碼快取在 `GOMODCACHE`，不一定會看到同樣的 `pkg/$GOOS_$GOARCH/*.a` 使用方式。）
+
 ``` prettyprint
 set GO111MODULE=
 set GOARCH=amd64
@@ -195,7 +201,7 @@ Hello, Justin
 
 # go doc
 
-`fmt` 的 Printf，就像是 C 的 `printf`，可用的格式控制可參考 [Package fmt](https://golang.org/pkg/fmt/) 的說明。實際上，Go 本身附帶了說明文件，可以執行 `go doc <pkg> <sym>[.<method>]` 來查詢說明。例如：
+`fmt` 的 Printf，就像是 C 的 `printf`，可用的格式控制可參考 [Package fmt](https://pkg.go.dev/fmt) 的說明。實際上，Go 本身附帶了說明文件，可以執行 `go doc <pkg> <sym>[.<method>]` 來查詢說明。例如：
 
 ``` prettyprint
 $ go doc fmt.Printf

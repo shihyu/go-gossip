@@ -57,7 +57,7 @@ var (
 )
 ```
 
-`syscall.Stdin`、`syscall.Stdout`、`syscall.Stderr` 分別是標準輸入、輸出、錯誤的檔案描述，這在 [`syscall` 的文件](https://golang.org/pkg/syscall/#pkg-variables)可以看到：
+`syscall.Stdin`、`syscall.Stdout`、`syscall.Stderr` 分別是標準輸入、輸出、錯誤的檔案描述，這在 [`syscall` 的文件](https://pkg.go.dev/syscall/#pkg-variables)可以看到：
 
 ``` prettyprint
 var (
@@ -67,7 +67,7 @@ var (
 )
 ```
 
-`os.File` 實作了 `io.Reader`、`io.Writer` 等行為，因此只要知道〈[io.Reader、io.Writer](ReaderWriter.html)〉，剩下的就是查詢文件，看看有哪些方法可以使用，沒什麼特別需要示範的了，倒是若需要簡單的檔案讀寫，可以看看 [`ioutil` 套件](https://golang.org/pkg/io/ioutil/)，其中有些簡便的函式：
+`os.File` 實作了 `io.Reader`、`io.Writer` 等行為，因此只要知道〈[io.Reader、io.Writer](ReaderWriter.html)〉，剩下的就是查詢文件，看看有哪些方法可以使用，沒什麼特別需要示範的了，倒是若需要簡單的檔案讀寫，可以看看 [`ioutil` 套件](https://pkg.go.dev/io/ioutil/)（歷史 API），其中有些簡便的函式：
 
 ``` prettyprint
 func NopCloser(r io.Reader) io.ReadCloser
@@ -79,7 +79,17 @@ func TempFile(dir, pattern string) (f *os.File, err error)
 func WriteFile(filename string, data []byte, perm os.FileMode) error
 ```
 
-`ReadFile`、`WriteFile` 只要指定檔案名稱等，程式碼上不需要自行建立檔案、緩衝區之類的，這些函式在 [`ioutil` 套件](https://golang.org/pkg/io/ioutil/) 的文件中，都有範例可以參考。
+`ReadFile`、`WriteFile` 只要指定檔案名稱等，程式碼上不需要自行建立檔案、緩衝區之類的，這些函式在 [`ioutil` 套件](https://pkg.go.dev/io/ioutil/) 的文件中，都有範例可以參考。
+
+補充（Go 1.16+）：`ioutil` 已棄用（deprecated），功能多已移到 `io` 與 `os`：
+
+``` prettyprint
+ioutil.ReadAll   -> io.ReadAll
+ioutil.ReadFile  -> os.ReadFile
+ioutil.WriteFile -> os.WriteFile
+ioutil.TempDir   -> os.MkdirTemp
+ioutil.TempFile  -> os.CreateTemp
+```
 
   
   

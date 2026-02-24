@@ -8,15 +8,17 @@
 
   
 
-Go 在 1.11 時內建了實驗性的模組管理功能，並藉由 `GO111MODULE` 來決定是否啟用，可設定的值是 `auto`（1.11 ~ 1.13 預設）、`on` 與 `off`。
+Go 在 1.11 時內建了實驗性的模組管理功能，並藉由 `GO111MODULE` 來決定是否啟用，可設定的值是 `auto`（1.11 ~ 1.15 的常見預設）、`on` 與 `off`。
 
-若使用 Go 1.13，當設定值是 `auto`，執行建構指令時，會看看是否有個 go.mod 檔案（用來定義依賴的模組），若有就使用 Go 模組功能，如果沒有 go.mod 檔案，就採用舊式 `GOPATH`、vendor 的特性。
+若使用 Go 1.13，當設定值是 `auto`，執行建構指令時，會看看是否有個 go.mod 檔案（用來定義依賴的模組），若有就使用 Go 模組功能；沒有 go.mod 時，則仍可能採用舊式 `GOPATH` / vendor 的工作方式。
 
-當設定值為 `on` 時，就是始終使用 Go 模組功能（從 1.12 之後，go.mod 可以在必要時再新增），模組下載後會自動安裝至 `GOPATH`。
+不過，在現代版本（例如 Go 1.26）中，模組已是標準做法。從 Go 1.16 起，模組模式預設啟用；日常開發通常不需要特別設定 `GO111MODULE`，直接使用 `go mod init` / `go mod tidy` 即可。
 
-go.mod 不可以在 `GOPATH` 之中。
+當設定值為 `on` 時，就是始終使用 Go 模組功能（從 1.12 之後，go.mod 可以在必要時再新增），模組下載內容會放在模組快取（預設位於 `GOPATH/pkg/mod`）。
 
-設定值為 `off` 時就是不使用 Go 模組功能。
+在 Go 1.13 之後，go.mod 可以位於 `GOPATH` 之內或之外；新專案通常直接放在版本控制目錄下即可，不必刻意配合 `GOPATH`。
+
+設定值為 `off` 時就是使用舊式 `GOPATH` 模式（僅建議維護舊專案時使用）。
 
 例如，現在有個 pkgfoo 釋出了 [v1.0.0](https://github.com/JustinSDK/pkgfoo/tree/v1.0.0) 版，而你打算基於它寫個 go-exercise，go-exercise 資料夾中有個 src/main/main.go：
 
@@ -26,40 +28,48 @@ package main
 import "github.com/JustinSDK/pkgfoo"
 
 func main() {
-    kgfoo.Hi()
+    pkgfoo.Hi()
     pkgfoo.Hello()
 }
 ```
 
-現在進入你的 go-exercise 資料夾底下，執行 `go mod init go-exercise`，這會建立一個 go.mod，使用 Go 1.13 的話，預設內容是：
+現在進入你的 go-exercise 資料夾底下，執行 `go mod init go-exercise`，這會建立一個 go.mod；`go` 指令寫入的版本號會依實際安裝版本而異。在 Go 1.26 中，`go mod init` 預設會寫入較低的相容版本（例如 1.25.0），而不是直接寫成 1.26：
 
 ``` prettyprint
 module go-exercise
 
-go 1.13
+go 1.25.0
 ```
 
 從 Go 1.12 開始，預設的 go.mod 中會有版本字段，放置了 go.mod 的資料夾稱為模組根（module root）目錄，通常就是一個 repository 的根目錄，該目錄下的全部套件都屬於該模組（除了那些本身包含 go.mod 檔案的子目錄之外）。
 
-接著執行 `go build -o bin/main.exe src/main/main.go`，這時會自動找出 `import` 陳述，執行了套件的下載並完成建構，此時會顯示以下訊息：
+在 Go 1.13 時，`go build` 常會一邊找出 `import` 陳述、一邊下載套件並更新 `go.mod`。不過從 Go 1.16 開始，`go build` / `go test` 預設不再自動改寫 `go.mod` 與 `go.sum`。在 Go 1.26 中，較常見的做法是先執行 `go mod tidy`（或 `go get` 調整依賴），再執行建構。
+
+另外，因為 `pkgfoo` 現在最新版本可能已經不是 `v1.0.0`，如果你想重現本頁後面「從 `v1.0.0` 昇級到 `v1.0.1`」的過程，可以先明確指定版本：
 
 ``` prettyprint
-go: finding github.com/JustinSDK/pkgfoo v1.0.0
+go get github.com/JustinSDK/pkgfoo@v1.0.0
+```
+
+例如，先執行 `go mod tidy` 時，會看到類似訊息：
+
+``` prettyprint
+go: finding module for package github.com/JustinSDK/pkgfoo
 go: downloading github.com/JustinSDK/pkgfoo v1.0.0
-go: extracting github.com/JustinSDK/pkgfoo v1.0.0
+go: found github.com/JustinSDK/pkgfoo in github.com/JustinSDK/pkgfoo v1.0.0
 ```
 
 而 go.mod 也有了底下內容：
 
 ``` prettyprint
-module exercise
+module go-exercise
 
-go 1.13
+go 1.25.0
 
 require github.com/JustinSDK/pkgfoo v1.0.0
 ```
 
-go.mod 定義了相依的套件與版本，若是第一次執行 `go build`，那麼總是會下載最新版本，你也可以自行編輯 go.mod 的內容，來取得想要的版本，另外你也會發現多了個 go.sum，其中包含了套件的 hash 等訊息，這用來確認取得的是正確的版本：
+go.mod 定義了相依的套件與版本，你也可以自行編輯 go.mod 的內容，來取得想要的版本；另外你也會發現多了個 go.sum，其中包含了套件的 hash 等訊息，這用來確認取得的是正確的版本。實務上常以 `go mod tidy` 來同步整理 `go.mod` 與 `go.sum`：
 
 ``` prettyprint
 github.com/JustinSDK/pkgfoo v1.0.0 h1:XOi67njsT9pcRrsT40Oi3LCA3b1TyIxHd6+9ceGwa0U=
@@ -77,7 +87,9 @@ Helo
 
 現在 appfoo 為了要能取得更新，可以使用 `go get -u`，這會昇級到最新的 MINOR 或 PATCH 版本，像是從 1.0.0 到 1.0.1，或者是 1.0.0 到 1.1.0，是的，這採用的是 [Semantic Versioning](https://semver.org/)；若是使用 `go get -u=patch all`，會將用到的套件昇級至最新的 PATCH 版本，像是從 1.0.0 到 1.0.1；若是使用 `go get package@version`，可以指定昇級至某個版本號，例如 `go get github.com/JustinSDK/pkgfoo@v1.0.1`，然而，不建議以此方式昇級至新的 MAJOR 版本，原因後述。
 
-在這邊因為只是小 bug 更新，就使用 `go get -u=patch all`，這會看到底下的訊息：
+補充（Go 1.26 現況）：這裡的 `go get` 是在「目前模組內管理依賴版本」。如果是安裝命令列工具，請改用 `go install module/path/cmd@version`（例如 `@latest`）；從 Go 1.18 起，`go get` 不再負責建構/安裝可執行檔。
+
+在這邊因為只是小 bug 更新，就使用 `go get -u=patch all`，這會看到類似底下的訊息：
 
 ``` prettyprint
 go: finding github.com/JustinSDK/pkgfoo v1.0.1
@@ -90,7 +102,7 @@ go.mod 的內容也更新了（go.sum 也會更新）：
 ``` prettyprint
 module go-exercise
 
-go 1.13
+go 1.25.0
 
 require github.com/JustinSDK/pkgfoo v1.0.1
 ```
@@ -128,7 +140,7 @@ func main() {
 }
 ```
 
-直接 `go build -o bin/main.exe src/main/main.go`，就會看到下載了 v2.0.0：
+直接 `go build -o bin/main.exe src/main/main.go`，就會看到類似底下下載 v2.0.0 的訊息：
 
 ``` prettyprint
 go: finding github.com/JustinSDK/pkgfoo/v2 v2.0.0
@@ -141,13 +153,15 @@ go: extracting github.com/JustinSDK/pkgfoo/v2 v2.0.0
 ``` prettyprint
 module go-exercise
 
-go 1.13
+go 1.25.0
 
 require (
     github.com/JustinSDK/pkgfoo v1.0.1
     github.com/JustinSDK/pkgfoo/v2 v2.0.0
 )
 ```
+
+補充（Go 1.18+）：如果你同時維護多個模組（例如 app 與數個本地 library），可以使用 `go work init` / `go work use` 建立 workspace，避免在本機開發時大量寫 `replace` 指令。
 
 現在它依賴在…兩個版本？是的，事實上，你也可以同時在 appfoo 中使用：
 

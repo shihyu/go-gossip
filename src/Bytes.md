@@ -8,9 +8,9 @@
 
   
 
-Go 字串的本質是 `[]byte`，如果想基於位元組來處理字串，或者是想處理其他來源的 `[]byte`，可以使用 [`bytes`](https://golang.org/pkg/bytes/) 套件。
+Go 字串的本質是 `[]byte`，如果想基於位元組來處理字串，或者是想處理其他來源的 `[]byte`，可以使用 [`bytes`](https://pkg.go.dev/bytes/) 套件。
 
-因為 Go 字串本質上就是一組 Unicode 碼點的 UTF-8 編碼位元組，[`bytes`](https://golang.org/pkg/bytes/) 與 [`strings`](https://golang.org/pkg/strings/) 套件中提供的函式，有著很大的相似性，只不過前者針對 `[]byte`，後者針對 `string`…唔…好像在說廢話…也就是說…儘管兩者提供的函式在名稱上有重疊，除了函式上的參數或傳回型態不同之外，兩者處理的粒度等也不同，例如 Compare，一個是逐一比較位元組，另一個是逐一比較 Unicode 碼點。
+因為 Go 字串本質上就是一組 Unicode 碼點的 UTF-8 編碼位元組，[`bytes`](https://pkg.go.dev/bytes/) 與 [`strings`](https://pkg.go.dev/strings/) 套件中提供的函式，有著很大的相似性，只不過前者針對 `[]byte`，後者針對 `string`…唔…好像在說廢話…也就是說…儘管兩者提供的函式在名稱上有重疊，除了函式上的參數或傳回型態不同之外，兩者處理的粒度等也不同，例如 Compare，一個是逐一比較位元組，另一個是逐一比較 Unicode 碼點。
 
 類似地，對於頻繁性的字串操作，可以使用 `strings.Builder`，對於對於頻繁性的位元組操作，可以使用 `bytes.Buffer`：
 

@@ -207,7 +207,7 @@ var savings Savings = acct
 fmt.Println(savings == nil)
 ```
 
-這是個 FAQ 了，在〈[Why is my nil error value not equal to nil?](https://golang.org/doc/faq#nil_error)〉就提到了個例子：
+這是個 FAQ 了，在〈[Why is my nil error value not equal to nil?](https://go.dev/doc/faq#nil_error)〉就提到了個例子：
 
 ``` prettyprint
 func returnsError() error {
@@ -251,6 +251,32 @@ var savings2 Savings = savings1
 savings2.name = "Monica Huang"
 fmt.Println(savings.name) // Justin Lin
 ```
+
+# Go 1.18+：介面也可作為型別條件
+
+從 Go 1.18 開始，`interface` 除了用來描述物件要有哪些方法，也可以用來描述「型別集合（type set）」，作為泛型的型別條件（constraint）。
+
+例如：
+
+``` prettyprint
+type StringKeyed interface {
+    ~string
+}
+
+func HasKey[K StringKeyed, V any](m map[K]V, key K) bool {
+    _, ok := m[key]
+    return ok
+}
+```
+
+上例中的 `StringKeyed` 並不是拿來做一般執行期介面值（例如 `var x StringKeyed`），而是拿來限制型別參數 `K` 的可用型別。
+
+另外，Go 1.18 也新增了兩個常見的預定義識別名稱：
+
+- `any`：`interface{}` 的別名。
+- `comparable`：可用 `==`、`!=` 比較的型別集合（只能用在型別條件）。
+
+Go 1.20 之後，像一般介面型別這類「可比較但可能在執行時 panic」的型別，也可以滿足 `comparable` 條件，因此像 `Set[any]` 這類泛型實例化會更容易成立；只是若實際比較到不可比較的動態值（例如內含 slice 的介面值），仍可能在執行時發生 panic。
 
 # 異質陣列或 slice
 

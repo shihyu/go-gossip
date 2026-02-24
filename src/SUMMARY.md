@@ -16,6 +16,7 @@
 - [for 迴圈](For.md)
 - [break、continue、goto](BreakContinueGoto.md)
 - [函式入門](Function.md)
+- [泛型入門（Go 1.18+）](Generics.md)
 - [一級函式](FirstClassFunction.md)
 - [匿名函式與閉包](Closure.md)
 - [defer、panic、recover](DeferPanicRecover.md)

@@ -20,7 +20,7 @@
 
 </div>
 
-使用 Go 1.13 … XD
+原文多以 Go 1.13 為例；目前已補充 Go 1.26 的差異說明（尤其是模組與 `go` 指令行為）。
 
 <div class="ad-2" style="text-align: center;">
 
@@ -82,6 +82,7 @@
 - 函式
 
 - - [函式入門](Function.html)
+  - [泛型入門（Go 1.18+）](Generics.html)
   - [一級函式](FirstClassFunction.html)
   - [匿名函式與閉包](Closure.html)
   - [defer、panic、recover](DeferPanicRecover.html)
@@ -201,9 +202,9 @@ Go 也可以在瀏覽器裏跳舞？
 附錄
 
 - [Go 官方套件說明文件](http://c-faq.com/)
-- [How to Write Go Code](https://golang.org/doc/code.html)
-- [Go Commands](https://golang.org/cmd/)
-- [Effective Go](https://golang.org/doc/effective_go.html)
+- [How to Write Go Code](https://go.dev/doc/code.html)
+- [Go Commands](https://pkg.go.dev/cmd/)
+- [Effective Go](https://go.dev/doc/effective_go.html)
 - ...
 
 <div class="ad336-280" style="text-align: center;">

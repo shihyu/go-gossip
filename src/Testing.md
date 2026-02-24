@@ -8,7 +8,7 @@
 
   
 
-Go 本身附帶了 `testing` 套件，搭配 `go test` 指令，可以自動對套件中的程式碼進行測試，在套件中，測試程式碼必須是 \_test.go 結尾，一個套件中可以有多個 \_test.go，例如，[fmt 套件的原始碼](https://golang.org/src/fmt/) 中，可以看到 export_test.go、fmt_test.go 等，就是測試程式碼。
+Go 本身附帶了 `testing` 套件，搭配 `go test` 指令，可以自動對套件中的程式碼進行測試，在套件中，測試程式碼必須是 \_test.go 結尾，一個套件中可以有多個 \_test.go，例如，[fmt 套件的原始碼](https://go.dev/src/fmt/) 中，可以看到 export_test.go、fmt_test.go 等，就是測試程式碼。
 
 # 功能測試
 
@@ -272,7 +272,7 @@ func BenchmarkAdd(b *testing.B) {
 
 </div>
 
-想知道更多 Go 測試套件的細節，可以參考 [Package testing](https://golang.org/pkg/testing/) 的說明。
+想知道更多 Go 測試套件的細節，可以參考 [Package testing](https://pkg.go.dev/testing/) 的說明。
 
   
   

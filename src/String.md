@@ -174,7 +174,7 @@ func main() {
 
 片段操作時，如果省略冒號之後的數字，則預設取得至字串尾端的子字串，例如 `"Go語言"[3:]` 會傳回 `"\xaa\x9e\xe8\xa8\x80"` 的字串，如果省略冒號之前的數字，預設從索引 0 開始，例如 `"Go語言"[:2]` 會取得 `"Go"` 的字串，也就是 `"\x47\x6f"` 的字串，如果是 `"Go語言"[:]`，那麼就是取得全部字串內容了。
 
-[`strings` 套件](https://golang.org/pkg/strings/) 中有不少字串可用的方法，想做字串操作時，可以多加利用，不過要看清楚是針對什麼在操作。例如 `strings.Index`：
+[`strings` 套件](https://pkg.go.dev/strings/) 中有不少字串可用的方法，想做字串操作時，可以多加利用，不過要看清楚是針對什麼在操作。例如 `strings.Index`：
 
 ``` prettyprint
 package main
@@ -235,7 +235,7 @@ U+8A9E '語' 位元起始位置 2
 U+8A00 '言' 位元起始位置 5
 ```
 
-總而言之，Go 的字串是由 UTF-8 編碼的位元組構成，在〈[Strings, bytes, runes and characters in Go](https://blog.golang.org/strings)〉談到了這麼設計的理由是，「字元」的定義太模稜兩可了，Go 為了避免模稜兩可，就將字串定義為 UTF-8 編碼的位元組構成，而 `rune` 用於儲存碼點。
+總而言之，Go 的字串是由 UTF-8 編碼的位元組構成，在〈[Strings, bytes, runes and characters in Go](https://go.dev/blog/strings)〉談到了這麼設計的理由是，「字元」的定義太模稜兩可了，Go 為了避免模稜兩可，就將字串定義為 UTF-8 編碼的位元組構成，而 `rune` 用於儲存碼點。
 
 PS. 這大概也是為何，我會整理出〈[亂碼 1/2](http://openhome.cc/Gossip/Encoding/)〉的原因 … XD
 

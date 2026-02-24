@@ -52,7 +52,7 @@
 
 # gofmt 簡單重構
 
-`gofmt` 也可以使用 `-r` 指定規則來實現簡單的重構，例如在〈[Command gofmt](https://golang.org/cmd/gofmt/)〉文件說明中，有個 `gofmt -r '(a) -> a' -l *.go` 可以列出 .go 檔案中有多餘括號的檔案名稱（透過 `-l` 引數來列出名稱），要直接移除 .go 檔案中多餘的括號並重寫原有的 .go 檔案，可以使用 `gofmt -r '(a) -> a' -w *.go`。
+`gofmt` 也可以使用 `-r` 指定規則來實現簡單的重構，例如在〈[Command gofmt](https://pkg.go.dev/cmd/gofmt/)〉文件說明中，有個 `gofmt -r '(a) -> a' -l *.go` 可以列出 .go 檔案中有多餘括號的檔案名稱（透過 `-l` 引數來列出名稱），要直接移除 .go 檔案中多餘的括號並重寫原有的 .go 檔案，可以使用 `gofmt -r '(a) -> a' -w *.go`。
 
 `-r` 接受的規則是 `pattern -> replacement`，其中 `pattern` 與 `replacement` 必須是合法的 Go 語法，而單一、小寫的字元會被作為萬用字元（Wildcard），因此，如果有個原始碼內容是：
 
@@ -96,9 +96,13 @@ func Hello(who string) {
 
 你可以執行 `gofmt -r 'a + "Hello, " -> "Hello, " + a' -w *.go`，甚至 `gofmt -r 'a + b -> b + a' -w` 來達到這個目的。
 
-`gofmt` 還有個 `-s` 引數，可以嘗試為你簡化原始碼，你可以看看〈[Command gofmt](https://golang.org/cmd/gofmt/)〉文件中的說明，瞭解它會做哪些簡化，文件中也談到，簡化後的 Go 原始碼，可能會與舊版的 Go 不相容。
+`gofmt` 還有個 `-s` 引數，可以嘗試為你簡化原始碼，你可以看看〈[Command gofmt](https://pkg.go.dev/cmd/gofmt/)〉文件中的說明，瞭解它會做哪些簡化，文件中也談到，簡化後的 Go 原始碼，可能會與舊版的 Go 不相容。
 
-至於方才提及的 `goimports`，也可以透過 `go get golang.org/x/tools/cmd/goimports` 來安裝，例如：
+至於方才提及的 `goimports`，在 Go 1.18+ / 1.26 的常見做法是使用 `go install` 搭配版本號來安裝，例如：
+
+``` prettyprint
+go install golang.org/x/tools/cmd/goimports@latest
+```
 
 # go fmt
 

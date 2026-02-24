@@ -8,7 +8,7 @@
 
   
 
-Go 的字串基本上是個 `[]byte`，在程式語言強弱型別的光譜中，Go 位於強型別的一端，對於字串與其他型態之間的轉換，往往得自行處理，在這方面，[`strconv` 套件](https://golang.org/pkg/strconv/)就提供了不少的函式。
+Go 的字串基本上是個 `[]byte`，在程式語言強弱型別的光譜中，Go 位於強型別的一端，對於字串與其他型態之間的轉換，往往得自行處理，在這方面，[`strconv` 套件](https://pkg.go.dev/strconv/)就提供了不少的函式。
 
 例如，最常用的是將字串剖析為某個型態：
 
@@ -52,7 +52,7 @@ b = strconv.AppendBool(b, true)
 fmt.Println(string(b))
 ```
 
-對於大量的字串附加處理，可以使用 [`strings` 套件](https://golang.org/pkg/strings/)的 `Builder`，一來操作上比較方便，二來可看看是否可取得較好的效能表現：
+對於大量的字串附加處理，可以使用 [`strings` 套件](https://pkg.go.dev/strings/)的 `Builder`，一來操作上比較方便，二來可看看是否可取得較好的效能表現：
 
 ``` prettyprint
 type Builder
@@ -162,7 +162,7 @@ func main() {
 }
 ```
 
-其他對於字串的比較、分割、大小寫轉換等處理，`strings` 中提供了一系列的函式，[`strings` 套件](https://golang.org/pkg/strings/)的文件中都有程式碼示範。
+其他對於字串的比較、分割、大小寫轉換等處理，`strings` 中提供了一系列的函式，[`strings` 套件](https://pkg.go.dev/strings/)的文件中都有程式碼示範。
 
   
   

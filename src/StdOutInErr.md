@@ -24,7 +24,7 @@ func main() {
 }
 ```
 
-`%s`、`%d` 是格式符號，在 Go 中稱為 verb，Go 可用的 verb 可以在 [`fmt`](https://golang.org/pkg/fmt/) 套件的文件中找到。
+`%s`、`%d` 是格式符號，在 Go 中稱為 verb，Go 可用的 verb 可以在 [`fmt`](https://pkg.go.dev/fmt/) 套件的文件中找到。
 
 `Scanf` 就類似 C 語言中的 `scanf`，可以格式化地取得輸入，底下是個範例：
 
@@ -81,7 +81,7 @@ func main() {
 }   
 ```
 
-實際上，[`os.File`](https://golang.org/pkg/os/#File) 可用的方法不只有 `Read`、`Write`，先留意這兩個方法的目的在於，這兩個方法分別符合 `io.Reader`、`io.Writer` 定義的行為：
+實際上，[`os.File`](https://pkg.go.dev/os/#File) 可用的方法不只有 `Read`、`Write`，先留意這兩個方法的目的在於，這兩個方法分別符合 `io.Reader`、`io.Writer` 定義的行為：
 
 ``` prettyprint
 type Reader interface {
@@ -138,7 +138,7 @@ func main() {
 
 `Fscanln` 會傳回掃描的筆數，如果筆數少於指定的掃描數量，`err` 會指出原因，在檔案讀取結束（End of file）時，`err` 會是 `io.EOF`，在上例中，資料來源是個格式確定的字串，因此僅簡單地判斷 `err` 是否為 `io.EOF` 來結束掃描。
 
-`os.File` 不過是具有 `io.Reader`、`io.Writer` 的行為罷了，`os.File` 代表檔案，也就是說 `Fprint`、`Fprintln`、`Fprintf`、`Fscan`、`Fscanln`、`Fscanf` 等函式，也可以用在檔案讀寫，其實標準輸入、輸出、錯誤等，也是被視為檔案的，這在 `os` 的 [file.go](https://golang.org/src/os/file.go) 可以看到：
+`os.File` 不過是具有 `io.Reader`、`io.Writer` 的行為罷了，`os.File` 代表檔案，也就是說 `Fprint`、`Fprintln`、`Fprintf`、`Fscan`、`Fscanln`、`Fscanf` 等函式，也可以用在檔案讀寫，其實標準輸入、輸出、錯誤等，也是被視為檔案的，這在 `os` 的 [file.go](https://go.dev/src/os/file.go) 可以看到：
 
 ``` prettyprint
 var (

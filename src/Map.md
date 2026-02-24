@@ -41,7 +41,7 @@ func main() {
 
 類似一些語言（例如 Python），要設定一個鍵值對應時，使用 `[]` 與 `=` 指定，要取得鍵對應的值時，使用 `[]` 指定鍵，這會傳回對應的值，想知道 `map` 中的鍵數，可以使用 `len` 函式。
 
-要注意的是，可用來做為鍵的值，必須是 [comparable](https://blog.golang.org/go-maps-in-action)，就目前來說，你要先知道的 comparable 型態有布林、數字、字串、指標（pointer）、channel、interface、struct，或者含有這這些型態的陣列，這些是都可以使用 `==` 來比較的值；而 slice、map 與函式，就不能用來做為鍵。
+要注意的是，可用來做為鍵的值，必須是 [comparable](https://go.dev/blog/go-maps-in-action)，就目前來說，你要先知道的 comparable 型態有布林、數字、字串、指標（pointer）、channel、interface、struct，或者含有這這些型態的陣列，這些是都可以使用 `==` 來比較的值；而 slice、map 與函式，就不能用來做為鍵。
 
 如果已知 map 中會有的鍵值對，則可以如下建立 map：
 

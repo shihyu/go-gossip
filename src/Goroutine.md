@@ -104,6 +104,11 @@ func main() {
 
 `sync.WaitGroup` 可以用來等待一組 Goroutine 的完成，主流程中建立 `sync.WaitGroup`，並透過 `Add` 告知要等待的 Goroutine 數量，並使用 `Wait` 等待 Goroutine 結束，而每個 Goroutine 結束前，必須執行 `sync.WaitGroup` 的 `Done` 方法。
 
+重點是，`Add` 的數字代表「之後會呼叫 `Done()` 的 Goroutine 數量」，不是程式總共會跑幾步或迴圈會執行幾次。
+
+- `Add` 設太小：可能提早結束，甚至在多呼叫 `Done()` 時發生 `panic: sync: negative WaitGroup counter`
+- `Add` 設太大：`wg.Wait()` 會一直卡住不返回
+
 因此，我們可以使用 `sync.WaitGroup` 來改寫以上的範例：
 
 ``` prettyprint

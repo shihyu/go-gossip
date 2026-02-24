@@ -43,9 +43,9 @@ Go 有自己的匯入物件，也就是 `go.importObject`，這個物件主要�
 
 也就是說，如果想要在 Go 中定義函式，然後在 JavaScript 中呼叫，就是將 Go 中定義的函式，設定給某個對應的 JavaScript 物件，之後就可以在 JavaScript 環境中使用了，只不過在定義時，必須留意 JavaScript 與 Go 的型態對應。
 
-可以被 JavaScript 環境呼叫的 Go 函式，必須被包裝為 `js.Callback` 型態，這個結構型態內嵌 `js.Value`，也就是它也是一種值，想要建立 `js.Callback` 實例，可以透過 `js.NewCallback` 函式（定義在 callback.go）。
+在現代版本（例如 Go 1.26）中，可以被 JavaScript 環境呼叫的 Go 函式，通常會使用 `js.Func` 搭配 `js.FuncOf` 來包裝；這個值可以設定到 JavaScript 物件上，之後由 JavaScript 呼叫。
 
-要能被 JavaScript 呼叫的 Go 函式，參數型態是 `[]js.Value`，也就是 `js.Value` 的 `slice`，`slice` 的元素代表著呼叫函式時傳入的引數，你可以想像 JavaScript 函式中 `arguments` 的對應型態。
+要能被 JavaScript 呼叫的 Go 函式，常見簽章為 `func(this js.Value, args []js.Value) any`，其中 `args` 是呼叫函式時傳入的引數，你可以想像 JavaScript 函式中 `arguments` 的對應型態。
 
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 
@@ -60,15 +60,16 @@ import "syscall/js"
 
 func main() {
     // 註冊在 JavaScript 全域
-    js.Global().Set("printSumTo", js.NewCallback(printSum))
+    js.Global().Set("printSumTo", js.FuncOf(printSum))
     // 阻斷 main 流程
     select {}   
 }
 
-func printSum(args []js.Value) {
+func printSum(this js.Value, args []js.Value) any {
     c1 := args[0]         // 結果顯示到這個 div 
     numbers := args[1:]   // 接下來是要加總的數字
     c1.Set("innerHTML", sum(numbers))
+    return nil
 }
 
 func sum(numbers []js.Value) int {
@@ -84,7 +85,7 @@ func sum(numbers []js.Value) int {
 
 </div>
 
-目前 Go 給 JavaScript 回呼用的函式不支援傳回值，未來也許會進一步支援，如果你想將結果帶回 JavaScript 環境，就是以副作用的方式實現，例如改變某個 JavaScript 物件的狀態，像是這邊是改變某個 DOM 的 `innerHTML`。
+`js.FuncOf` 的回呼可傳回值（會轉為對應的 JavaScript 值），不過像事件處理器這類場合，通常仍以副作用方式實現比較常見，例如改變某個 JavaScript 物件的狀態，像是這邊是改變某個 DOM 的 `innerHTML`。
 
 因為 Go 的 `main` 執行完，模組的程式就結束了，這樣 Go 中定義的函式就沒有了，然而，事件會是在之後才發生，因而要被回呼的函式必須存活著，為了這個目的，範例中使用 `select {}` 來阻斷流程，視需求而定，你也可以用別的方式來設計某種阻斷。
 
@@ -162,7 +163,7 @@ import (
 
 func main() {
     // 註冊按鈕事件
-    dom("runButton").Call("addEventListener", "click", js.NewCallback(cal))
+    dom("runButton").Call("addEventListener", "click", js.FuncOf(cal))
     select {}
 }
 
@@ -172,10 +173,11 @@ func dom(id string) js.Value {
 }
 
 // 按下 Run 的事件處理器
-func cal(args []js.Value) {
+func cal(this js.Value, args []js.Value) any {
     n1, _ := inputValue("n1")
     n2, _ := inputValue("n2")
     dom("r").Set("innerHTML", n1+n2)
+    return nil
 }
 
 // 取得輸入欄位值

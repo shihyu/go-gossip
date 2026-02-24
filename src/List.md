@@ -72,7 +72,9 @@ func main() {
 }
 ```
 
-你可能會有問題，`Element` 的 `Value` 型態是 `interface{}`，那麼想操作保存的元素值上的欄位、方法時，不就要知道型態嗎？就目前來說，Go 不支援泛型，必須透過型態斷言：
+你可能會有問題，`Element` 的 `Value` 型態是 `interface{}`，那麼想操作保存的元素值上的欄位、方法時，不就要知道型態嗎？這裡仍然需要透過型態斷言：
+
+補充（Go 1.18+）：Go 已支援泛型，不過 `container/list` 本身仍是舊有 API 風格（實務上可視為 `any` / `interface{}` 容器），因此若你需要型別安全的清單結構，常見做法是自行包一層泛型型別。
 
 ``` prettyprint
 package main

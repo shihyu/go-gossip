@@ -8,9 +8,9 @@
 
   
 
-Go 1.11 實驗性地加入了 WebAssembly 的支援，這表示你可以使用 Go 來撰寫程式碼，然後令其在網頁中執行，也可以與瀏覽器互動，像是瀏覽器的 JavaScript 環境、DOM 操作等。
+Go 1.11 當時以實驗性功能加入了 WebAssembly 支援；在現代版本（例如 Go 1.26）中，`js/wasm` 已是常見目標之一，你可以使用 Go 來撰寫程式碼，然後令其在網頁中執行，也可以與瀏覽器互動，像是瀏覽器的 JavaScript 環境、DOM 操作等。
 
-對 Go 開發者而言，理想的狀況下，若 Go 封裝的好，最好是可以完全忽略 JavaScript、瀏覽器環境等事實，也不需要知道 WebAssembly 的細節，然而，畢竟目前還是實驗性質，如果能認識 JavaScript、瀏覽器、WebAssembly 的特性，對使用 Go 撰寫程式並編譯為 WebAssembly 來說，是有很大的幫助的。
+對 Go 開發者而言，理想的狀況下，若 Go 封裝的好，最好是可以完全忽略 JavaScript、瀏覽器環境等事實，也不需要知道 WebAssembly 的細節；不過，若能認識 JavaScript、瀏覽器、WebAssembly 的特性，對使用 Go 撰寫程式並編譯為 WebAssembly 來說，仍有很大的幫助。
 
 如果對 JavaScript、瀏覽器的細節有興趣，建議參考〈[ECMAScript 本質部份](https://openhome.cc/Gossip/ECMAScript/)〉，如果對 WebAssembly 的細節有興趣，建議參考〈[WebAssembly](https://openhome.cc/Gossip/WebAssembly/)〉文件。
 
@@ -54,13 +54,13 @@ SET GOARCH=wasm
 go build -o test.wasm main.go
 ```
 
-test.wasm 是編譯出來的 WebAssembly 模組位元組碼，除了你撰寫的程式之外，根據〈[Go 1.11 Release Notes](https://goo.gl/YfaETG)〉，編譯出來的 WebAssembly 模組也包含了 goroutine、垃圾收集、maps 等功能的執行環境，最小約在 2MB 左右，壓縮後可以減至 500KB。
+test.wasm 是編譯出來的 WebAssembly 模組位元組碼。體積會依 Go 版本、程式內容與最佳化方式而異；早期 Go 1.11 的 wasm hello world 常見約數 MB 等級（壓縮後可明顯降低），現代版本的結果也仍建議搭配壓縮與快取策略評估。
 
 接下來就是開個 HTML 檔案，在當中使用 JavaScript，運用 Fetch API、WebAssembly API 等，取得、編譯、初始化 WebAssembly 模組，這些細節在〈[WebAssembly](https://openhome.cc/Gossip/WebAssembly/)〉文件都有談到。
 
-如果想要直接有個現成的載入頁面可以使用，可以複製 Go 安裝目錄的 misc\wasm 中 wasm_exec.html 與 wasm_exec.js 到你的工作目錄之中，wasm_exec.html 裏頭寫的 JavaScript，會使用 Fetch API 來取得 test.wasm，這也是為什麼，方才編譯時指定輸出檔案名稱為 test.wasm 的原因。
+如果想要直接有個現成的載入頁面可以使用，在 Go 1.26 可從 Go 安裝目錄的 `lib/wasm` 取得 `wasm_exec.html` 與 `wasm_exec.js`（舊版文件常見 `misc/wasm` 路徑）。`wasm_exec.html` 裏頭寫的 JavaScript，會使用 Fetch API 來取得 test.wasm，這也是為什麼，方才編譯時指定輸出檔案名稱為 test.wasm 的原因。
 
-如果你有安裝 Node.js，那麼可以直接搭配 wasm_exec.js 來運行 test.wasm，這會顯示 Hello, WebAssembly：
+如果你有安裝 Node.js，Go 1.26 也可使用 `go_js_wasm_exec`（或參考 `lib/wasm/wasm_exec_node.js`）來運行 test.wasm。舊版文件常見直接搭配 `wasm_exec.js` 的方式，實際可用性會依版本而異：
 
 ``` prettyprint
 node wasm_exec.js test.wasm

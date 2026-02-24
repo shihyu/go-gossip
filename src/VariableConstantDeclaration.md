@@ -75,7 +75,7 @@ var x, y, z = 10, 3.14, "Justin"
 ``` prettyprint
 var (
     x = 10        // int 型態
-    y = 3.14      // float32 型態
+    y = 3.14      // float64 型態
     z = "Justin"  // string 型態
 )
 ```
@@ -213,7 +213,7 @@ func main() {
 
 由於常數可以是未定型態，因此一個有趣的地方就是，像 `2 + 3.0`、`15 / 4`、`15 / 4.0` 這樣的常數運算式，該怎麼在編譯時期決定它們的值？答案是根據運算式中的常數運算元是整數、`rune`（單引號括住的常數）、浮點數或複數來決定，如果運算式中包括了越後面的常數，就會用它來決定。
 
-因此，`2 + 3.0` 會是未定型態的浮點數 `5.0`，`15 / 4` 會是未定型態的整數 `3`，然而，`15 / 4.0`，會是浮點數型態的 `3.75`，在規格書的〈[Constant expressions](https://golang.org/ref/spec#Constant_expressions)〉中，列出了說明以及一些範例，例如：
+因此，`2 + 3.0` 會是未定型態的浮點數 `5.0`，`15 / 4` 會是未定型態的整數 `3`，然而，`15 / 4.0`，會是浮點數型態的 `3.75`，在規格書的〈[Constant expressions](https://go.dev/ref/spec#Constant_expressions)〉中，列出了說明以及一些範例，例如：
 
 ``` prettyprint
 const a = 2 + 3.0          // a == 5.0   (untyped floating-point constant)
@@ -237,7 +237,7 @@ const Φ = iota*1i - 1/1i   //            (untyped complex constant)
 
 現在，應該能明白，〈[認識預定義型態](http://openhome.cc/Gossip/Go/PreDeclaredType.html)〉中 `math.MaxInt64` 若不加上 `int64`，何以會 overflow 的錯誤了。
 
-附帶一提的是，在 Go 中，模組中定義的名稱若要能在模組外可見，必須是首字大寫，而對於像 `math.MaxInt64` 這類的公用常數，可以定義在一個 .go 檔案之中，例如 `math.MaxInt64`，就是定義在一個 [const.go](https://golang.org/src/math/const.go) 之中。
+附帶一提的是，在 Go 中，模組中定義的名稱若要能在模組外可見，必須是首字大寫，而對於像 `math.MaxInt64` 這類的公用常數，可以定義在一個 .go 檔案之中，例如 `math.MaxInt64`，就是定義在一個 [const.go](https://go.dev/src/math/const.go) 之中。
 
 # 使用 iota 列舉
 
@@ -275,6 +275,63 @@ const (
 
 ``` prettyprint
 const x, y, z = iota, iota, iota
+```
+
+# Go 1.20+ / 1.21+ / 1.26 補充
+
+本章談變數、常數與型別轉換，這裡補充幾個較新的語法與內建函式。
+
+Go 1.17 起可將 slice 轉成陣列指標，Go 1.20 起也可直接轉成陣列（長度不足時會 panic）：
+
+``` prettyprint
+package main
+
+import "fmt"
+
+func main() {
+    s := []int{10, 20, 30}
+    ap := (*[3]int)(s) // Go 1.17+
+    a := [3]int(s)     // Go 1.20+
+
+    ap[0] = 99
+    fmt.Println(s) // [99 20 30]
+    fmt.Println(a) // [10 20 30]（a 是轉換當下的值複製）
+}
+```
+
+Go 1.21 新增 `min`、`max`、`clear` 三個內建函式：
+
+``` prettyprint
+package main
+
+import "fmt"
+
+func main() {
+    nums := []int{3, 1, 2}
+    m := map[string]int{"a": 1, "b": 2}
+
+    fmt.Println(min(3, 1, 2)) // 1
+    fmt.Println(max(3, 1, 2)) // 3
+
+    clear(nums)
+    clear(m)
+    fmt.Println(nums) // [0 0 0]
+    fmt.Println(m)    // map[]
+}
+```
+
+Go 1.26 起，`new` 的運算元可以是運算式，能直接建立並初始化指標值：
+
+``` prettyprint
+package main
+
+import "fmt"
+
+func main() {
+    p := new(42)
+    q := new(int64(300))
+    fmt.Println(*p, *q) // 42 300
+}
 ```
 
   

@@ -20,7 +20,7 @@ type Interface interface {
 }
 ```
 
-也就是說，除了實現 `sort.Interface` 的 `Len`、`Less`、`Swap` 方法之外，還要實現 `Push` 與 `Pop` 的行為，在 [`heap` 的 Go 官方文件說明](https://golang.org/pkg/container/heap/) 有個簡單範例：
+也就是說，除了實現 `sort.Interface` 的 `Len`、`Less`、`Swap` 方法之外，還要實現 `Push` 與 `Pop` 的行為，在 [`heap` 的 Go 官方文件說明](https://pkg.go.dev/container/heap/) 有個簡單範例：
 
 ``` prettyprint
 type IntHeap []int

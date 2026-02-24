@@ -172,7 +172,7 @@ func main() {
 }
 ```
 
-`==` 與 `!=` 只能用在 comparable 的運算元上，這有一套嚴格規則，Go 語言中哪些值是可以比較的，可以參考規格書中〈[Comparison operators](https://golang.org/ref/spec#Comparison_operators)〉的說明。
+`==` 與 `!=` 只能用在 comparable 的運算元上，這有一套嚴格規則，Go 語言中哪些值是可以比較的，可以參考規格書中〈[Comparison operators](https://go.dev/ref/spec#Comparison_operators)〉的說明。
 
 Go 中沒有 `?:` 三元條件運算子。
 

@@ -145,6 +145,70 @@ Go 的 `for` 可以搭配 `range`，對 slice、陣列、`string`、`map` 和 ch
 
 對於 slice、陣列、`string`、`map`，在之前的〈[位元組構成的字串](http://openhome.cc/Gossip/Go/String.html)〉、〈[身為複合值的陣列](http://openhome.cc/Gossip/Go/Array.html)〉、〈[底層為陣列的 slice](http://openhome.cc/Gossip/Go/Slice.html)〉與〈[成對鍵值的 map](http://openhome.cc/Gossip/Go/Map.html)〉中，都有相關範例示範，這邊不再贅述。
 
+# Go 1.22+ 與 1.23+ 的 for 補充
+
+從 Go 1.22 開始，`for` 迴圈中宣告的變數，會在每次迭代建立新的變數實例，這修正了過去常見的閉包捕捉問題。例如：
+
+``` prettyprint
+package main
+
+import "fmt"
+
+func main() {
+    funcs := []func(){}
+    for _, v := range []string{"a", "b", "c"} {
+        funcs = append(funcs, func() {
+            fmt.Println(v)
+        })
+    }
+    for _, f := range funcs {
+        f()
+    }
+}
+```
+
+在 Go 1.22 之後，上例會依序印出 `a`、`b`、`c`（舊版本常會看到重複最後一個值）。
+
+Go 1.22 也支援對整數直接使用 `range`，這相當於從 `0` 迭代到 `n-1`：
+
+``` prettyprint
+package main
+
+import "fmt"
+
+func main() {
+    for i := range 5 {
+        fmt.Println(i)
+    }
+}
+```
+
+Go 1.23 更進一步支援對 iterator function 使用 `range`，常見型態之一是 `func(func(T) bool)`：
+
+``` prettyprint
+package main
+
+import "fmt"
+
+func Counter(n int) func(func(int) bool) {
+    return func(yield func(int) bool) {
+        for i := range n {
+            if !yield(i) {
+                return
+            }
+        }
+    }
+}
+
+func main() {
+    for v := range Counter(3) {
+        fmt.Println(v)
+    }
+}
+```
+
+這讓自訂容器或序列，也能自然地配合 `for range` 語法使用。
+
   
   
 

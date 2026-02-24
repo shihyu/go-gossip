@@ -361,7 +361,7 @@ func main() {
 
 技術上來說，上面的例子，只是傳了 `x` 的值複本給 `reflect.ValueOf()`，因此，對其設值並無意義。
 
-若對反射想進一步研究，可以參考〈[The Laws of Reflection](http://blog.golang.org/laws-of-reflection)〉。
+若對反射想進一步研究，可以參考〈[The Laws of Reflection](https://go.dev/blog/laws-of-reflection)〉。
 
   
   

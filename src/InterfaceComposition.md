@@ -146,6 +146,46 @@ func main() {
 
 更精確來說，Go 本身並非基於類別，沒有提供繼承語法，也就沒有父介面、子介面的概念，以上僅僅只是以行為的內嵌實現了繼承的概念，因而是就看不看得到相關的行為，來判斷是否可通過編譯。
 
+# Go 1.18+：型別條件中的介面組合
+
+從 Go 1.18 開始，介面除了行為組合，也能在泛型中用來組合型別條件。這類介面通常不是拿來建立執行期介面值，而是用在型別參數限制上。
+
+例如，可以先定義數值族群，再組合成更大的條件：
+
+``` prettyprint
+type Integer interface {
+    ~int | ~int8 | ~int16 | ~int32 | ~int64
+}
+
+type Unsigned interface {
+    ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
+}
+
+type Number interface {
+    Integer
+    Unsigned
+    ~float32 | ~float64
+}
+```
+
+這裡的 `Number` 是透過介面內嵌（組合）與 union type element（`|`）建立出來的型別條件。
+
+Go 1.24 起，generic type aliases 完整支援，因此可以更自然地把這類條件用在 alias 上，例如：
+
+``` prettyprint
+type Set[T comparable] = map[T]struct{}
+```
+
+Go 1.26 也放寬了限制：泛型型別可以在自己的型別參數列表中參照自己，像是：
+
+``` prettyprint
+type Adder[A Adder[A]] interface {
+    Add(A) A
+}
+```
+
+這對某些需要「與自身同型態運算」的泛型介面或資料結構定義會比較直接。
+
   
   
 

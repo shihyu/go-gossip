@@ -66,9 +66,9 @@
 
 當然，基本上還是要有一些約定，例如，在函式之前，緊接著函式的註解，中間沒有空白行，就是函式的文件說明來源。
 
-類似地，在套件之前，緊接著套件的註解，就是套件的文件說明來源，通常，一個套件的文件說明，會是來自於套件中，一個 doc.go 中 `package` 宣告前的註解，例如，你可以在 [`fmt` 的原始碼目錄](https://golang.org/src/fmt/) 中，找到一個 [doc.go](https://golang.org/src/fmt/doc.go)，其中除了 `package fmt` 之外，沒有任何原始碼，剩下的只有註解。
+類似地，在套件之前，緊接著套件的註解，就是套件的文件說明來源，通常，一個套件的文件說明，會是來自於套件中，一個 doc.go 中 `package` 宣告前的註解，例如，你可以在 [`fmt` 的原始碼目錄](https://go.dev/src/fmt/) 中，找到一個 [doc.go](https://go.dev/src/fmt/doc.go)，其中除了 `package fmt` 之外，沒有任何原始碼，剩下的只有註解。
 
-除了函式、套件之外，最頂層的型態宣告、變數、常數等前緊接著的註解，都可以是文件的來源，不相鄰的註解則會被 `godoc` 忽略，如果有已知的 Bug，可以使用 `BUG()` 標示，例如 [bytes.go](https://golang.org/src/bytes/bytes.go) 中有個：
+除了函式、套件之外，最頂層的型態宣告、變數、常數等前緊接著的註解，都可以是文件的來源，不相鄰的註解則會被 `godoc` 忽略，如果有已知的 Bug，可以使用 `BUG()` 標示，例如 [bytes.go](https://go.dev/src/bytes/bytes.go) 中有個：
 
 ``` prettyprint
 // BUG(rsc): The rule Title uses for word boundaries does not handle Unicode punctuation properly.
@@ -76,25 +76,25 @@ func Title(s []byte) []byte {
     ....
 ```
 
-這會出現在文件的 [Bugs 區段](https://golang.org/pkg/bytes/#pkg-note-BUG)。
+這會出現在文件的 [Bugs 區段](https://pkg.go.dev/bytes/#pkg-note-BUG)。
 
 如果你想要從註解產生 HTML 文件（使用 `-html` 引數），那麼有幾個簡單的規則（用過 Markdown 的應該感覺有點熟悉），參考一下 Go 的原始碼，應該能很快地掌握。
 
 基本上，`go doc` 會在 `GOROOT` 與 `GOPATH` 中的原始碼查詢註解作為文件，如果想改變查詢時的 Go 目錄，可以使用 `-goroot` 指定。
 
-有關註解與文件間的關係，也可以進一步參考 [Effective Go 的 Commentary](https://golang.org/doc/effective_go.html#commentary)。
+有關註解與文件間的關係，也可以進一步參考 [Effective Go 的 Commentary](https://go.dev/doc/effective_go.html#commentary)。
 
 # godoc 文件伺服器
 
-Go 1.2rc1 之後，曾經從 `go doc` 改用 `godoc` 指令了，不過，從 [Go 1.5 Release Notes](https://golang.org/doc/go1.5) 中看到，Go 1.5 有個新的 `go doc` 指令，專門用於命令列模式下的文件查詢，這使得 `godoc` 主要剩下文件服器的功能，因而在 Go 1.13 中，`godoc` 被移除。
+Go 1.2rc1 之後，曾經從 `go doc` 改用 `godoc` 指令了，不過，從 [Go 1.5 Release Notes](https://go.dev/doc/go1.5) 中看到，Go 1.5 有個新的 `go doc` 指令，專門用於命令列模式下的文件查詢，這使得 `godoc` 主要剩下文件服器的功能，因而在 Go 1.13 中，`godoc` 被移除。
 
-如果在一個網路受限的環境，又想要在網頁上查詢文件，還是可以安裝 `godoc`：
+如果在一個網路受限的環境，又想要在網頁上查詢文件，還是可以安裝 `godoc`（來自 `x/tools`）：
 
 ``` prettyprint
-go get -u golang.org/x/tools/cmd/godoc
+go install golang.org/x/tools/cmd/godoc@latest
 ```
 
-這時執行 bin 中的 `godoc`，並附帶一個 `-http` 引數指定連接埠，例如，`./bin/godoc -http=:6060`，這會在本機啟動一個 HTTP 伺服器，使用瀏覽器連接 http://localhost:6060（或 http://主機IP:6060）就可以查詢文件：
+這時執行安裝後的 `godoc`，並附帶一個 `-http` 引數指定連接埠，例如，`godoc -http=:6060`，這會在本機啟動一個 HTTP 伺服器，使用瀏覽器連接 http://localhost:6060（或 http://主機IP:6060）就可以查詢文件：
 
 <div class="pure-g">
 
