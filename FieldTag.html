@@ -180,7 +180,7 @@
 <h1 id="結構欄位標籤"><a class="header" href="#結構欄位標籤">結構欄位標籤</a></h1>
 </div>
 <p>對於 JSON 或 XML 等具有結構性的資料，在 Go 中經常會使用 <code>struct</code> 定義資料結構，例如，底下這個程式可以將簡單的結構轉為 JSON：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -213,7 +213,7 @@ func main() {
 }
 </code></pre>
 <p>然而，Go 的慣例中，公開的結構欄位名稱通常是大寫的，如果你的 JSON 要求的是小寫的欄位名稱，或者是其他名稱，可以使用欄位標籤（Field tag）。例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -246,7 +246,7 @@ func main() {
 }
 </code></pre>
 <p>欄位標籤可以在反射時，使用 <code>Field</code> 的 <code>Tag</code> 來取得，雖然欄位標籤可以是任意格式字串，然而慣例上，會由 <code>key: "value"</code> 的格式組成，符合此格式的話，可以使用 <code>Tag</code> 的 <code>Lookup</code> 來查找 <code>value</code>，它傳回兩個值，第一個值是 <code>value</code>，第二個值指出是否有對應的名稱，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -280,7 +280,7 @@ func main() {
 }
 </code></pre>
 <p>實際上，如果要將結構轉為 JSON 格式字串，可以使用 <code>encoding/json</code>，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "encoding/json"

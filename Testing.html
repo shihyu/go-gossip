@@ -182,7 +182,7 @@
 <p>Go 本身附帶了 <code>testing</code> 套件，搭配 <code>go test</code> 指令，可以自動對套件中的程式碼進行測試，在套件中，測試程式碼必須是 _test.go 結尾，一個套件中可以有多個 _test.go，例如，<a href="https://go.dev/src/fmt/">fmt 套件的原始碼</a> 中，可以看到 export_test.go、fmt_test.go 等，就是測試程式碼。</p>
 <h1 id="功能測試"><a class="header" href="#功能測試">功能測試</a></h1>
 <p>想要使用 Go 的 <code>testing</code> 套件撰寫測試程式碼，必須 <code>import "testing"</code>，在 _test.go 中撰寫形式 <code>func TestXxx(t *testing.T)</code> 的函式，Xxx 可以是任意名稱，例如，在 src/mymath 目錄中，寫個 basic_test.go：</p>
-<pre><code class="language-prettyprint">package mymath
+<pre><code class="language-go">package mymath
 
 import "testing"
 
@@ -199,7 +199,7 @@ func TestSomething(t *testing.T) {
 </div>
 </div>
 <p>如果函式中使用了 <code>testing</code> 的 <code>Error</code>、<code>Fail</code> 等與失敗相關的方法，那麼測試就會失敗，例如：</p>
-<pre><code class="language-prettyprint">package mymath
+<pre><code class="language-go">package mymath
 
 import "testing"
 
@@ -215,7 +215,7 @@ func TestSomething(t *testing.T) {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>如果想要在測試失敗時，留下一些訊息，可以使用 <code>Error</code> 方法，例如：</p>
-<pre><code class="language-prettyprint">package mymath
+<pre><code class="language-go">package mymath
 
 import "testing"
 
@@ -229,7 +229,7 @@ func TestSomething(t *testing.T) {
 </div>
 </div>
 <p>來實際寫個測試，例如，測試一個 <code>Add</code> 函式：</p>
-<pre><code class="language-prettyprint">package mymath
+<pre><code class="language-go">package mymath
 
 import "testing"
 
@@ -242,7 +242,7 @@ func TestAdd(t *testing.T) {
 }
 </code></pre>
 <p>由於目前還沒有撰寫 <code>Add</code> 函式，因此若執行 <code>go test mymath</code> 的話，會以 [build failed] 收場，如果在 basic.go 撰寫了正確的 <code>Add</code> 函式：</p>
-<pre><code class="language-prettyprint">package mymath
+<pre><code class="language-go">package mymath
 
 func Add(a, b int) int {
     return a + b
@@ -256,7 +256,7 @@ func Add(a, b int) int {
 </div>
 <p>如果 <code>Log</code> 之後接上 <code>Fail</code> 函式，那麼不加上 <code>-v</code>，也會顯示 <code>Log</code> 的訊息，實際上，<code>Error</code> 函式就是相當於先以 <code>Log</code> 顯示指定的訊息，然後再接上 <code>Fail</code> 函式。</p>
 <p>如果想要略過測試，那麼可以使用 <code>Skip</code> 函式，例如：</p>
-<pre><code class="language-prettyprint">package mymath
+<pre><code class="language-go">package mymath
 
 import "testing"
 
@@ -288,7 +288,7 @@ func TestAdd(t *testing.T) {
 </div>
 <h1 id="效能評測"><a class="header" href="#效能評測">效能評測</a></h1>
 <p>如果想進行效能評測（Benchmark），那麼 _test.go 中，評測函式必須是 <code>func BenchmarkXxx(b *testing.B)</code> 形式，例如：</p>
-<pre><code class="language-prettyprint">package mymath
+<pre><code class="language-go">package mymath
 
 import "testing"
 

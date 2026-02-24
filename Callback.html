@@ -181,7 +181,7 @@
 </div>
 <p>在〈<a href="JavaScript.html">Go 呼叫 JavaScript</a>〉看過如何在 Go 中取得 JavaScript 的函式，然後予以呼叫，若你曾稍微瞭解過〈<a href="https://openhome.cc/Gossip/WebAssembly/">WebAssembly</a>〉，就會發覺，這跟 WebAssembly 匯入函式至 WebAssembly 的方式不同。</p>
 <p>這是 JavaScript 的 wasm_exec.js 以及 Go 的 <code>syscall/js</code> 居中之緣故，在 wasm_exec.html 中你也可以看到載入、編譯、實例化 WebAssembly 的過程：</p>
-<pre><code class="language-prettyprint">if (!WebAssembly.instantiateStreaming) { // polyfill
+<pre><code class="language-go">if (!WebAssembly.instantiateStreaming) { // polyfill
     WebAssembly.instantiateStreaming = async (resp, importObject) =&gt; {
         const source = await (await resp).arrayBuffer();
         return await WebAssembly.instantiate(source, importObject);
@@ -211,7 +211,7 @@ async function run() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>例如，顯示加總至某個指定 DOM 物件的函式，可以如下定義：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "syscall/js"
 
@@ -242,7 +242,7 @@ func sum(numbers []js.Value) int {
 <p><code>js.FuncOf</code> 的回呼可傳回值（會轉為對應的 JavaScript 值），不過像事件處理器這類場合，通常仍以副作用方式實現比較常見，例如改變某個 JavaScript 物件的狀態，像是這邊是改變某個 DOM 的 <code>innerHTML</code>。</p>
 <p>因為 Go 的 <code>main</code> 執行完，模組的程式就結束了，這樣 Go 中定義的函式就沒有了，然而，事件會是在之後才發生，因而要被回呼的函式必須存活著，為了這個目的，範例中使用 <code>select {}</code> 來阻斷流程，視需求而定，你也可以用別的方式來設計某種阻斷。</p>
 <p>至於 JavaScript 的部份，來稍微修改一下 wasm_exec.html：</p>
-<pre><code class="language-prettyprint">&lt;!doctype html&gt;
+<pre><code class="language-go">&lt;!doctype html&gt;
 &lt;!--
 Copyright 2018 The Go Authors. All rights reserved.
 Use of this source code is governed by a BSD-style
@@ -298,7 +298,7 @@ license that can be found in the LICENSE file.
 <p>至於 WebAssembly API 的調整，想要瞭解這部份的話，可以看看〈<a href="https://openhome.cc/Gossip/WebAssembly/">WebAssembly</a>〉中前三篇的說明。</p>
 <p>故且不討論 WebAssembly API 怎麼寫，在自定義的 JavaScript 程式碼中，想要呼叫 Go 中定義的函式，其實感覺就是多了些額外的手續，而且不自然。</p>
 <p>如果把一切都帶到 Go 中做，將 Go 中定義的函式，當成是某事件的回呼，會比較單純一些，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "strconv"
@@ -330,7 +330,7 @@ func inputValue(id string) (int, error) {
 }
 </code></pre>
 <p>至於 wasm_exec.html 可以如下調整：</p>
-<pre><code class="language-prettyprint">&lt;!doctype html&gt;
+<pre><code class="language-go">&lt;!doctype html&gt;
 &lt;!--
 Copyright 2018 The Go Authors. All rights reserved.
 Use of this source code is governed by a BSD-style

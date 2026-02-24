@@ -183,7 +183,7 @@
 <h1 id="字串入門"><a class="header" href="#字串入門">字串入門</a></h1>
 <p>先從簡單的開始，在 Go 原始碼中，如果你撰寫 <code>"Go語言"</code> 這麼一段文字，那麼會產生一個字串，預設型態為 <code>string</code>，字串是唯讀的，一旦建立，就無法改變字串內容。</p>
 <p>使用 <code>string</code> 宣告變數若無指定初值，預設是空字串 <code>""</code>，可以使用 <code>+</code> 對兩個字串進行串接，由於字串是唯讀的，因此實際上串接的動作，會產生新的字串，如果想比較兩個字串的相等性，可以使用 <code>==</code>、<code>!=</code>、<code>&lt;</code>、<code>&lt;=</code>、<code>&gt;</code>、<code>&gt;=</code> 依字典順序比較。</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -200,11 +200,11 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>使用 <code>""</code> 時不可換行，如果你的字串想要換行，方法之一是分兩個字串，並用 <code>+</code> 串接。例如：</p>
-<pre><code class="language-prettyprint">    text := "Go語言" +
+<pre><code class="language-go">    text := "Go語言" +
             "Cool" 
 </code></pre>
 <p>另一個方式是以重音符 ` 定義字串，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -215,7 +215,7 @@ func main() {
 }
 </code></pre>
 <p>使用 ` 定義的字串，會完全保留換行與空白，因此，在上頭你可以看到被保留的換行與空白字元，如果使用 <code>fmt.Println(text)</code>，顯示時也會看到對應的換行與空白。使用 ` 定義的字串，也不會轉譯字元，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -245,7 +245,7 @@ func main() {
 </ul>
 <h1 id="唯讀位元組片段"><a class="header" href="#唯讀位元組片段">唯讀位元組片段</a></h1>
 <p>那麼，想知道一個字串的長度該怎麼做呢？Go 中有個 <code>len</code> 函式，當它作用於字串時，結果可能會令一些從其他程式語言，像是 Java 過來的人感到訝異：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -257,7 +257,7 @@ func main() {
 </div>
 <p>顯示的結果是 8 而不是 4，給個提示，Go 的字串實作使用 UTF-8，是的！<code>len</code> 傳回的是位元組長度，因為 Go 的字串，本質上是 UTF-8 編碼後的位元組組成，如果你使用 <code>fmt.Printf("%x", "Go語言")</code>，會顯示 476fe8aa9ee8a880，47 是「G」的位元組以 16 進位數字表示的結果，6f 是 o，e8aa9e 是「語」的三個位元組分別以 16 進位數字表示的結果，e8a880 是「言」。</p>
 <p>不單是如此，Go 中可以使用 <code>[]</code> 與索引來取得字串的位元組資料，是的，位元組！傳回的型態是 <code>byte</code>（<code>uint8</code>），<code>"Go語言"[0]</code> 取得的是 G 的位元組資料，<code>"Go語言"[1]</code> 取得的是 o 的位元組資料，<code>"Go語言"[2]</code> 呢？取得的是「語」的 UTF-8 實作中，第一個位元組資料，也就是 e8。可以用以下這個程式片段來印證：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -273,7 +273,7 @@ func main() {
 <p>雖然還沒正確介紹 <code>for</code> 迴圈，不過程式應該很清楚，用迴圈遞增的 <code>i</code> 值來取得指定索引處的資料，結果是顯示「47 6f e8 aa 9e e8 a8 80 」。</p>
 <p>這個位元組序列是怎麼決定的？當你寫下 <code>"Go語言"</code>，你的 .go 原始碼檔案是什麼編碼呢？是的！UTF-8，Go 就是從這當中取得 <code>"Go語言"</code> 位元組序列，每個位元組就是 UTF-8 的一個碼元（code unit）。</p>
 <p>雖說字串是唯讀的位元組片段，不過，實際的位元組是隱藏在字串底層，如果你想取得，必須轉為 <code>[]byte</code>，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -290,7 +290,7 @@ func main() {
 <h1 id="string-與索引"><a class="header" href="#string-與索引">string 與索引</a></h1>
 <p>實際上，Go 的字串支援片段操作，slice 操作時的索引是針對位元組，然而，傳回的型態還是 <code>string</code>，例如，<code>"Go語言"[0:2]</code>，傳回 <code>"Go"</code>，因為指定要切割出索引 0 開始，索引 2 結束（但不包括 2）的部份，也就是 47 與 6f 這兩個位元組，但是以 <code>string</code> 傳回。</p>
 <p>那麼，如果是 <code>"Go語言"[2:3]</code> 呢？嗯，傳回的字串是 <code>"\xe8"</code>！這是什麼？事實上，Go 中的字串可以是任意位元組片段，因此，你可以如下定義字串：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -301,7 +301,7 @@ func main() {
 </code></pre>
 <p>片段操作時，如果省略冒號之後的數字，則預設取得至字串尾端的子字串，例如 <code>"Go語言"[3:]</code> 會傳回 <code>"\xaa\x9e\xe8\xa8\x80"</code> 的字串，如果省略冒號之前的數字，預設從索引 0 開始，例如 <code>"Go語言"[:2]</code> 會取得 <code>"Go"</code> 的字串，也就是 <code>"\x47\x6f"</code> 的字串，如果是 <code>"Go語言"[:]</code>，那麼就是取得全部字串內容了。</p>
 <p><a href="https://pkg.go.dev/strings/"><code>strings</code> 套件</a> 中有不少字串可用的方法，想做字串操作時，可以多加利用，不過要看清楚是針對什麼在操作。例如 <code>strings.Index</code>：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 import "strings"
@@ -313,7 +313,7 @@ func main() {
 </code></pre>
 <p>傳回的索引值是 5 而不是 3，這是因為 <code>"言"</code> 的第一個位元組，是在 <code>"Go語言"</code> UTF-8 編碼後的位元組組成中第 5 個索引位置。</p>
 <p>問題來了，如果對於 <code>"Go語言"</code>，想逐一取得 <code>'G'</code>、<code>'o'</code>、<code>'語'</code>、<code>'言'</code> 該怎麼辦？當然不能用 <code>text[n]</code>，這只會取得第 n 個位元組，可以將字串型態轉換為 <code>[]rune</code> ：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -327,7 +327,7 @@ func main() {
 <p>字串型態轉換為 <code>[]rune</code> 時，會將 UTF-8 編碼的位元組，轉換為 Unicode 碼點，在這個例子中可以看到，<code>cs[2]</code> 確實地取得了第三個文字「語」，而 <code>len</code> 也確實取得數量 4。</p>
 <p>如〈<a href="http://openhome.cc/Gossip/Go/PreDeclaredType.html">認識預定義型態</a>〉中談過的，在 Go 中並沒有字元對應的型態，只有碼點的概念，<code>rune</code> 為 <code>int32</code> 的別名，可用來儲存 Unicode 碼點（code point），如果使用 <code>fmt.Printf("%d\n", cs[2])</code>，會顯示 35486，這就是「語」的 Unicode 碼點，35486 的 16 進位表示是 8a9e，因此，如果你寫 <code>'\u8a9e'</code>，也會得到一個 <code>rune</code> 代表著「語」，<code>fmt.Printf("%c", '\u8a9e')</code> 也會顯示「語」，當然，直接寫 <code>'語'</code> 也是可以得到一個 <code>rune</code>。</p>
 <p>想從 <code>rune</code> 得到一個 <code>string</code>，可以直接寫 <code>string('語')</code> 就可以了。如果想以 <code>rune</code> 為單位來走訪字串，而不是以位元組走訪，可以使用 <code>for range</code>，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -340,7 +340,7 @@ func main() {
 </code></pre>
 <p>可以看到，<code>for range</code> 可以同時取得每個 <code>rune</code> 在字串中的位元起始位置，以及 <code>rune</code> 值，<code>%U</code> 可以用 16 進位顯示 <code>rune</code>，如果是 <code>%#U</code>，還會一併顯示碼點的列印形式。</p>
 <p>這個程式的執行結果會顯示：</p>
-<pre><code class="language-prettyprint">U+0047 'G' 位元起始位置 0
+<pre><code class="language-go">U+0047 'G' 位元起始位置 0
 U+006F 'o' 位元起始位置 1
 U+8A9E '語' 位元起始位置 2
 U+8A00 '言' 位元起始位置 5

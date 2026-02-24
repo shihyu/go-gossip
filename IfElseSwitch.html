@@ -182,7 +182,7 @@
 <p>在分支判斷的控制上，Go 提供了 <code>if...else</code>、<code>switch</code> 語法，相較於其他提供類似語法的語言，在 Go 中 <code>if...else</code>、<code>switch</code> 語法的相似性更高。</p>
 <h1 id="ifelse-語法"><a class="header" href="#ifelse-語法">if..else 語法</a></h1>
 <p>直接來看個 <code>if..else</code> 的實例：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -197,7 +197,7 @@ func main() {
 }
 </code></pre>
 <p>在 Go 中，<code>if</code> 之後直接寫判斷式可以不用使用 <code>()</code> 括號，而 <code>{}</code> 是必要的，這樣應該是比較能避免 <a href="http://support.apple.com/kb/HT6147">Apple 曾經發生某個函式中有兩個連續縮排而引發的問題</a>：</p>
-<pre><code class="language-prettyprint">...       
+<pre><code class="language-go">...       
 if ((err = SSLHashSHA1.update(&amp;hashCtx, &amp;signedParams)) != 0)
         goto fail;
         goto fail;
@@ -206,7 +206,7 @@ if ((err = SSLHashSHA1.final(&amp;hashCtx, &amp;hashOut)) != 0)
 ...
 </code></pre>
 <p>Go 的 <code>if</code> 可以使用 <code>:=</code> 宣告與指定變數值，與判斷式之間以分號區隔，因此方才的範例也可以寫成：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -220,7 +220,7 @@ func main() {
 }
 </code></pre>
 <p>這麼一來，<code>remain</code> 變數就只在 <code>if..else</code> 的區塊中有作用。如果要使用 <code>:=</code> 宣告與指定多個變數值，可以寫成 <code>if var1, var2 := 10, 20; cond</code> 的形式。<code>if...else</code> 可以組成 <code>if...else if...else</code> 形式，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -242,7 +242,7 @@ func main() {
 </code></pre>
 <h1 id="switch-語法"><a class="header" href="#switch-語法">switch 語法</a></h1>
 <p>實際上，對於上頭的範例，可以改用 <code>switch</code> 來撰寫，程式會更為簡潔：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -267,7 +267,7 @@ func main() {
 }
 </code></pre>
 <p>注意，與 C/C++ 或 Java 等語言不同的是，Go 的 <code>switch</code> 比對成功後，不會自動往下執行，因而不用撰寫 <code>break</code>，有多個條件想符合時，在同一 <code>case</code> 中使用逗號區隔。如果真的想在比對成功後，往下一個 <code>case</code> 中的陳述執行，可以使用 <code>fallthrough</code>，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -295,7 +295,7 @@ func main() {
 </code></pre>
 <p>在上面的例子中，如果沒有 <code>fallthrough</code>，那麼只會顯示 “滿分喔！“，而不會執行 <code>case 9</code> 中的 <code>level = 'A'</code>，因此最後顯示得分等級時，不會有 A 的字眼。在上頭也可以看到，<code>switch</code> 中也可以使用 <code>:=</code> 宣告與初始變數。</p>
 <p>實際上，Go 的 <code>switch</code> 中， <code>case</code> 不用是常數，只要 <code>switch</code> 的值型態與 <code>case</code> 比對的型態符合，也可以是個變數或運算式，甚至還可以接受布林運算式，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 

@@ -181,17 +181,17 @@
 </div>
 <p>在 Go 1.13 之前，<code>errors</code> 套件只公開了 <code>New</code> 函式，從 Go 1.13 之後，增加了 <code>Is</code>、<code>As</code>、與 <code>Unwrap</code> 函式。</p>
 <p><code>Is</code> 函式是用於取代 <code>==</code> 判斷錯誤的場合，例如以下的程式片段：</p>
-<pre><code class="language-prettyprint">if err == io.EOF {
+<pre><code class="language-go">if err == io.EOF {
     ...
 }
 </code></pre>
 <p>可以改用 <code>Is</code> 函式：</p>
-<pre><code class="language-prettyprint">if errors.Is(err, io.EOF) {
+<pre><code class="language-go">if errors.Is(err, io.EOF) {
     ...
 }
 </code></pre>
 <p><code>Is</code> 也可以用於判斷 <code>nil</code>，<code>err</code> 若有實作 <code>Is</code> 方法，也可以使用 <code>Is</code> 函式來判斷，因為 <code>Is</code> 函式的原始碼是這麼實作的：</p>
-<pre><code class="language-prettyprint">func Is(err, target error) bool {
+<pre><code class="language-go">func Is(err, target error) bool {
     if target == nil {
         return err == target
     }
@@ -215,18 +215,18 @@
 </code></pre>
 <p>（從原始碼中的註解可以看到，未來可能進一步支援 <code>target</code> 實作 <code>Is</code> 方法的情況。）</p>
 <p><code>As</code> 函式是用於取代型態斷言判斷錯誤類型的場合，例如以下的程式片段：</p>
-<pre><code class="language-prettyprint">if e, ok := err.(*PathError); ok {
+<pre><code class="language-go">if e, ok := err.(*PathError); ok {
     ...
 }
 </code></pre>
 <p>可以改用 <code>As</code> 函式：</p>
-<pre><code class="language-prettyprint">var e *PathError
+<pre><code class="language-go">var e *PathError
 if errors.As(err, &amp;e) {
     ...
 }
 </code></pre>
 <p>來看看 <code>As</code> 函式的實作：</p>
-<pre><code class="language-prettyprint">func As(err error, target interface{}) bool {
+<pre><code class="language-go">func As(err error, target interface{}) bool {
     if target == nil {
         panic("errors: target cannot be nil")
     }
@@ -254,7 +254,7 @@ if errors.As(err, &amp;e) {
 </code></pre>
 <p><code>target</code> 若不是指標就會 <code>panic</code>；另外，<code>err</code> 可以是個實作 <code>As</code> 方法的實例。</p>
 <p>在 <code>Is</code> 與 <code>As</code> 的實作中，都看到了 <code>Unwrap</code> 函式：</p>
-<pre><code class="language-prettyprint">func Unwrap(err error) error {
+<pre><code class="language-go">func Unwrap(err error) error {
     u, ok := err.(interface {
         Unwrap() error
     })

@@ -181,14 +181,14 @@
 </div>
 <p>如果在收集元素的過程中，想要一併排序，方式之一是使用<a href="https://openhome.cc/Gossip/AlgorithmGossip/HeapSort.htm">堆積排序</a>，對於這個需求，Go 提供了 <code>heap</code> 套件作為實現上的輔助。</p>
 <p><code>heap</code> 套件提供的是最小堆積樹演算，底層的資料結構必須實現 <code>heap.Interface</code>：</p>
-<pre><code class="language-prettyprint">type Interface interface {
+<pre><code class="language-go">type Interface interface {
     sort.Interface
     Push(x interface{}) 
     Pop() interface{} 
 }
 </code></pre>
 <p>也就是說，除了實現 <code>sort.Interface</code> 的 <code>Len</code>、<code>Less</code>、<code>Swap</code> 方法之外，還要實現 <code>Push</code> 與 <code>Pop</code> 的行為，在 <a href="https://pkg.go.dev/container/heap/"><code>heap</code> 的 Go 官方文件說明</a> 有個簡單範例：</p>
-<pre><code class="language-prettyprint">type IntHeap []int
+<pre><code class="language-go">type IntHeap []int
 
 func (h IntHeap) Len() int           { return len(h) }
 func (h IntHeap) Less(i, j int) bool { return h[i] &lt; h[j] }
@@ -207,7 +207,7 @@ func (h *IntHeap) Pop() interface{} {
 }
 </code></pre>
 <p>實現了 <code>heap.Interface</code> 的資料結構，就可以透過 <code>heap</code> 套件中的 <code>Init</code>、<code>Push</code>、<code>Pop</code> 等函式來進行操作：</p>
-<pre><code class="language-prettyprint">h := &amp;IntHeap{2, 1, 5}
+<pre><code class="language-go">h := &amp;IntHeap{2, 1, 5}
 heap.Init(h)
 heap.Push(h, 3)
 fmt.Printf("minimum: %d\n", (*h)[0])
@@ -217,7 +217,7 @@ for h.Len() &gt; 0 {
 </code></pre>
 <p>在 <code>Push</code>、<code>Pop</code> 過程中有關堆積樹的調整，就都由 <code>heap.Push</code>、<code>heap.Pop</code> 等函式來處理了。</p>
 <p>官方文件提供的範例是可以簡單示範 <code>heap</code> 套件的使用，不過，一下子使用 <code>heap.Xxx</code>，一下子又是使用 <code>h.Xxx</code> 的混合風格，看來蠻怪的，可以來改變一下：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "container/heap"

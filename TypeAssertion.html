@@ -180,7 +180,7 @@
 <h1 id="型態斷言"><a class="header" href="#型態斷言">型態斷言</a></h1>
 </div>
 <p>宣告介面時使用的名稱，只是一個方便取用及閱讀的標示，最重要的是介面中定義的行為，以及實際的接收者型態。因此，若你打算從一個介面轉換至另一個介面，只要行為符合就可以了。例如以下是可行的：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -208,7 +208,7 @@ func main() {
 }
 </code></pre>
 <p>在第二個指定時，編譯器會檢查 <code>testerA</code> 的型態定義，也就是介面中，是否定義了 <code>test()</code> 行為，若是則可通過編譯，若否就編譯錯誤。例如以下的情況：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -244,7 +244,7 @@ func main() {
 <p>就算 <code>testerA</code> 儲存的結構實例，確實有實作<code>testB()</code> 這個方法，然而從編譯器的角度來看，<code>testerA</code> 的行為只有 <code>testA()</code>，而看不到它有 <code>testB()</code> 的行為，因此上面這個範例會編譯錯誤。</p>
 <h1 id="comma-ok-型態斷言"><a class="header" href="#comma-ok-型態斷言">Comma-ok 型態斷言</a></h1>
 <p>如果真的要通過編譯，可以使用<a href="https://go.dev/ref/spec#Type_assertions">型態斷言（Type assertion）</a>：</p>
-<pre><code class="language-prettyprint">...同前…略
+<pre><code class="language-go">...同前…略
 
 func main() {
     var testerA ATester = &amp;Subject{"Test"}
@@ -258,7 +258,7 @@ func main() {
 <p><code>x.(T)</code> 這個語法，<code>x</code> 的型態是某介面，而 <code>T</code> 是預期的型態，或者是值實作的另一個介面名稱，在〈<a href="Interface.html">介面入門</a>〉中談過，介面底層儲存了型態與值的資訊，<code>x.(T)</code> 是在告知編譯器，在執行時期再來斷言型態，也就是執行時期再來判斷 <code>x</code> 底層儲存的值，型態是否為 <code>T</code>，若是就傳回底層儲存的值。</p>
 <p>型態斷言與型態轉換不同，型態轉換是將值的型態轉換為另一型態，編譯器會檢查兩個型態的資料結構是否相同，若否會發生編譯錯誤。</p>
 <p>斷言是執行時期進行的，在底下的範例中，執行時期會斷言 <code>value</code> 底層儲存的值，其型態為 <code>Duck</code>：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -281,7 +281,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>如果 <code>value</code> 底層儲存的值，其型態為實際上不是 <code>Duck</code> 型態，那麼操作 <code>duck</code> 時會發生執行時期錯誤，為了避免這類錯誤發生，可以進行 Comma-ok 型態斷言，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -306,20 +306,20 @@ func main() {
 </code></pre>
 <p>第一個 <code>duck</code> 變數是 <code>Duck</code> 型態，若 <code>value</code> 底層儲存的值確實是 <code>Duck</code> 型態，<code>ok</code> 變數會是 <code>true</code>，否則 <code>ok</code> 會是 <code>false</code>，因此，在上面的例子中，只會針對 <code>Duck</code> 顯示其 <code>name</code> 的值。</p>
 <p>在〈<a href="Interface.html">介面入門</a>〉中談過，底下的範例會是 <code>false</code>：</p>
-<pre><code class="language-prettyprint">var acct *Account = nil
+<pre><code class="language-go">var acct *Account = nil
 var savings Savings = acct
 fmt.Println(savings == nil) // false
 </code></pre>
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>實際上 <code>savings</code> 底層儲存的值確實是 <code>nil</code>，透過型態斷言的話可以取出。例如：</p>
-<pre><code class="language-prettyprint">var acct *Account = nil
+<pre><code class="language-go">var acct *Account = nil
 var savings Savings = acct
 fmt.Println(savings.(*Account) == nil) // true
 </code></pre>
 <h1 id="型態-switch-測試"><a class="header" href="#型態-switch-測試">型態 switch 測試</a></h1>
 <p>依照上面的說明，如果想測試多個型態，可以用多個 <code>if...else if</code>，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -352,7 +352,7 @@ func main() {
 }
 </code></pre>
 <p>不過，針對這個情況，使用型態 <code>switch</code> 測試會更為適合：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -387,7 +387,7 @@ func main() {
 </code></pre>
 <p><code>value.(type)</code> 這樣的語法，只能用在 <code>switch</code> 之中。</p>
 <p>來看個實際的應用，在 Go 的 <code>fmt</code> 中，有個 print.go 的原始碼，其中有一段是針對傳入的引數，是實作了 <code>Error</code> 介面或 <code>Stringer</code> 介面，若實作了 <code>Error</code> 介面，則呼叫其 <code>Error()</code> 方法，若實作了 <code>Stringer</code> 介面，就呼叫其 <code>String()</code> 方法：</p>
-<pre><code class="language-prettyprint">720             switch v := p.arg.(type) {
+<pre><code class="language-go">720             switch v := p.arg.(type) {
 721             case error:
 722                 handled = true
 723                 defer p.catchPanic(p.arg, verb)

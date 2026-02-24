@@ -210,7 +210,7 @@
 <p>當然，基本上還是要有一些約定，例如，在函式之前，緊接著函式的註解，中間沒有空白行，就是函式的文件說明來源。</p>
 <p>類似地，在套件之前，緊接著套件的註解，就是套件的文件說明來源，通常，一個套件的文件說明，會是來自於套件中，一個 doc.go 中 <code>package</code> 宣告前的註解，例如，你可以在 <a href="https://go.dev/src/fmt/"><code>fmt</code> 的原始碼目錄</a> 中，找到一個 <a href="https://go.dev/src/fmt/doc.go">doc.go</a>，其中除了 <code>package fmt</code> 之外，沒有任何原始碼，剩下的只有註解。</p>
 <p>除了函式、套件之外，最頂層的型態宣告、變數、常數等前緊接著的註解，都可以是文件的來源，不相鄰的註解則會被 <code>godoc</code> 忽略，如果有已知的 Bug，可以使用 <code>BUG()</code> 標示，例如 <a href="https://go.dev/src/bytes/bytes.go">bytes.go</a> 中有個：</p>
-<pre><code class="language-prettyprint">// BUG(rsc): The rule Title uses for word boundaries does not handle Unicode punctuation properly.
+<pre><code class="language-go">// BUG(rsc): The rule Title uses for word boundaries does not handle Unicode punctuation properly.
 func Title(s []byte) []byte {
     ....
 </code></pre>
@@ -221,7 +221,7 @@ func Title(s []byte) []byte {
 <h1 id="godoc-文件伺服器"><a class="header" href="#godoc-文件伺服器">godoc 文件伺服器</a></h1>
 <p>Go 1.2rc1 之後，曾經從 <code>go doc</code> 改用 <code>godoc</code> 指令了，不過，從 <a href="https://go.dev/doc/go1.5">Go 1.5 Release Notes</a> 中看到，Go 1.5 有個新的 <code>go doc</code> 指令，專門用於命令列模式下的文件查詢，這使得 <code>godoc</code> 主要剩下文件服器的功能，因而在 Go 1.13 中，<code>godoc</code> 被移除。</p>
 <p>如果在一個網路受限的環境，又想要在網頁上查詢文件，還是可以安裝 <code>godoc</code>（來自 <code>x/tools</code>）：</p>
-<pre><code class="language-prettyprint">go install golang.org/x/tools/cmd/godoc@latest
+<pre><code class="language-go">go install golang.org/x/tools/cmd/godoc@latest
 </code></pre>
 <p>這時執行安裝後的 <code>godoc</code>，並附帶一個 <code>-http</code> 引數指定連接埠，例如，<code>godoc -http=:6060</code>，這會在本機啟動一個 HTTP 伺服器，使用瀏覽器連接 http://localhost:6060（或 http://主機IP:6060）就可以查詢文件：</p>
 <div class="pure-g">

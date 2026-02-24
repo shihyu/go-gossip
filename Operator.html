@@ -183,7 +183,7 @@
 <h1 id="算術運算子"><a class="header" href="#算術運算子">算術運算子</a></h1>
 <p>算術運算子作用於數值，產生與第一個運算元相同型態的結果。<code>+</code>、<code>-</code>、<code>*</code>、<code>/</code> 四個運算子，可用於整數、浮點數與複數；<code>+</code> 也用於字串串接；<code>%</code> 餘除運算子，只用於整數，<code>&amp;</code>、<code>|</code>、<code>^</code>、<code>&amp;^</code> 位元運算子只用於整數，<code>&lt;&lt;</code>、<code>&gt;&gt;</code> 位移運算子只用於整數。</p>
 <p><code>+</code>、<code>-</code>、<code>*</code>、<code>/</code> 使用上應該沒什麼問題，主要就是注意運算的順序是先乘除後加減，必要時使用括號讓順序清楚，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -199,7 +199,7 @@ func main() {
 </div>
 <p>對於遞增與遞減 1 的操作，Go 可以使用 <code>++</code> 與 <code>--</code> 的操作，不過，<code>++</code> 與 <code>--</code> 只能置於變數後方，而且是個陳述，因此，對於 <code>i := 1</code>，你可以在一行陳述中寫 <code>i++</code> 或 <code>i--</code>，不過，不能寫 <code>fmt.Println(i++)</code>，這樣就能避免是要先傳回 <code>i</code> 值再遞增 <code>i</code>，還是先遞增 <code>i</code> 再傳回 1 的問題。</p>
 <p>在二進位運算上有 AND、OR、XOR 等運算，底下是 Go 中的一些例子：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -232,7 +232,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>執行結果如下：</p>
-<pre><code class="language-prettyprint">AND運算：
+<pre><code class="language-go">AND運算：
 0 AND 0     0
 0 AND 1     0
 1 AND 0     0
@@ -259,7 +259,7 @@ AND NOT運算：
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>位元運算是逐位元運算，例如 10010001 與 01000001 作 AND 運算，是一個一個位元對應運算，答案就是 00000001。補數運算是將所有位元 0 變 1，1 變 0。例如 00000001 經補數運算就會變為 11111110。Go 的補數運算子是 <code>^</code>，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -270,7 +270,7 @@ func main() {
 </code></pre>
 <p>上面的程式片段會顯示 -1，因為 number 在記憶體中全部位元都是 0，經補數運算全部位元就都變成 1，這個數在電腦中用整數表示則是 -1。</p>
 <p><code>&lt;&lt;</code> 左移運算子會將所有位元往左移指定位數，左邊被擠出去的位元會被丟棄，而右邊補上 0；<code>&gt;&gt;</code> 右移運算則是相反，會將所有位元往右移指定位數，右邊被擠出去的位元會被丟棄，至於最左邊補上原來的位元，如果左邊原來是 0 就補0，1 就補 1。</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -285,7 +285,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>實際來左移看看就知道為何可以如此作次方運算了：</p>
-<pre><code class="language-prettyprint">00000001 -&gt; 1 
+<pre><code class="language-go">00000001 -&gt; 1 
 00000010 -&gt; 2 
 00000100 -&gt; 4 
 00001000 -&gt; 8
@@ -293,7 +293,7 @@ func main() {
 <p>對於一個算術運算 <code>x = x op y</code>，可以寫成 <code>x op= y</code>，<code>op</code> 是指算術運算子，例如 <code>x = x + y</code>，可以寫成 <code>x += y</code>，這也就是所謂的指定運算子。</p>
 <h1 id="比較運算"><a class="header" href="#比較運算">比較運算</a></h1>
 <p>數學上有大於、等於、小於的比較運算，Go 中也提供了這些運算子，它們有大於（<code>&gt;</code>）、不小於（<code>&gt;=</code>）、小於（<code>&lt;</code>）、不大於（<code>&lt;=</code>）、等於（<code>==</code>）以及不等於（<code>!=</code>），比較條件成立時用 <code>true</code> 表示，比較條件不成立用 <code>false</code> 表示。以下程式片段示範了幾個比較運算的使用：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -310,7 +310,7 @@ func main() {
 <p>Go 中沒有 <code>?:</code> 三元條件運算子。</p>
 <h1 id="邏輯運算"><a class="header" href="#邏輯運算">邏輯運算</a></h1>
 <p>在邏輯上有所謂的「且」、「或」與「反相」，在 Go 中提供對應的邏輯運算子（Logical operator），分別為 <code>&amp;&amp;</code>、<code>||</code>及 <code>!</code>。看看以下的程式片段會輸出什麼結果？</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -323,17 +323,17 @@ func main() {
 </code></pre>
 <p><code>&amp;&amp;</code> 與 <code>||</code> 有捷徑運算（Short-Circuit Evaluation）。因為 <code>&amp;&amp;</code> 只要其中一個為假，就可以判定結果為假，所以只要左運算元評估為 <code>false</code>，就會直接傳回 <code>false</code>，不會再去運算右運算元。因為 <code>||</code> 只要其中一個為真，就可以判定結果為真，所以只要左運算元評估為 <code>true</code>，就會直接傳回 <code>true</code>，就不會再去運算右運算元。</p>
 <p>來舉個運用捷徑運算的例子，在 Go 中兩個整數相除，若除數為 0 會發生 integer divide by zero 的錯誤，以下運用 <code>&amp;&amp;</code> 捷徑運算避免了這個問題：</p>
-<pre><code class="language-prettyprint">if(number2 != 0 &amp;&amp; number1 / number2 &gt; 1) {
+<pre><code class="language-go">if(number2 != 0 &amp;&amp; number1 / number2 &gt; 1) {
     fmt.Println(number1 / number2)
 }
 </code></pre>
 <p>在這個程式片段中，變數 number1 與 number2 都是 <code>int</code> 型態，如果 <code>number2</code> 為 0 的話，<code>&amp;&amp;</code> 左邊運算元結果就是 <code>false</code>，直接判斷整個 <code>&amp;&amp;</code> 的結果應是 <code>false</code>，不用再去評估右運算元，從而避免了 <code>number1 / number2</code> 而 <code>number2</code> 等於 <code>0</code> 時的除零錯誤。</p>
 <h1 id="指標"><a class="header" href="#指標">指標</a></h1>
 <p>Go 語言中有指標（Pointer），你可以在宣告變數時於型態前加上 <code>*</code>，這表示建立一個指標，例如：</p>
-<pre><code class="language-prettyprint">var i *int
+<pre><code class="language-go">var i *int
 </code></pre>
 <p>這時 <code>i</code> 是個空指標，也就是值為 <code>nil</code>，上頭等同於 <code>var i *int = nil</code>，目前並沒有儲存任何位址，如果想讓它儲存另一個變數的記憶體位址，可以使用 <code>&amp;</code> 取得變數位址並指定給 <code>i</code>，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -355,7 +355,7 @@ func main() {
 <p><code>j</code> 的位置儲存了 1，那麼具體來說，<code>j</code> 的位置到底是在哪？這就是 <code>&amp;</code> 取址運算的目的，<code>&amp;j</code> 具體取得了 <code>j</code> 的位置，然後指定給 <code>i</code>。</p>
 <p>如上所示，如果想存取指標位址處的變數儲存的值，可以使用 <code>*</code>，因而，你改變 <code>j</code> 的值，<code>*i</code> 取得的就是改變後的值，透過 <code>*i</code> 改變值，從 <code>j</code> 取得的也會是改變後的值。</p>
 <p>其應用的實例之一是使用 <code>fmt.Scanf</code> 取得標準輸入時，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 

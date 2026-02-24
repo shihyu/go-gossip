@@ -182,7 +182,7 @@
 <p>在 Go 中要讓指定的流程並行執行非常簡單，只需要將流程寫在函式中，並在函式加個 <code>go</code> 就可以了，這樣我們稱之為啟動一個 Goroutine。</p>
 <h1 id="使用-gorutine"><a class="header" href="#使用-gorutine">使用 Gorutine</a></h1>
 <p>先來看個沒有啟用 Goroutine，卻要寫個龜兔賽跑遊戲的例子，你可能是這麼寫的：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -216,7 +216,7 @@ func main() {
 </code></pre>
 <p>由於程式只有一個流程，所以只能將烏龜與兔子的行為混雜在這個流程中撰寫，而且為什麼每次都先遞增烏龜再遞增兔子步數呢？這樣對兔子很不公平啊！如果可以撰寫程式再啟動兩個流程，一個是烏龜流程，一個兔子流程，程式邏輯會比較清楚。</p>
 <p>你可以將烏龜的流程與兔子的流程分別寫在一個函式中，並用 <code>go</code> 啟動執行：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -268,7 +268,7 @@ func main() {
 <li><code>Add</code> 設太大：<code>wg.Wait()</code> 會一直卡住不返回</li>
 </ul>
 <p>因此，我們可以使用 <code>sync.WaitGroup</code> 來改寫以上的範例：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -319,7 +319,7 @@ func main() {
 }
 </code></pre>
 <p>有個 <code>runtime.GOMAXPROCS()</code> 函式，可以設定 Go 同時間能使用的 CPU 數量，它會傳回上一次設定的數字，如果傳入小於 1 的值，不會改變任何設定，因此，可以使用 <code>runtime.GOMAXPROCS(0)</code> 知道目前的設定值。想在執行時期得知可用的 CPU 數量，可以使用 <code>runtime.NumCPU()</code> 函式，因此，為了確保 Go 會使用全部的 CPU 來運行，可以這麼撰寫：</p>
-<pre><code class="language-prettyprint">runtime.GOMAXPROCS(runtime.NumCPU()) 
+<pre><code class="language-go">runtime.GOMAXPROCS(runtime.NumCPU()) 
 </code></pre>
 <p>除了透過 <code>runtime.GOMAXPROCS()</code> 設定之外，也可以透過環境變數 <code>GOMAXPROCS</code> 來設置，實際上，Go 1.5 已經預設會使用所有的 CPU 核心，不過，仍可以透過 <code>runtime.GOMAXPROCS()</code> 函式或環境變數來改變設定。</p>
 <div class="ad336-280" style="text-align: center;">

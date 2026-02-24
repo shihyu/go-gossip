@@ -182,7 +182,7 @@
 <p>作為一門現代語言，Go 的特色之一是函式為一級函式（First-class function），可以作為值來進行傳遞。</p>
 <h1 id="函式作為值"><a class="header" href="#函式作為值">函式作為值</a></h1>
 <p>例如你定義一個取最大值的函式 <code>max</code>，你可以將此函式作為值傳遞給 <code>maximum</code>：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -203,7 +203,7 @@ func main() {
 </div>
 <p>可以看到，被 <code>max</code> 參考的函式，也被 <code>maximum</code> 參考著，因而，現在透過 <code>max</code> 或者 <code>maximum</code>，都可以呼叫函式。</p>
 <p>因為 Go 型態推斷能力的關係，上頭的 <code>maximum</code> 並不用宣告型態，而可以直接參考 <code>max</code> 函式的型態，那麼，<code>max</code> 或者是 <code>maximum</code> 的型態是什麼呢？</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 import "reflect"
@@ -226,7 +226,7 @@ func main() {
 <p>可以看到，函式的型態包括了 <code>func</code>、參數型態與傳回值型態，但不用宣告函式、參數與傳回值的名稱。</p>
 <h1 id="宣告函式變數"><a class="header" href="#宣告函式變數">宣告函式變數</a></h1>
 <p>你可以僅宣告一個變數可用來參考特定型態的函式，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -246,7 +246,7 @@ func main() {
 }
 </code></pre>
 <p>若想先宣告一個 <code>maximum</code> 變數，可以在之後參考 <code>max</code> 函式，可以使用型態 <code>func(int, int) int</code> 來宣告，通常，宣告函式變數時，若想免於冗長的函式型態宣告，可以使用 <code>type</code> 來定義一個新的型態名稱：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -271,7 +271,7 @@ func main() {
 </div>
 <p>在上例中，<code>BiFunc</code> 是個新的定義型態（defined type），底層型態（underlying type）為 <code>func(int, int) int</code>，Go 會認定兩者屬於不同型態，因為新的型態會擁有新的名稱，在 Go 1.9 前，這是避免冗長函式型態宣告的唯一方式。</p>
 <p>不過，就這邊來說，實際上只是想要 <code>func(int, int) int</code> 能有個簡短一點的名稱，從 Go 1.9 開始，可以為型態取別名，別名就只是同一型態的另一個名稱，：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -294,7 +294,7 @@ func main() {
 </code></pre>
 <p>在這邊，<code>BiFunc</code> 只是 <code>func(int, int) int</code> 的另一個名稱，而不是新的型態。</p>
 <p>函式變數既然是個變數，也就可以對它取指標，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -316,7 +316,7 @@ func main() {
 <p>如上，你可以對 <code>maximum</code> 取指標，得到變數位址，不過，你不能對宣告的 <code>max</code> 取指標，去除程式中最後一個註解的話，會發生 cannot take the address of max 的錯誤。</p>
 <h1 id="回呼應用"><a class="header" href="#回呼應用">回呼應用</a></h1>
 <p>因為函式可以當作值傳遞，因此，對於函式中流程幾乎相同，只有少數操作不同的情況，就可以將操作不同的部份以回呼（Callback）函式取代。例如，可以設計一個 <code>filter</code> 函式，用來過濾出符合特定條件的值：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 

@@ -182,7 +182,7 @@
 <p>反射（Reflection）是探知資料自身結構的一種能力，不同的語言提供不同的反射機制，在 Go 語言中，反射的能力主要由 <code>reflect</code> 套件提供。</p>
 <h1 id="資料的-type"><a class="header" href="#資料的-type">資料的 Type</a></h1>
 <p>在先前的文件中，有時會用到 <code>reflect.TypeOf()</code> 來顯示資料的型態名稱，實際上，<code>reflect.TypeOf()</code> 傳回 <code>Type</code> 的實例，<code>Type</code> 是個介面定義，目前包含了以下的方法定義：</p>
-<pre><code class="language-prettyprint">type Type interface {
+<pre><code class="language-go">type Type interface {
     Align() int
     FieldAlign() int
     Method(int) Method
@@ -217,7 +217,7 @@
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>因此，你可以透過 <code>Type</code> 的方法定義，取得某個型態的相關結構資訊，舉例來說：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -248,7 +248,7 @@ func main() {
 }
 </code></pre>
 <p>如果 <code>reflect.TypeOf()</code> 接受的是個指標，因為指標實際上只是個位址值，必須要透過 <code>Type</code> 的 <code>Elem</code> 方法取得指標的目標 <code>Type</code>，才能取得型態的相關成員：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "errors"
@@ -307,7 +307,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>有上面的範例中，也示範了如何取得介面定義的方法資訊，這個範例會顯示以下的結果：</p>
-<pre><code class="language-prettyprint">Deposit func(*main.Account, float64) error
+<pre><code class="language-go">Deposit func(*main.Account, float64) error
 Withdraw func(*main.Account, float64) error
 struct
 main.Account
@@ -316,7 +316,7 @@ name string
 </code></pre>
 <h1 id="資料的-kind"><a class="header" href="#資料的-kind">資料的 Kind</a></h1>
 <p>上面的範例中，使用了 <code>Type</code> 的 <code>Kind()</code> 方法，這會傳回 <code>Kind</code> 列舉值：</p>
-<pre><code class="language-prettyprint">type Kind uint
+<pre><code class="language-go">type Kind uint
 
 const (
     Invalid Kind = iota
@@ -351,7 +351,7 @@ const (
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>以下是個簡單的型態測試：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -391,7 +391,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>如果想實際獲得資料的值，可以使用 <code>reflect.ValueOf()</code> 函式，這會傳回 <code>Value</code> 實例，<code>Value</code> 是個結構，定義了一些方法可以使用，可用來取得實際的值，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -417,7 +417,7 @@ func main() {
 }
 </code></pre>
 <p>如果是個指標，一樣也是要透過 <code>Elem()</code> 方法取得目標值，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -443,7 +443,7 @@ func main() {
 }
 </code></pre>
 <p>可以透過 <code>Value</code> 對值進行變動，不過，<code>Value</code> 必須是可定址的，具體來說，就是 <code>reflect.ValueOf()</code> 必須接受指標：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -466,7 +466,7 @@ func main() {
 }
 </code></pre>
 <p>上面的例子若改成以下，就會出現錯誤：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"

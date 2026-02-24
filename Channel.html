@@ -183,7 +183,7 @@
 <h1 id="使用-channel"><a class="header" href="#使用-channel">使用 Channel</a></h1>
 <p>Channel 就像是個佇列，可以對它發送值，也可以從它上頭取得值，想要建立一個 Channel，要在型態之前加上個 <code>chan</code>，每個 <code>chan</code> 都要宣告可容納的型態。</p>
 <p>舉例來說，使用 Channel 來修改之前的龜兔賽跑程式：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -235,7 +235,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>上頭的範例建立 Channel 時並沒有指定 Channel 中可以容納多少資料，Channel 中預設只能容納一個資料，你可以在建立 Channel 時指定當中可以容納的資料數量。例如，建立一個生產者、消費者的程式：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -267,7 +267,7 @@ func main() {
 <h1 id="close-與-range"><a class="header" href="#close-與-range">close 與 range</a></h1>
 <p>在這篇文件的第一個範例中，由於預期只會從 Channel 中收到兩個字串，因此主流程中使用了兩次 <code>&lt;- goal</code>，然而有時，我們無法事先知道，能從 Channel 得到幾筆資料。</p>
 <p>舉例來說，你也許想寫個猜數字遊戲，在隨機猜測數字的情況下，你無法事先知道要猜幾次才會猜中，而你想將先前猜測的數字透過 Channel 傳送：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -308,7 +308,7 @@ func main() {
 <p>在這個範例中，每次猜測的數字，都會使用 <code>ch &lt;- number</code> 傳至 Channel 中，而最後猜中數字時，使用 <code>close()</code> 關閉 Channel，Go 的 <code>range</code> 可以搭配 Channel 使用，在 Channel 尚未關閉前，搭配 <code>for</code> 就可以持續從 Channel 中取出資料。</p>
 <h1 id="select"><a class="header" href="#select">select</a></h1>
 <p>如果有多個 Channel 需要協調，可以使用 <code>select</code>，直接來看個多個生產者與一個消費者的例子：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -346,7 +346,7 @@ func main() {
 <p>在 <code>select</code> 的 <code>case</code> 中，會監看哪個 Channel 可以取得資料（或發送資料至 Channel），如果都有資料的話，就會隨機選取，如果都無法取得資料（或發送資料至 Channel）就會發生 panic，這可以設置 <code>default</code> 來解決，也就是監看的 Channel 中都沒有資料的話就會執行，或者利用 <code>select</code> 來做些超時設定。例如：</p>
 <div class="google-auto-placed ap_container" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -395,7 +395,7 @@ func main() {
 </code></pre>
 <p>如果過了 3 秒鐘，另兩個 Channel 都還是阻斷，<code>case &lt;- time.After(3 * time.Second)</code> 該行就會成立，因此就可以看到消費者的抱怨了…XD</p>
 <p>在 <code>select</code> 中若有相同的 Channel，會隨機選取。例如底下會顯示哪個結果是不一定的：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -415,7 +415,7 @@ func main() {
 </code></pre>
 <h1 id="單向-channel"><a class="header" href="#單向-channel">單向 Channel</a></h1>
 <p>可以將 Channel 轉為只可發送或只可取值的 Channel，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 

@@ -182,7 +182,7 @@
 <p>在〈<a href="Struct.html">結構入門</a>〉中看過，有些資料會有相關性，相關聯的資料組織在一起，對於資料本身的可用性或者是程式碼的可讀性，都會有所幫助，實際上，有些資料與可處理它的函式也會有相關性，將相關聯的資料與函式組織在一起，對資料與函式本身的可用性或者是程式碼的可讀性，也有著極大的幫助。</p>
 <h1 id="建立方法"><a class="header" href="#建立方法">建立方法</a></h1>
 <p>假設可能原本有如下的程式內容，負責銀行帳戶的建立、存款與提款：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "errors"
@@ -225,7 +225,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>實際上，<code>Desposit</code>、<code>Withdraw</code>、<code>String</code> 的函式操作，都是與傳入的 <code>Account</code> 實例有關，何不將它們組織在一起呢？這樣比較容易使用些，在 Go 語言中，你可以重新修改函式如下：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "errors"
@@ -269,7 +269,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>注意到，在這邊使用的是 <code>(ac *Account)</code>，也就是指標，如果你是如下使用 <code>(ac Account)</code>：</p>
-<pre><code class="language-prettyprint">func (ac Account) Deposit(amount float64) {
+<pre><code class="language-go">func (ac Account) Deposit(amount float64) {
     if amount &lt;= 0 {
         panic("必須存入正數")
     }
@@ -277,7 +277,7 @@ func main() {
 }
 </code></pre>
 <p>那麼執行像是 <code>account.Deposit(500)</code>，就像是以 <code>Deposit(*account, 500)</code> 呼叫以下函式：</p>
-<pre><code class="language-prettyprint">func Deposit(account Account, amount float64) {
+<pre><code class="language-go">func Deposit(account Account, amount float64) {
     if amount &lt;= 0 {
         panic("必須存入正數")
     }
@@ -292,7 +292,7 @@ func main() {
 <p>某些程度上，可以將接收者想成是其他語言中的 <code>this</code> 或 <code>self</code>，<a href="https://github.com/golang/go/wiki/CodeReviewComments#receiver-names">Go 建議為接收者適當命名</a>，而不是用 <code>this</code>、<code>self</code> 之類的名稱。接收者並沒有文件上記載的作用，命名時不用其他參數具有一定的描述性，只要能表達程式意圖就可以了，Go 建議是個一或兩個字母的名稱（某些程度上，也可以用來與其他參數區別）。</p>
 <h1 id="名稱相同的方法"><a class="header" href="#名稱相同的方法">名稱相同的方法</a></h1>
 <p>之前談過，Go 語言中不允許方法重載（Overload），因此，對於以下的程式，是會發生 <code>String</code> 重複宣告的編譯錯誤：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -323,7 +323,7 @@ func main() {
 }
 </code></pre>
 <p>然而，若是將函式定義為方法，就不會有這個問題，Go 可以從方法的接收者辨別，該使用哪個 <code>String</code> 方法：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -355,7 +355,7 @@ func main() {
 </code></pre>
 <h1 id="方法作為值"><a class="header" href="#方法作為值">方法作為值</a></h1>
 <p>在 Go 語言中，函式也可以作為值傳遞，那麼就產生了一個問題，方法呢？既然方法本質上也是個函式，那麼是否也可以作為值傳遞，答案是可以的，不過，以上面的程式為例，你不能直接以 <code>String := String</code> 這樣的方式傳遞，而必須使用方法運算式（Method expression）。例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "errors"
@@ -405,7 +405,7 @@ func main() {
 }
 </code></pre>
 <p>可以看到，這樣取得的函式，就像是本文一開始的範例那樣，你可以傳入任何的 <code>Account</code> 實例。另一個取得方法的方式是方法值（Method value），這會保有取得方法當時的接收者：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "errors"
@@ -461,7 +461,7 @@ func main() {
 <h1 id="值都能有方法"><a class="header" href="#值都能有方法">值都能有方法</a></h1>
 <p>實際上，不只是結構的實例可以定義方法，在 Go 語言中，只要是值，就可以定義方法，條件是必須是定義的型態（defined type），具體而言，就是使用 <code>type</code> 定義的新型態。</p>
 <p>例如，以下的範例為 <code>[]int</code> 定義了一個新的型態名稱，並定義了一個 <code>ForEach</code> 方法：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -482,7 +482,7 @@ func main() {
 }
 </code></pre>
 <p>這個範例會顯示 10 到 50 作為結果，必須留意的是，<code>type</code> 定義了新型態 <code>Funcint</code>，因為 <code>ForEach</code> 是針對 <code>Funcint</code> 定義，而不是針對 <code>[]int</code>，因此底下是行不通的：</p>
-<pre><code class="language-prettyprint">lt2 := []int {10, 20, 30, 40, 50}
+<pre><code class="language-go">lt2 := []int {10, 20, 30, 40, 50}
 
 // lt2.ForEach undefined (type []int has no field or method ForEach)
 lt2.ForEach(func(ele int) {
@@ -490,13 +490,13 @@ lt2.ForEach(func(ele int) {
 })
 </code></pre>
 <p>編譯器認為 <code>[]int</code> 並沒有定義 <code>ForEach</code>，因此發生錯誤，想要通過編譯的話，可以進行型態轉換：</p>
-<pre><code class="language-prettyprint">lt2 := IntList([]int {10, 20, 30, 40, 50})
+<pre><code class="language-go">lt2 := IntList([]int {10, 20, 30, 40, 50})
 lt2.ForEach(func(ele int) {
     fmt.Println(ele)
 })
 </code></pre>
 <p>你甚至可以基於 <code>int</code> 等基本型態定義方法，同樣地，必須定義一個新的型態名稱：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -526,7 +526,7 @@ func main() {
 <p>像這樣基於某個基本型態定義新型態，並為其定義更多高階特性，在 Go 的領域是常見的做法。這個範例會顯示 0 到 9，看起來就像是指定函式，要求執行 x 次吧！…XD</p>
 <h1 id="nil-接收者"><a class="header" href="#nil-接收者">nil 接收者</a></h1>
 <p>在 Go 中，接收者可以是 <code>nil</code>，這讓你有機會在方法中處理接收者為 <code>nil</code> 的情況，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -562,7 +562,7 @@ func main() {
 <p>如果是其他語言，例如 Java 的話，在 <code>findById("789").String()</code> 的地方會 <code>NullPointerException</code>，不過在 Go 中，可以針對接收者是否為 <code>nil</code>，來決定如何處理，例如這邊就實作了 nil safety 的概念。</p>
 <h1 id="模擬建構式初始式"><a class="header" href="#模擬建構式初始式">模擬建構式、初始式</a></h1>
 <p>Go 沒有物件導向語言中建構式或初始式之類的概念，然而可以自行模擬，例如在 <a href="https://pkg.go.dev/container/list/">container/list</a> 的<a href="https://go.dev/src/container/list/list.go">原始碼</a>可以看到 <code>New</code> 作為一個工廠函式，用來建立新的 <code>List</code>，初始的流程寫在 <code>Init</code> 方法之中：</p>
-<pre><code class="language-prettyprint">...
+<pre><code class="language-go">...
 // Init initializes or clears list l.
 func (l *List) Init() *List {
     l.root.next = &amp;l.root

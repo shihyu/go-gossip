@@ -182,7 +182,7 @@
 <p>在 Go 中，陣列的長度固定，是個複合值，元素的型態及個數決定了陣列的型態，在記憶體中使用連續空間配置。</p>
 <h1 id="建立與存取陣列"><a class="header" href="#建立與存取陣列">建立與存取陣列</a></h1>
 <p>建立陣列的方式是 <code>[n]type</code>，其中 <code>n</code> 為陣列的元素數量，<code>type</code> 是元素的型態。例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -196,7 +196,7 @@ func main() {
 </code></pre>
 <p>在上面的程式中，建立了具有 10 個元素的陣列，可以用來儲存 <code>int</code> 型態的值，可透過 <code>scores</code> 變數指定索引來存取元素，<code>scores</code> 變數的型態為 <code>[10]int</code>，記得，長度也是陣列的型態的一部份，若一個陣列為 <code>[10]int</code>，而另一個陣列為 <code>[5]int</code>，這兩個陣列會是不同的型態，像上頭這樣宣告陣列，預設每個元素都會初始為 0。</p>
 <p>陣列使用索引存取，如同其他語言的慣例，索引從 0 開始，<code>len</code> 函式可以取得陣列的長度，如果想在建立陣列時指定初始，可以如下：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -212,7 +212,7 @@ func main() {
 <p>在上頭可以看到，如果宣告的元素數量不足 <code>[]</code> 中指定的數量，那麼會自動給予初值，也可以使用 <code>...</code>，或者只寫 <code>[]</code>，讓編譯器自動判斷數量，如果宣告的元素數量超過 <code>[]</code> 中指定的數量，那麼會有 out of bounds 的編譯錯誤。</p>
 <h1 id="陣列指定與比較"><a class="header" href="#陣列指定與比較">陣列指定與比較</a></h1>
 <p>在 Go 中，陣列指定會逐一複製值，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -229,7 +229,7 @@ func main() {
 <p>在呼叫函式時若傳遞陣列給參數，或者是傳回陣列，也是做複製的動作。陣列可以使用 <code>==</code> 與 <code>!=</code> 進行比較，由於長度也是陣列型態的一部份，因此，只要長度與元素型態相同的陣列才可以做比較，如果將 <code>[3]int</code> 與 <code>[5]int</code> 做比較，會發生 mismatched types 編譯錯誤，同樣的，指定陣列給另一陣列時，也必須是相同型態的陣列。</p>
 <h1 id="巢狀陣列"><a class="header" href="#巢狀陣列">巢狀陣列</a></h1>
 <p>Go 的陣列是線性的，如果想模擬多維，可以使用巢狀陣列。例如，建立一個二維陣列：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -239,7 +239,7 @@ func main() {
 }
 </code></pre>
 <p>顯然地，第一個 <code>[]</code> 中數字指定了陣列中會有兩個 <code>[3]int</code> 陣列，因此，若要同時宣告陣列中的元素，可以如下：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -265,7 +265,7 @@ func main() {
 <p>上頭一口氣示範了幾種巢狀陣列的宣告方式，基本上後兩種應該是比較容易撰寫的，由於陣列的長度是型態的一部份，必須在宣告時指定，因此，就二維陣列來說，一定都是方陣。</p>
 <h1 id="走訪陣列"><a class="header" href="#走訪陣列">走訪陣列</a></h1>
 <p>想要逐一走訪陣列的話，基本上可以使用 <code>for</code> 迴圈，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -277,7 +277,7 @@ func main() {
 }
 </code></pre>
 <p>另一個方式是使用 <code>for range</code>：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -289,7 +289,7 @@ func main() {
 }
 </code></pre>
 <p>在不需要索引的情況下，可以使用 <code>_</code> 忽略傳回的索引值，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 

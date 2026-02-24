@@ -181,13 +181,13 @@
 </div>
 <p>在〈<a href="StdOutInErr.html">從標準輸入、輸出認識 io</a>〉中談到了 <code>io.Reader</code>、<code>io.Writer</code>，在 Go 中，這兩個介面抽象化了輸入、輸出，認識這兩個介面分別定義的 <code>Read</code>、<code>Write</code> 行為，是掌握 Go 中輸入、輸出的基礎。</p>
 <p><code>io.Reader</code> 定義的 <code>Read</code> 行為，可以在 <a href="https://pkg.go.dev/io/#Reader"><code>type Reader</code></a> 查看：</p>
-<pre><code class="language-prettyprint">type Reader interface {
+<pre><code class="language-go">type Reader interface {
     Read(p []byte) (n int, err error)
 }
 </code></pre>
 <p>對於呼叫者來說，<code>Read</code> 會將資料讀入 <code>p</code>，並傳回讀入的位元組數 <code>n</code>，<code>n</code> 會是 0 到不大於 <code>len(p)</code> 的整數，如果 <code>n</code> 不是 0 但不足 <code>len(p)</code>，應該先處理已讀取的位元組，這時 <code>err</code> 可能不是 <code>nil</code>（例如檔案結尾，可能會傳回 <code>io.EOF</code>），無論如何，在這之後 <code>Read</code>，<code>n</code> 會是 0 而 <code>err</code> 會是 <code>io.EOF</code>。</p>
 <p>例如，若要讀取一個文字檔案，其中以 UTF-8 儲存中文，可以如下：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -226,13 +226,13 @@ func main() {
 }
 </code></pre>
 <p><code>io.Writer</code> 定義的 <code>Write</code> 行為，可以在 <a href="https://pkg.go.dev/io/#Writer"><code>type Writer</code></a> 查看：</p>
-<pre><code class="language-prettyprint">type Writer interface {
+<pre><code class="language-go">type Writer interface {
     Write(p []byte) (n int, err error)
 }
 </code></pre>
 <p><code>Write</code> 會將 <code>p</code> 輸出並傳回實際輸出的位元組，<code>n</code> 會是 0 到不大於 <code>len(p)</code> 的整數，如果 <code>n &lt; len(p)</code>，那麼 <code>err</code> 不會是 <code>nil</code>。</p>
 <p>來寫個 <code>Copy</code> 函式好了，可以將 <code>io.Reader</code> 的資料直接寫到 <code>io.Writer</code>：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -285,7 +285,7 @@ func main() {
 }
 </code></pre>
 <p>在這個例子中，可以將指定的檔案讀入並顯示在主控台中，這是因為 <code>os.Stdout</code> 具有 <code>io.Writer</code> 的行為。實際上，<code>io.Copy</code> 就提供了這個功能：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"

@@ -180,14 +180,14 @@
 <h1 id="err-是否-nil"><a class="header" href="#err-是否-nil">err 是否 nil？</a></h1>
 </div>
 <p>對於錯誤，Go 不採取例外處理機制，而是透過傳回 <code>error</code> 值來表示是否發生了什麼錯誤，最基本的做法就是：</p>
-<pre><code class="language-prettyprint">if err != nil {
+<pre><code class="language-go">if err != nil {
     // 做些什麼
 }
 </code></pre>
 <p>然而，接觸 Go 不用多久就會發現，若要認真地檢查、處理錯誤，<code>if err != nil</code> 之類的程式碼就會到處充斥，特別是在進行 IO 之類的操作時更是如此，單純地 <code>if err != nil</code> 寫法最後會寫到懷疑人生，這麼寫真的是對的嗎？</p>
 <p>這時可能會做的選擇之一是：就別檢查了吧！如果寫的是特定目的之程式、不太需要考慮太多狀況、不用考慮過多的穩固性、想要很快地寫出原型之類的，這個選擇可能是正確的，畢竟真要認真寫 Go 中的錯誤檢查，某些程度上就像 Java 中常被人嫌的受檢例外（Checked exception）一樣囉嗦，還好 Go 可以選擇不檢查…XD</p>
 <p>只不過，如果想寫出較通用、具有穩固性的程式，錯誤檢查就是必需的，Go 也鼓勵開發者積極地檢查錯誤；那麼…乾脆全 <code>panic</code> 好了？</p>
-<pre><code class="language-prettyprint">func check(err) {
+<pre><code class="language-go">func check(err) {
     if err != nil {
         panic(err)
     }
@@ -200,7 +200,7 @@
 <p>不過，可以想想為什麼會有人想在發生錯誤時，一律引發 <code>panic</code>，因為可以從目前的執行處中斷，就像例外處理機制中例外發生時，後續程式碼就不會執行那樣。</p>
 <p>這就是以檢查是否有錯誤的方式，沒辦法直接做到的事，因為不在檢查出錯誤的時候進行 <code>return</code>、<code>break</code> 之類的動作，程式碼就會往下執行。</p>
 <p>為了能在錯誤發生時中斷流程，就有可能寫出這類的程式碼：</p>
-<pre><code class="language-prettyprint">_, err = fd.Write(p0[a:b])
+<pre><code class="language-go">_, err = fd.Write(p0[a:b])
 if err != nil {
     return err
 }
@@ -217,7 +217,7 @@ if err != nil {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>這段程式碼摘自〈<a href="https://go.dev/blog/errors-are-values">Errors are values</a>〉，該文章中提到一個解決的方式是：</p>
-<pre><code class="language-prettyprint">var err error
+<pre><code class="language-go">var err error
 write := func(buf []byte) {
     if err != nil {
         return
@@ -236,7 +236,7 @@ if err != nil {
 </div>
 <p>這麼一來，每一次 <code>write</code> 呼叫時，就都會檢查 <code>err</code> 是否為 <code>nil</code>，如果不是 <code>nil</code> 就 <code>return</code>，實際上也就不會執行 <code>w.Write</code>，雖然程式碼上呼叫了 <code>write</code> 多次；然而，某次呼叫若發生了錯誤，後續的 <code>write</code> 並不會真正執行寫出的動作，而透過這個方式，可以將發生錯誤時要進行的動作，統整在最後檢查並執行。</p>
 <p>匿名函式的方式建立了 Closure，捕捉了 <code>err</code> 變數，這麼一來就得做些迴避同名變數的問題，另外匿名函式的寫法也不是那麼簡明，因此文章中定義了：</p>
-<pre><code class="language-prettyprint">type errWriter struct {
+<pre><code class="language-go">type errWriter struct {
     w   io.Writer
     err error
 }
@@ -249,7 +249,7 @@ func (ew *errWriter) write(buf []byte) {
 }
 </code></pre>
 <p>這麼一來，每個 <code>io.Writer</code> 可以有個別的 <code>err</code> 可以使用，而原本的程式就可以改寫為：</p>
-<pre><code class="language-prettyprint">ew := &amp;errWriter{w: fd}
+<pre><code class="language-go">ew := &amp;errWriter{w: fd}
 ew.write(p0[a:b])
 ew.write(p1[c:d])
 ew.write(p2[e:f])
@@ -259,7 +259,7 @@ if ew.err != nil {
 }
 </code></pre>
 <p>在〈<a href="bufio.html">bufio 套件</a>〉中看過的 <code>bufio.Writer</code> 就是這類的設計：</p>
-<pre><code class="language-prettyprint">type Writer struct {
+<pre><code class="language-go">type Writer struct {
     err error
     buf []byte
     n   int
@@ -318,7 +318,7 @@ func (b *Writer) Flush() error {
 }
 </code></pre>
 <p>在 <code>b.err</code> 不為 <code>nil</code> 的情況下，實際上不會有實際的寫出，而 <code>Flush</code> 時，若 <code>b.err</code> 不為 <code>nil</code> 就會被 <code>return</code>，因此在使用 <code>bufio.Writer</code> 時，可以如下撰寫，在最後檢查</p>
-<pre><code class="language-prettyprint">b := bufio.NewWriter(fd)
+<pre><code class="language-go">b := bufio.NewWriter(fd)
 b.Write(p0[a:b])
 b.Write(p1[c:d])
 b.Write(p2[e:f])
@@ -328,7 +328,7 @@ if b.Flush() != nil {
 }
 </code></pre>
 <p>這個模式可以進一步應用，例如在〈<a href="bufio.html">bufio 套件</a>〉中看過 <code>bufio.Scanner</code> 的使用，語意上比較高階：</p>
-<pre><code class="language-prettyprint">scanner := bufio.NewScanner(f)
+<pre><code class="language-go">scanner := bufio.NewScanner(f)
 for scanner.Scan() {
     fmt.Println(scanner.Text())
 }
@@ -338,7 +338,7 @@ if err := scanner.Err(); err != nil {
 </code></pre>
 <p><code>scanner.Scan()</code> 傳回布林值，表示是否掃描到下一行，沒有下一行或中途發生錯誤，就會傳回 <code>false</code>；然而迴圈檢查就只在乎有沒有下一行，離開迴圈後再來檢查錯誤，兩個程式區塊各司其職。</p>
 <p><code>bufio.Scanner</code> 本身的組成中有 <code>io.Reader</code> 與 <code>err</code>：</p>
-<pre><code class="language-prettyprint">type Scanner struct {
+<pre><code class="language-go">type Scanner struct {
     r            io.Reader 
     ...略
     err          error
@@ -346,7 +346,7 @@ if err := scanner.Err(); err != nil {
 }
 </code></pre>
 <p>若你查看 <code>Scan</code> 方法的實作，會傳回 <code>false</code> 的情況之一，就是 <code>Scanner</code> 的 <code>err</code> 不是 <code>nil</code>：</p>
-<pre><code class="language-prettyprint">    ...略
+<pre><code class="language-go">    ...略
     if s.err != nil {
         // Shut it down.
         s.start = 0

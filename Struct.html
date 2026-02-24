@@ -182,7 +182,7 @@
 <p>有些資料會有相關性，例如，一個 XY 平面上的點可以使用 (x, y) 座標來表示；名稱、郵件位址、電話可能代表著一張名片上的資訊。將相關聯的資料組織在一起，對於資料本身的可用性或者是程式碼的可讀性，都會有所幫助。</p>
 <h1 id="struct-組織資料"><a class="header" href="#struct-組織資料">struct 組織資料</a></h1>
 <p>Go 語言中有 <code>struct</code>，可以用來將相關的資料組織在一起，如果你學過 C 語言，這對你應該不陌生。舉個例子來說，相對於個別地存取 <code>x</code>、<code>y</code> 變數：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -199,7 +199,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>若 <code>x</code> 與 <code>y</code> 變數，相當於 XY 平面上的 (x, y) 座標，那麼將之組織在一起同時存取會比較好：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -219,7 +219,7 @@ func main() {
 <p>在上面的例子中，<code>struct</code> 定義了一個結構，當中包括了 <code>x</code> 與 <code>y</code> 兩個值域（field），接著馬上用它來建立了一個實例，依順序指定了 <code>x</code> 與 <code>y</code> 的值是 <code>10</code> 與 <code>20</code>，可以看到，想要存取結構的值域，可以運過點運算子（<code>.</code>）。</p>
 <h1 id="基於結構定義新型態"><a class="header" href="#基於結構定義新型態">基於結構定義新型態</a></h1>
 <p>上面的例子中，建立了一個匿名型態的結構，你可以使用 <code>type</code> 基於 <code>struct</code> 來定義新型態，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -239,7 +239,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>如果一開始不知道結構的值域數值為何，可以使用 <code>var</code> 宣告即可，那麼值域會依型態而有適當的預設值。例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -255,7 +255,7 @@ func main() {
 <p><code>point</code> 並不是參考，<code>point</code> 的位置開始，有一片可以儲存結構的空間，可以使用 <code>&amp;</code> 來取得 <code>point</code> 的位址值，<code>point</code> 的位址值無法改變。</p>
 <h1 id="結構與指標"><a class="header" href="#結構與指標">結構與指標</a></h1>
 <p>如果你建立了一個結構的實例，並將之指定給另一個結構變數，那麼會進行值域的複製。例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -276,7 +276,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>這對於函式的參數傳遞也是一樣的：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -297,7 +297,7 @@ func main() {
 }
 </code></pre>
 <p><code>point</code> 的位置開始儲存了結構，可以對 <code>point</code> 使用 <code>&amp;</code> 取值，將位址值指定給指標，因此若指定或傳遞結構時，不是想要複製值域，可以使用指標。例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -317,7 +317,7 @@ func main() {
 </code></pre>
 <p>注意到 <code>point2 := &amp;point1</code> 多了個 <code>&amp;</code>，這取得了 <code>point1</code> 實例的指標值，並傳遞給 <code>point2</code>，<code>point2</code> 的型態是 <code>*Point</code>，也就是相當於 <code>var point2 *Point = &amp;point1</code>，因此，當你透過 <code>point1.X</code> 改變了值，透過 <code>point2</code> 就能取得對應的改變。</p>
 <p>類似地，也可以在傳遞參數給函式時使用指標：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -339,7 +339,7 @@ func main() {
 </code></pre>
 <p>可以看到在 Go 語言中，即使是指標，也可以直接透過點運算子來存取值域，這是 Go 提供的語法糖，<code>point.X</code> 在編譯過後，會被轉換為 <code>(*point).X</code>。</p>
 <p>你也可以透過 <code>new</code> 來建立結構實例，這會傳回結構實例的位址：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -361,7 +361,7 @@ func main() {
 </code></pre>
 <p>在這邊，<code>point</code> 是個指標，也就是 <code>*Point</code> 型態，儲存了結構實例的位址。</p>
 <p>結構的值域也可以是指標型態，也可以是結構自身型態之指標，因此可實現鏈狀參考，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 

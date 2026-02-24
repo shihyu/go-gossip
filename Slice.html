@@ -182,7 +182,7 @@
 <p>在〈<a href="http://openhome.cc/Gossip/Go/Array.html">身為複合值的陣列</a>〉中看過陣列，有的場合需要陣列，然而，若只想處理陣列中某片區域，或者以更高階的觀點看待一片資料（而不是從固定長度的陣列觀點），那麼可以使用 slice。</p>
 <h1 id="建立一個-slice"><a class="header" href="#建立一個-slice">建立一個 slice</a></h1>
 <p>如果需要一個 slice，可以使用 <code>make</code> 函式，舉個例子來說，可以如下建立一個長度與容量皆為 5 的 slice，並傳回 <code>slice</code> 的參考，型態為 <code>[]int</code>：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -205,7 +205,7 @@ func main() {
 <p>透過 <code>s1</code> 或 <code>s2</code> 操作時，操作的對象是變數參考之實例，就底層來說，<code>make([]int, 5)</code> 在記憶體某位置建立了 slice 實例，而 <code>s1</code> 儲存了該位置，如果改變了 <code>s1</code> 儲存的位址值，那透過 <code>s1</code> 操作時，就會是另一個 slice 實例了。</p>
 <p>將變數的參考對象指定給另一個變數時，底層是將儲存的位址值指定給該變數，在上例中，<code>s2 := s1</code>，就是將 <code>s1</code> 儲存的位址值，指定給 <code>s2</code>，因此透過 <code>s2</code> 操作的對象，與 <code>s1</code> 操作的對象是相同的，透過其中一個名稱來改變 slice 的元素內容，透過另一個名稱取得 slice 的元素值，就會是改變後的值。</p>
 <p>上例也可以寫為：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -226,7 +226,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>在 Go 中，參考的預設零值都是 <code>nil</code>。slice 無法進行 <code>==</code> 比較，slice 唯一可以用 <code>==</code> 比較的對象是 <code>nil</code>，儲存 slice 參考的變數也無法進行 <code>==</code> 比較，若真想知道兩個變數參考的是否同一 slice，可以如下透過<a href="Reflect.html">反射機制</a>來得知：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -242,7 +242,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>若事先知道 slice 的值，也可以使用 slice 字面常量：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -258,7 +258,7 @@ func main() {
 </code></pre>
 <p>注意到，建立 slice 時，方括號中是沒有 <code>...</code> 的，如果方括號中有 <code>...</code>，那會是個陣列，而不是個 slice，如上可看到的，<code>s1</code> 的型態會是 <code>[]int</code>，然而，<code>a1</code> 的型態會是 <code>[5]int</code>，<code>s1</code> 是個參考，可以指向某個 slice 實例，<code>s1</code> 本身儲存的位址值可以改變，而 <code>a1</code> 本身就是陣列，從 <code>a1</code> 的位置開始，有連續 5 個 <code>int</code> 空間可用來儲存 <code>int</code> 值，<code>a1</code> 本身的位置是固定的，無法改變。</p>
 <p>使用 slice 字面常量時，還可以初始特定索引處的值。例如：</p>
-<pre><code class="language-prettyprint">slice := []int{10, 20, 30, 10: 100, 20: 200}
+<pre><code class="language-go">slice := []int{10, 20, 30, 10: 100, 20: 200}
 // 顯示 [10 20 30 0 0 0 0 0 0 0 100 0 0 0 0 0 0 0 0 0 200]
 fmt.Println(slice)
 </code></pre>
@@ -267,7 +267,7 @@ fmt.Println(slice)
 <p>在上面的例子中，索引 0、1、2 被初始為 10、20、30，之後指定索引 10 為 100，索引 20 為 200，其餘未指定處初始為 <code>int</code> 零值 0。</p>
 <h1 id="從陣列或-slice-建立-slice"><a class="header" href="#從陣列或-slice-建立-slice">從陣列或 slice 建立 slice</a></h1>
 <p>如果有個現成的陣列，可以從陣列中建立 slice，例如，從陣列的索引 1 到 4（不包括）建立一個 slice 的話，可以如下：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -299,7 +299,7 @@ func main() {
 <p>是的！slice 底層實際上還是個陣列，若兩個 slice 底層是共用同一個陣列，從一個 slice 操作，另一個 slice 取得的值也就會反映變化，也因此在上面的例子中，你透過 <code>slice[0]</code> 設定值為 20，底層的陣列也會因而反映出變化，透過 slice 指定索引取得元素值時，不能超出 slice 的長度，不然會出現 index out of range 的錯誤。</p>
 <p>注意，單是宣告 <code>var slice []int</code> 的話，<code>slice</code> 預設零值會是 <code>nil</code>，也就是相當於 <code>var slice []int = nil</code>，也就是 <code>slice</code> 參考至 <code>nil</code>，此時 <code>len(slice)</code> 與 <code>cap(slice)</code> 的結果都會是 0，<code>fmt.Println</code> 的顯示會是 []，<code>==</code> 用於 slice 時，唯一能用來比較的就是 <code>nil</code>。</p>
 <p>方才使用 <code>make([]int, 5)</code> 函式建立 slice 時，只指定了長度為 5，而容量就預設與長度相同，實際上，可以分別指定容量與長度，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -312,7 +312,7 @@ func main() {
 </code></pre>
 <p>指定索引從陣列中產生 slice時，若省略冒號之後的數字，則建立的 slice，預設可取得至陣列尾端的元素，也就是長度將等於容量，例如，若 <code>arr := [...]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}</code>，那麼 <code>arr[3:]</code> 的話，取得的 slice 可以存取的元素為 {4, 5, 6, 7, 8, 9, 10}，長度與容量皆為 7；如果省略冒號之前的數字，預設從索引 0 開始，例如 <code>arr[:2]</code> 會取得 {1, 2}，長度為 2，容量為 10；如果是 <code>arr[:]</code>，那麼就是取得全部陣列內容了，長度與容量皆為 10。</p>
 <p>Go 1.2 開始，可以在 <code>[]</code> 中指定三個數字，以冒號區隔，第三個數字指定的是 slice 以原陣列哪個索引作為邊界。例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -326,7 +326,7 @@ func main() {
 </code></pre>
 <p>第三個數字指定的索引不能超過陣列邊界，不然會發生 invalid slice index 的錯誤。</p>
 <p>也可以從 slice 中產生 slice，產生的 slice 底層還是同一個陣列。例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -346,7 +346,7 @@ func main() {
 </code></pre>
 <h1 id="slice-的-append"><a class="header" href="#slice-的-append">slice 的 append</a></h1>
 <p>可以使用 <code>append</code> 對 slice 附加元素，這會傳回一個 slice 的參考：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -370,7 +370,7 @@ func main() {
 </code></pre>
 <p>只要附加的元素沒有超出 slice 的容量，傳回的 slice 參考就會是相同的，底層也是同一陣列，因此，改變了 <code>slice2[0]</code> 的值，<code>slice1</code>、<code>arr</code> 取得結果都有了變化。</p>
 <p>如果 <code>append</code> 的時候，附加元素超出了 slice 的容量，那麼底層會建立一個新的陣列，容量為原 slice 容量的兩倍加 2，接著將舊陣列內容複製到新陣列，然後將指定的值附加上去，<code>append</code> 的結果也會傳回新的 slice 參考。例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -394,7 +394,7 @@ func main() {
 </code></pre>
 <p>在上面的例子中，由於 <code>slice2</code> 底層的陣列，與 <code>slice1</code> 無關了，因此，透過 <code>slice2[0]</code> 修改了值，並不會影響到透過 <code>slice1</code> 或 <code>arr</code> 取得的值。</p>
 <p>如果想用 <code>append</code> 來直接附加另一個 slice，可以使用 <code>...</code>，將另一個 slice 擴展為一列引數，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -406,7 +406,7 @@ func main() {
 </code></pre>
 <h1 id="slice-的-copy"><a class="header" href="#slice-的-copy">slice 的 copy</a></h1>
 <p>可以使用 <code>copy</code> 函式，將一個 slice 的內容，複製至另一個 slice：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 

@@ -183,7 +183,7 @@
 <p>對 Go 開發者而言，理想的狀況下，若 Go 封裝的好，最好是可以完全忽略 JavaScript、瀏覽器環境等事實，也不需要知道 WebAssembly 的細節；不過，若能認識 JavaScript、瀏覽器、WebAssembly 的特性，對使用 Go 撰寫程式並編譯為 WebAssembly 來說，仍有很大的幫助。</p>
 <p>如果對 JavaScript、瀏覽器的細節有興趣，建議參考〈<a href="https://openhome.cc/Gossip/ECMAScript/">ECMAScript 本質部份</a>〉，如果對 WebAssembly 的細節有興趣，建議參考〈<a href="https://openhome.cc/Gossip/WebAssembly/">WebAssembly</a>〉文件。</p>
 <p>無論如何，來看個簡單的 Go 程式如何編譯為 WebAssembly，首先，來個簡單的 Go 程式：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 func main() {
     println("Hello, WebAssembly")
@@ -191,26 +191,26 @@ func main() {
 </code></pre>
 <p>再簡單也不過，在編譯為 WebAssembly 之後，<code>println</code> 的輸出預設會是瀏覽器主控台（console），接下來，若要編譯為 WebAssembly，環境變數 <code>GOOS</code> 必須設定為 <code>js</code>，<code>GOARCH</code> 必須設定為 <code>wasm</code>。</p>
 <p>如果你是使用 Visual Studio Code，安裝了 <a href="https://github.com/Microsoft/vscode-go">vscode-go</a> 擴充，可以在 settings.json 中設定：</p>
-<pre><code class="language-prettyprint">{
+<pre><code class="language-go">{
     "go.toolsEnvVars": {"GOOS":"js", "GOARCH": "wasm"}
 }
 </code></pre>
 <p>如果是要在 Visual Studio Code 開啟的終端機中設定環境變數，因為它是基於 Power Shell，可以如下設定環境變數：</p>
-<pre><code class="language-prettyprint">$env:GOOS="js"
+<pre><code class="language-go">$env:GOOS="js"
 $env:GOARCH="wasm"
 </code></pre>
 <p>如果是在 Windows 的命令提示字元，就是使用 <code>set</code> 了：</p>
-<pre><code class="language-prettyprint">SET GOOS=js
+<pre><code class="language-go">SET GOOS=js
 SET GOARCH=wasm
 </code></pre>
 <p>接下來，可以執行建構：</p>
-<pre><code class="language-prettyprint">go build -o test.wasm main.go
+<pre><code class="language-go">go build -o test.wasm main.go
 </code></pre>
 <p>test.wasm 是編譯出來的 WebAssembly 模組位元組碼。體積會依 Go 版本、程式內容與最佳化方式而異；早期 Go 1.11 的 wasm hello world 常見約數 MB 等級（壓縮後可明顯降低），現代版本的結果也仍建議搭配壓縮與快取策略評估。</p>
 <p>接下來就是開個 HTML 檔案，在當中使用 JavaScript，運用 Fetch API、WebAssembly API 等，取得、編譯、初始化 WebAssembly 模組，這些細節在〈<a href="https://openhome.cc/Gossip/WebAssembly/">WebAssembly</a>〉文件都有談到。</p>
 <p>如果想要直接有個現成的載入頁面可以使用，在 Go 1.26 可從 Go 安裝目錄的 <code>lib/wasm</code> 取得 <code>wasm_exec.html</code> 與 <code>wasm_exec.js</code>（舊版文件常見 <code>misc/wasm</code> 路徑）。<code>wasm_exec.html</code> 裏頭寫的 JavaScript，會使用 Fetch API 來取得 test.wasm，這也是為什麼，方才編譯時指定輸出檔案名稱為 test.wasm 的原因。</p>
 <p>如果你有安裝 Node.js，Go 1.26 也可使用 <code>go_js_wasm_exec</code>（或參考 <code>lib/wasm/wasm_exec_node.js</code>）來運行 test.wasm。舊版文件常見直接搭配 <code>wasm_exec.js</code> 的方式，實際可用性會依版本而異：</p>
-<pre><code class="language-prettyprint">node wasm_exec.js test.wasm
+<pre><code class="language-go">node wasm_exec.js test.wasm
 </code></pre>
 <p>如果要在瀏覽器中運行，你需要有個 HTTP 伺服器，例如 Node.js 的 <code>http-server</code>，在啟動之後，請求你的 http://localhost:8080/wasm_exec.html。</p>
 <p>這會看到一個 Run 按鈕，開啟你瀏覽器上的開發者工具，然後按下網頁中的 Run 按鈕，你就會看到開發者工具中的主控台顯示了文字：</p>

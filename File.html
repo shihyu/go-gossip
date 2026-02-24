@@ -181,13 +181,13 @@
 </div>
 <p>想要進行目錄、檔案等的操作，基本上就是查看 <code>os</code> 套件，可以使用的函式很多，逐一談好像也沒太大意義，基本上若對目錄、檔案以及權限等有所認識，應該查查文件、搜尋一些範例，大致就知道怎麼用吧！</p>
 <p>無論如何，輸入輸出中最基本的就是檔案讀寫，至今為止看過，要開啟檔案進行讀取的話，使用的是 <code>os.Open</code> 函式，這會以唯讀方式開啟既有的檔案（否則會有 <code>PathError</code>）：</p>
-<pre><code class="language-prettyprint">func Open(name string) (*File, error)
+<pre><code class="language-go">func Open(name string) (*File, error)
 </code></pre>
 <p>如果要指定讀寫方式與權限的話，要使用 <code>os.OpenFile</code>：</p>
-<pre><code class="language-prettyprint">func OpenFile(name string, flag int, perm FileMode) (*File, error)
+<pre><code class="language-go">func OpenFile(name string, flag int, perm FileMode) (*File, error)
 </code></pre>
 <p><code>flag</code> 可以指定的常數有：</p>
-<pre><code class="language-prettyprint">const (
+<pre><code class="language-go">const (
     // 必須指定 O_RDONLY、O_WRONLY 或 O_RDWR
     O_RDONLY int = syscall.O_RDONLY // 唯讀
     O_WRONLY int = syscall.O_WRONLY // 唯寫
@@ -201,26 +201,26 @@
 )
 </code></pre>
 <p><code>perm</code> 的話是檔案<a href="https://en.wikipedia.org/wiki/Chmod#Octal_modes">八進位權限</a>，例如 0777；另外，還有個 <code>os.Create</code>，實現上就是使用 <code>OpenFile</code> 以 0666 的方式建立可讀寫的檔案（清空文件）：</p>
-<pre><code class="language-prettyprint">func Create(name string) (*File, error) {
+<pre><code class="language-go">func Create(name string) (*File, error) {
     return OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, 0666)
 }
 </code></pre>
 <p><code>Open</code>、<code>OpenFile</code> 或 <code>Create</code> 都會傳回 <code>*os.File</code>；另外還有個 <code>NewFile</code>，多數情況下用不到，主要是在將檔案描述（File descriptor）以 <code>*os.File</code> 來表示，例如，<code>os.Stdin</code>、<code>os.Stdout</code>、<code>os.Stderr</code>，在〈<a href="StdOutInErr.html">從標準輸入、輸出認識 io</a>〉看過它的使用：</p>
-<pre><code class="language-prettyprint">var (
+<pre><code class="language-go">var (
     Stdin  = NewFile(uintptr(syscall.Stdin), "/dev/stdin")
     Stdout = NewFile(uintptr(syscall.Stdout), "/dev/stdout")
     Stderr = NewFile(uintptr(syscall.Stderr), "/dev/stderr")
 )
 </code></pre>
 <p><code>syscall.Stdin</code>、<code>syscall.Stdout</code>、<code>syscall.Stderr</code> 分別是標準輸入、輸出、錯誤的檔案描述，這在 <a href="https://pkg.go.dev/syscall/#pkg-variables"><code>syscall</code> 的文件</a>可以看到：</p>
-<pre><code class="language-prettyprint">var (
+<pre><code class="language-go">var (
     Stdin  = 0
     Stdout = 1
     Stderr = 2
 )
 </code></pre>
 <p><code>os.File</code> 實作了 <code>io.Reader</code>、<code>io.Writer</code> 等行為，因此只要知道〈<a href="ReaderWriter.html">io.Reader、io.Writer</a>〉，剩下的就是查詢文件，看看有哪些方法可以使用，沒什麼特別需要示範的了，倒是若需要簡單的檔案讀寫，可以看看 <a href="https://pkg.go.dev/io/ioutil/"><code>ioutil</code> 套件</a>（歷史 API），其中有些簡便的函式：</p>
-<pre><code class="language-prettyprint">func NopCloser(r io.Reader) io.ReadCloser
+<pre><code class="language-go">func NopCloser(r io.Reader) io.ReadCloser
 func ReadAll(r io.Reader) ([]byte, error)
 func ReadDir(dirname string) ([]os.FileInfo, error)
 func ReadFile(filename string) ([]byte, error)
@@ -230,7 +230,7 @@ func WriteFile(filename string, data []byte, perm os.FileMode) error
 </code></pre>
 <p><code>ReadFile</code>、<code>WriteFile</code> 只要指定檔案名稱等，程式碼上不需要自行建立檔案、緩衝區之類的，這些函式在 <a href="https://pkg.go.dev/io/ioutil/"><code>ioutil</code> 套件</a> 的文件中，都有範例可以參考。</p>
 <p>補充（Go 1.16+）：<code>ioutil</code> 已棄用（deprecated），功能多已移到 <code>io</code> 與 <code>os</code>：</p>
-<pre><code class="language-prettyprint">ioutil.ReadAll   -&gt; io.ReadAll
+<pre><code class="language-go">ioutil.ReadAll   -&gt; io.ReadAll
 ioutil.ReadFile  -&gt; os.ReadFile
 ioutil.WriteFile -&gt; os.WriteFile
 ioutil.TempDir   -&gt; os.MkdirTemp

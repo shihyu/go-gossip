@@ -182,7 +182,7 @@
 <p>從 Go 1.18 開始，Go 支援泛型（Generics，也就是 type parameters）。這讓你可以用同一份程式碼，處理多種型態，而不用到處寫重複函式或依賴 <code>interface{}</code> 加型態斷言。</p>
 <h1 id="泛型函式"><a class="header" href="#泛型函式">泛型函式</a></h1>
 <p>函式可以在名稱後面宣告型別參數，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -207,7 +207,7 @@ func main() {
 <p>通常編譯器可以從引數推斷型別參數，因此呼叫時常不必寫成 <code>First[int](...)</code>。</p>
 <h1 id="型別條件constraints"><a class="header" href="#型別條件constraints">型別條件（constraints）</a></h1>
 <p>如果泛型函式或泛型型別需要使用某些運算（例如 <code>==</code>、<code>&lt;</code>），就要限制型別參數可接受的型態範圍，這就是型別條件。</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -228,7 +228,7 @@ func main() {
 <p><code>comparable</code> 也是 Go 1.18 新增的預定義識別名稱，只能用在型別條件中。從 Go 1.20 起，可比較（但可能在執行時比較時 panic）的型別，也能滿足 <code>comparable</code> 條件。</p>
 <h1 id="介面作為型別集合type-set"><a class="header" href="#介面作為型別集合type-set">介面作為型別集合（type set）</a></h1>
 <p>Go 1.18 之後，介面不只描述方法集合，也可以描述型別集合（用於 constraint）。例如：</p>
-<pre><code class="language-prettyprint">type Integer interface {
+<pre><code class="language-go">type Integer interface {
     ~int | ~int8 | ~int16 | ~int32 | ~int64
 }
 </code></pre>
@@ -236,7 +236,7 @@ func main() {
 <p>這類帶有 union（<code>|</code>）或具體型別元素的介面，通常只能用在型別條件，不會拿來當一般執行期介面值使用。</p>
 <h1 id="泛型型別"><a class="header" href="#泛型型別">泛型型別</a></h1>
 <p>不只函式可以用泛型，型別宣告也可以：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -269,12 +269,12 @@ func main() {
 </code></pre>
 <h1 id="go-124generic-type-aliases"><a class="header" href="#go-124generic-type-aliases">Go 1.24：generic type aliases</a></h1>
 <p>Go 1.24 起，generic type aliases 完整支援，因此可像下面這樣寫：</p>
-<pre><code class="language-prettyprint">type Set[T comparable] = map[T]struct{}
+<pre><code class="language-go">type Set[T comparable] = map[T]struct{}
 </code></pre>
 <p>這在整理常用資料結構別名時很方便，例如 <code>Set[string]</code>、<code>Set[int]</code>。</p>
 <h1 id="go-126型別參數列表中的自我參照"><a class="header" href="#go-126型別參數列表中的自我參照">Go 1.26：型別參數列表中的自我參照</a></h1>
 <p>Go 1.26 放寬了限制，泛型型別可在自己的型別參數列表中參照自己。這對某些泛型介面（特別是要求「輸入輸出都是自身型態」）會比較自然：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 

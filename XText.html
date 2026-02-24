@@ -183,20 +183,20 @@
 <p>如果文字資料的來源並非 UTF-8 呢？例如，儲存時並非使用 UTF-8 的檔案？解決的方法之一，是將檔案另行儲存為 UTF-8，再使用 Go 來讀取，當然，並非所有的的場合都可以這麼做，另一個方式是，使用 <a href="https://pkg.go.dev/golang.org/x/text"><code>golang.org/x/text</code></a> 套件。</p>
 <p>Go 除了本身自帶的標準套件之外，還有另外一系列官方的擴充套件（常稱 x/ repos），這些套件也是 Go 專案的一部份，只不過在相容性的維護上比較沒那麼嚴格。</p>
 <p>在官方擴充套件中，<code>golang.org/x/text</code> 主要包含了文字編碼、轉換、國際化、本地化等文字性任務的套件。若是在模組專案中使用，通常直接 <code>import</code> 後執行 <code>go mod tidy</code> 即可；若要手動加入依賴，也可以使用：</p>
-<pre><code class="language-prettyprint">go get golang.org/x/text@latest
+<pre><code class="language-go">go get golang.org/x/text@latest
 </code></pre>
 <p>文字編碼的轉換主要由 <a href="https://pkg.go.dev/golang.org/x/text/transform"><code>golang.org/x/text/transform</code></a> 套件來處理，看看其中的函式或結構方法，都會需要 <code>Transformer</code> 介面的實現，例如最基本的 <code>String</code>：</p>
-<pre><code class="language-prettyprint">func String(t Transformer, s string) (result string, n int, err error)
+<pre><code class="language-go">func String(t Transformer, s string) (result string, n int, err error)
 </code></pre>
 <p><code>Transformer</code> 定義的主要是 <code>Transform</code> 方法，代表著編碼的轉換：</p>
-<pre><code class="language-prettyprint">type Transformer interface {
+<pre><code class="language-go">type Transformer interface {
     Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error)
     Reset()
 }
 </code></pre>
 <p><code>dst</code>、<code>src</code> 代表著同一文字兩個不同編碼的位元組，由於 Go 使用 UTF-8，從 UTF-8 轉換為其他編碼，這個動作稱為 <code>Encode</code>，從其他編碼轉換為 UTF-8，這個動作稱為 Decode。</p>
 <p>Encode、Decode 的動作，分別由 <a href="https://pkg.go.dev/golang.org/x/text/encoding"><code>golang.org/x/text/encoding</code></a> 套件的 <code>Encoder</code>、<code>Decoder</code> 來處理，它們都是 <code>transform.Transformer</code> 的實現：</p>
-<pre><code class="language-prettyprint">type Encoder struct {
+<pre><code class="language-go">type Encoder struct {
     transform.Transformer
     ...
 }
@@ -207,17 +207,17 @@ type Decoder struct {
 }
 </code></pre>
 <p>為了便於使用，<code>encoding</code> 定義了 <code>Encoding</code> 的行為：</p>
-<pre><code class="language-prettyprint">type Encoding interface {
+<pre><code class="language-go">type Encoding interface {
     NewDecoder() *Decoder
     NewEncoder() *Encoder
 }
 </code></pre>
 <p><a href="https://pkg.go.dev/golang.org/x/text/encoding"><code>golang.org/x/text/encoding</code></a> 套件之中，定義了不同的編碼轉換套件，例如，想處理 Big5（Code Page 950） 編碼轉換的話，需要 <code>golang.org/x/text/encoding/traditionalchinese</code> 套件，它的 <code>Big5</code> 就實現了 <code>Encoding</code>，因此想要獲得 UTF-8 &lt;-&gt; Big5 的 <code>Encoder</code>、<code>Decoder</code>，可以如下：</p>
-<pre><code class="language-prettyprint">utf8ToBig5 := traditionalchinese.Big5.NewEncoder()
+<pre><code class="language-go">utf8ToBig5 := traditionalchinese.Big5.NewEncoder()
 big5ToUtf8 := traditionalchinese.Big5.NewDecoder()
 </code></pre>
 <p>因此，若要讀取一個底層為 Big5 編碼的字串，轉換為 UTF-8 編碼字串，可以如下：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "golang.org/x/text/encoding/traditionalchinese"
@@ -233,7 +233,7 @@ func main() {
 }
 </code></pre>
 <p>要將一個 UTF-8 編碼字串，轉換為 Big5 編碼的字串，可以如下：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "golang.org/x/text/encoding/traditionalchinese"
@@ -248,7 +248,7 @@ func main() {
 }
 </code></pre>
 <p><code>transform</code> 也定義了 <code>Reader</code>、<code>Writer</code>，可以用來將 <code>Transformer</code> 與 <code>io.Reader</code>、<code>io.Writer</code> 包裹在一起：</p>
-<pre><code class="language-prettyprint">type Reader
+<pre><code class="language-go">type Reader
     func NewReader(r io.Reader, t Transformer) *Reader
     func (r *Reader) Read(p []byte) (int, error)
 
@@ -258,7 +258,7 @@ type Writer
     func (w *Writer) Write(data []byte) (n int, err error)
 </code></pre>
 <p>例如，想要讀取 Big5 文件的話，底下是個示範：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "golang.org/x/text/encoding/traditionalchinese"

@@ -182,7 +182,7 @@
 <p>許多語言中都會有的成對鍵值資料結構，在 Go 中是以內建型態 <code>map</code> 來實作，格式為 <code>map[keyType]valueType</code>。</p>
 <h1 id="建立與初始-map"><a class="header" href="#建立與初始-map">建立與初始 map</a></h1>
 <p>想要建立例一個 <code>map</code> 實例，但尚無任何鍵值對，可以使用 <code>make</code> 函式，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -205,7 +205,7 @@ func main() {
 <p>類似一些語言（例如 Python），要設定一個鍵值對應時，使用 <code>[]</code> 與 <code>=</code> 指定，要取得鍵對應的值時，使用 <code>[]</code> 指定鍵，這會傳回對應的值，想知道 <code>map</code> 中的鍵數，可以使用 <code>len</code> 函式。</p>
 <p>要注意的是，可用來做為鍵的值，必須是 <a href="https://go.dev/blog/go-maps-in-action">comparable</a>，就目前來說，你要先知道的 comparable 型態有布林、數字、字串、指標（pointer）、channel、interface、struct，或者含有這這些型態的陣列，這些是都可以使用 <code>==</code> 來比較的值；而 slice、map 與函式，就不能用來做為鍵。</p>
 <p>如果已知 map 中會有的鍵值對，則可以如下建立 map：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -222,13 +222,13 @@ func main() {
 }
 </code></pre>
 <p>如果 <code>passwords</code> 建立時，最後一個鍵值項目後不換行，那麼最後一個逗號就不需要，例如：</p>
-<pre><code class="language-prettyprint">passwords := map[string]int {"caterpillar" : 123456, "monica" : 54321}
+<pre><code class="language-go">passwords := map[string]int {"caterpillar" : 123456, "monica" : 54321}
 </code></pre>
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>實際上，你也可以寫 <code>passwords := map[string]int {}</code>，來建立一個沒有任何鍵值對的 <code>map</code>，這相當於寫 <code>passwords := make(map[string]int)</code>，不過，若是 <code>var passwords map[string]int</code> 的話，只是建立一個參考名稱 <code>passwords</code>，預設零值是 <code>nil</code>，也就是相當於 <code>var passwords map[string]int = nil</code> 的意思。</p>
 <p>也就是說，<code>var passwords map[string]int</code> 宣告了一個參考型態，兩個 <code>map</code> 型態的名稱，可以指向同一個 <code>map</code> 實例，透過其中一個名稱來改變 <code>map</code> 內容，從另一個名稱就可以獲得對應的修改：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -247,7 +247,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>不過，更精確地說，使用 <code>mapName[key]</code> 時，會傳回兩個值（Go 中允許同時傳回多值），第一個是鍵對應的值，若沒有該鍵就傳回值型態的零值，第二個是布林值，指出鍵是否存在。例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -263,7 +263,7 @@ func main() {
 }
 </code></pre>
 <p>因此，若只是單純想測試鍵是否存在，只要用底線 <code>_</code> 忽略傳回的值就可以了，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -281,7 +281,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p><code>exists</code> 的指定與 <code>if</code> 的判斷也可以寫在同一行：</p>
-<pre><code class="language-prettyprint">if _, exists := passwds[name]; exists {
+<pre><code class="language-go">if _, exists := passwds[name]; exists {
     fmt.Printf("%s's password is %d\n", name, passwds[name])
 } else {
     fmt.Printf("No password for %s\n", name)
@@ -290,7 +290,7 @@ func main() {
 <p>如果想刪除某個鍵值，可以使用 <code>delete</code> 函式，例如 <code>delete(passwds, "caterpillar")</code>。</p>
 <h1 id="迭代鍵值"><a class="header" href="#迭代鍵值">迭代鍵值</a></h1>
 <p>如果要迭代 <code>map</code> 的鍵值，可以使用 <code>for range</code>，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -306,7 +306,7 @@ func main() {
 }
 </code></pre>
 <p>如果只是想迭代 <code>map</code> 的鍵，可以如下：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -322,7 +322,7 @@ func main() {
 }
 </code></pre>
 <p>如果只想迭代 <code>map</code> 的值，可以如下：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -338,7 +338,7 @@ func main() {
 }
 </code></pre>
 <p>如果想取得 <code>map</code> 中的鍵清單或者是值清單，方式之一是使用 slice 進行收集，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -369,7 +369,7 @@ func main() {
 }
 </code></pre>
 <p>Go 的 <code>map</code> 在迭代時沒有一定的順序，如果想要有排序結果，必須自行處理，例如，針對鍵排序來進行迭代：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "sort"
 import "fmt"

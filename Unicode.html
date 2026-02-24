@@ -182,7 +182,7 @@
 <p><code>unicode</code>、<code>unicode/utf8</code>、<code>unicode/utf16</code> 是用來判斷、處理 Unicode 以及 UTF-8、UTF-16 編碼的套件，在使用這些套件之前，要先知道的是，Go 認為「字元」的定義過於模糊，在 Go 中使用 <code>rune</code> 儲存 Unicode 碼點（Code point），而 Go 中字串是 UTF-8 編碼的位元組組成。</p>
 <p><a href="https://pkg.go.dev/unicode/"><code>unicode</code></a> 套件主要用來判斷 Unicode 碼點的特性（properties），在 Unicode 規範中，每個碼點會被指定某些特性，具有相同特性的一組碼點構成一個集合，以便於理解、判斷這組碼點。</p>
 <p>例如，<a href="https://en.wikipedia.org/wiki/Template:General_Category_(Unicode)">General Category</a> 特性有 Letter/L 代表字母、Number/N 代表數字等，在 Go 的 <a href="https://pkg.go.dev/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 一開頭，列出的就是這類特性的變數：</p>
-<pre><code class="language-prettyprint">var (
+<pre><code class="language-go">var (
     ...
     Digit  = _Nd // 十進位數字的集合
 
@@ -195,7 +195,7 @@
 }
 </code></pre>
 <p>每個變數的型態都是 <code>*RangeTable</code>，由碼點的範圍等欄位組成：</p>
-<pre><code class="language-prettyprint">type RangeTable struct {
+<pre><code class="language-go">type RangeTable struct {
     R16         []Range16   // 用 uint16 記錄碼點低位至高位
     R32         []Range32   // 記錄 R16 無法表示的範圍，用 uint32 記錄碼點低位至高位
     LatinOffset int 
@@ -204,7 +204,7 @@
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>碼點範圍表可以在 <a href="https://go.dev/src/unicode/tables.go">tables.go</a> 找到。舉例來說，字母集合的碼點範圍：</p>
-<pre><code class="language-prettyprint">var _L = &amp;RangeTable{
+<pre><code class="language-go">var _L = &amp;RangeTable{
     R16: []Range16{
         {0x0041, 0x005a, 1},
         {0x0061, 0x007a, 1},
@@ -212,7 +212,7 @@
         很長的清單...
 </code></pre>
 <p>透過指定 <code>RangeTable</code>，就可以簡單地判斷碼點是否有某特性，例如，<code>²³¹¼½¾𝟏𝟐𝟑𝟜𝟝𝟞𝟩𝟪𝟫𝟬𝟭𝟮𝟯𝟺𝟻𝟼㉛㉜㉝ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫⅬⅭⅮⅯⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹⅺⅻⅼⅽⅾⅿ</code> 都是數字：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -236,10 +236,10 @@ func main() {
 <p>Unicode 將希臘文、漢字等以<a href="https://en.wikipedia.org/wiki/Script_(Unicode)">文字（Script）</a>特性標示，在 Go 的 <a href="https://pkg.go.dev/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 第二組列出的變數清單，就是對應的 <code>RangeTable</code>，例如 <code>unicode.Han</code> 是正體中文、簡體中文，以及日、韓、越南文的全部漢字範圍。</p>
 <p>另外還有一些其他特性，列在 Go 的 <a href="https://pkg.go.dev/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 第三組變數清單，例如 <code>unicode.White_Space</code> 代表被標示為空白特性的碼點，這包括了半形、全形、Tab 等。</p>
 <p>如果想要使用多個 RangeTable，<code>可以透過 IsOneOf</code>：</p>
-<pre><code class="language-prettyprint">func IsOneOf(ranges []*RangeTable, r rune) bool
+<pre><code class="language-go">func IsOneOf(ranges []*RangeTable, r rune) bool
 </code></pre>
 <p><code>unicode</code> 也提供了一些常用的判斷函式：</p>
-<pre><code class="language-prettyprint">func IsControl(r rune) bool
+<pre><code class="language-go">func IsControl(r rune) bool
 func IsDigit(r rune) bool
 func IsGraphic(r rune) bool
 func IsLetter(r rune) bool
@@ -254,13 +254,13 @@ func IsTitle(r rune) bool
 func IsUpper(r rune) bool
 </code></pre>
 <p>在大小寫或特定轉換上，有以下的函式：</p>
-<pre><code class="language-prettyprint">func To(_case int, r rune) rune
+<pre><code class="language-go">func To(_case int, r rune) rune
 func ToLower(r rune) rune
 func ToTitle(r rune) rune
 func ToUpper(r rune) rune
 </code></pre>
 <p>基本上，這可以應付大多數語言的轉換，像是全形字母的大小寫或首字母大寫等，<code>To</code> 可使用的常數有：</p>
-<pre><code class="language-prettyprint">const (
+<pre><code class="language-go">const (
     UpperCase = iota
     LowerCase
     TitleCase
@@ -270,21 +270,21 @@ func ToUpper(r rune) rune
 <p>例如，<code>unicode.To(unicode.UpperCase, rune('ａ'))</code> 可以得到 <code>'Ａ'</code>。</p>
 <h1 id="unicodeutf8unicodeutf16-套件"><a class="header" href="#unicodeutf8unicodeutf16-套件">unicode/utf8、unicode/utf16 套件</a></h1>
 <p><code>unicode/utf8</code> 套件提供的函式，主要是進行 <code>rune</code> 與 UTF-8 編碼之間的處理。例如驗證是否為合法的 UTF-8 <code>[]byte</code> 或字串：</p>
-<pre><code class="language-prettyprint">func Valid(p []byte) bool
+<pre><code class="language-go">func Valid(p []byte) bool
 func ValidString(s string) bool
 </code></pre>
 <p>驗證 <code>rune</code> 可否編碼為 UTF-8：</p>
-<pre><code class="language-prettyprint">func ValidRune(r rune) bool
+<pre><code class="language-go">func ValidRune(r rune) bool
 </code></pre>
 <p>在 <code>rune</code> 與 UTF-8 編碼之間轉換：</p>
-<pre><code class="language-prettyprint">func DecodeLastRune(p []byte) (r rune, size int)
+<pre><code class="language-go">func DecodeLastRune(p []byte) (r rune, size int)
 func DecodeLastRuneInString(s string) (r rune, size int)
 func DecodeRune(p []byte) (r rune, size int)
 func DecodeRuneInString(s string) (r rune, size int)
 func EncodeRune(p []byte, r rune) int
 </code></pre>
 <p><code>unicode/utf16</code> 主要是進行 <code>rune</code> 與 UTF-16 編碼之間的處理，只不過目前函式只有幾個：</p>
-<pre><code class="language-prettyprint">func Decode(s []uint16) []rune
+<pre><code class="language-go">func Decode(s []uint16) []rune
 func DecodeRune(r1, r2 rune) rune
 func Encode(s []rune) []uint16
 func EncodeRune(r rune) (r1, r2 rune)
@@ -292,7 +292,7 @@ func IsSurrogate(r rune) bool
 </code></pre>
 <p>UTF-8 編碼下，碼元（code unit）是 8 個位元，Go 中使用 <code>byte</code> 也就是 <code>uint8</code> 來儲存，UTF-16 編碼下，碼元（code unit）是 16 個位元，Go 中使用 <code>uint16</code> 來儲存。</p>
 <p>來看個簡單的範例，使用 <code>unicode/utf8</code> 與 <code>unicode/utf16</code> 套件來顯示「Hello, 世界」的 UTF-16 碼元：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -312,7 +312,7 @@ func main() {
 }
 </code></pre>
 <p>顯示結果如下：</p>
-<pre><code class="language-prettyprint">U+0048 'H':       
+<pre><code class="language-go">U+0048 'H':       
   Code unit [0048]
 U+0065 'e':       
   Code unit [0065]

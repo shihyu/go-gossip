@@ -184,7 +184,7 @@
 <p>在上述的設定中，維持了一個 <code>GOPATH</code> 不用切換，新專案可以加入至 <code>GOPATH</code> 最前頭，<code>go get</code> 的第三方套件會下載到最前面的路徑中，然而，若需要 prj2 也在開發中，若 prj2 需要新的第三方套件時，<code>go get</code> 卻會下載到新專案之中；在各自不同的情境中，無論怎麼調整 <code>GOPATH</code> 的順序，總是會有各自不同的問題發生。</p>
 <p>另一方面，<code>GOPATH</code> 本身不涉及套件來源的版本問題，因此，若專案依賴的 repository 被修改了，日後建構專案就會受到影響，對依賴於Github之類來源，而且第三方套件本身非常活躍的專案來說，重新建構專案時無法有穩定的結果，這顯然是個大問題。</p>
 <p>例如在〈<a href="Package.html">Go 套件管理</a>〉中看過的例子，使用 <code>go get github.com/JustinSDK/goexample</code>，然後撰寫底下的程式：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "github.com/JustinSDK/goexample"
 
@@ -195,7 +195,7 @@ func main() {
 </code></pre>
 <p>這簡單的程式被發佈為一個範例了，某年某月的某一天，我修改了 goexample 的內容，讓 <code>Hi</code>、<code>Hello</code> 顯示中文並發佈到 Github 上的檔案庫，有位讀者，依舊照著〈<a href="Package.html">Go 套件管理</a>〉中的說明進行操作，然而看到的不是英文，而是中文的招呼。</p>
 <p>為了避免這個問題，通常會將下載的檔案庫複製出來，例如放到 deps 中：</p>
-<pre><code class="language-prettyprint">project
+<pre><code class="language-go">project
     └─src
         ├─deps
         │  └─src
@@ -212,7 +212,7 @@ func main() {
                 main.go
 </code></pre>
 <p>問題是放到 deps 的檔案庫該怎麼用呢？其中一個方式是修改 <code>import</code>：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "deps/src/github.com/JustinSDK/goexample"
 
@@ -224,7 +224,7 @@ func main() {
 <p>另一個方式是透過工具修改 <code>GOPATH</code> 自動包含 deps 目錄，這類的概念主要成為了 <a href="https://github.com/tools/godep">godep</a> 等工具早期在管理 Go 套件時的思考出發點。</p>
 <p>Go 在 1.5 時實驗性地加入了 vendor，需要透過 <code>GO15VENDOREXPERIMENT="1"</code> 來啟用，1.6 預設 <code>GO15VENDOREXPERIMENT="1"</code>，1.7 拿掉 <code>GO15VENDOREXPERIMENT</code> 環境變數，使得vendor成為正式的內建特性。</p>
 <p>簡單來說，如果你的套件中有個 vendor 資料夾，例如：</p>
-<pre><code class="language-prettyprint">project
+<pre><code class="language-go">project
     └─src
         └─main
             │  main.go

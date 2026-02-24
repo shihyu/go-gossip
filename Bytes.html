@@ -182,7 +182,7 @@
 <p>Go 字串的本質是 <code>[]byte</code>，如果想基於位元組來處理字串，或者是想處理其他來源的 <code>[]byte</code>，可以使用 <a href="https://pkg.go.dev/bytes/"><code>bytes</code></a> 套件。</p>
 <p>因為 Go 字串本質上就是一組 Unicode 碼點的 UTF-8 編碼位元組，<a href="https://pkg.go.dev/bytes/"><code>bytes</code></a> 與 <a href="https://pkg.go.dev/strings/"><code>strings</code></a> 套件中提供的函式，有著很大的相似性，只不過前者針對 <code>[]byte</code>，後者針對 <code>string</code>…唔…好像在說廢話…也就是說…儘管兩者提供的函式在名稱上有重疊，除了函式上的參數或傳回型態不同之外，兩者處理的粒度等也不同，例如 Compare，一個是逐一比較位元組，另一個是逐一比較 Unicode 碼點。</p>
 <p>類似地，對於頻繁性的字串操作，可以使用 <code>strings.Builder</code>，對於對於頻繁性的位元組操作，可以使用 <code>bytes.Buffer</code>：</p>
-<pre><code class="language-prettyprint">type Buffer
+<pre><code class="language-go">type Buffer
     func NewBuffer(buf []byte) *Buffer
     func NewBufferString(s string) *Buffer
     func (b *Buffer) Bytes() []byte
@@ -208,7 +208,7 @@
     func (b *Buffer) WriteTo(w io.Writer) (n int64, err error)
 </code></pre>
 <p>建立 <code>Buffer</code> 時可以使用 <code>NewBuffer</code> 指定初始的位元組大小，如果你想要處理的是字串的 UTF-8 位元組，可以使用 <code>NewBufferString</code>。例如，來簡單地針對中文做百分比編碼：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -236,7 +236,7 @@ func main() {
 }
 </code></pre>
 <p>類似地，你也可以透過 <code>bytes.Reader</code>，將 <code>[]byte</code> 作為來源讀取：</p>
-<pre><code class="language-prettyprint">type Reader
+<pre><code class="language-go">type Reader
     func NewReader(b []byte) *Reader
     func (r *Reader) Len() int
     func (r *Reader) Read(b []byte) (n int, err error)

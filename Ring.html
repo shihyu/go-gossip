@@ -180,7 +180,7 @@
 <h1 id="ring-套件"><a class="header" href="#ring-套件">ring 套件</a></h1>
 </div>
 <p>對於環狀資料結構，Go 提供了 <code>container/ring</code> 套件，<code>Ring</code> 結構有 <code>Value</code> 欄位，可以使用 <code>New</code> 指定元素數量來建立實例，可用的方法有：</p>
-<pre><code class="language-prettyprint">func (r *Ring) Do(f func(interface{}))  // 走訪每個元素並傳入 f
+<pre><code class="language-go">func (r *Ring) Do(f func(interface{}))  // 走訪每個元素並傳入 f
 func (r *Ring) Len() int                // 元素數量
 func (r *Ring) Link(s *Ring) *Ring      // 銜接另一個 Ring
 func (r *Ring) Move(n int) *Ring        // 移動 n 個元素，n 可正或負
@@ -189,7 +189,7 @@ func (r *Ring) Prev() *Ring             // 上一個鏈（也就是上一個元�
 func (r *Ring) Unlink(n int) *Ring      // 解除指定數量的 Ring，傳回被解除的子鏈
 </code></pre>
 <p>因為是環狀結構，每個元素都可視為一個鏈的開頭或結尾，因此 <code>Link</code> 等操作都傳回 <code>*Ring</code>。底下是個建立 <code>Ring</code> 並設值的簡單範例：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -210,7 +210,7 @@ func main() {
 </code></pre>
 <p><a href="https://pkg.go.dev/container/ring/"><code>ring</code> 的官方文件</a>有相關方法的範例，這邊就不重複列出了，實際應用上，<code>ring</code> 可以用來管理有限筆數的歷史記錄、輪播等。</p>
 <p>這邊的話拿來解一下 <a href="https://openhome.cc/Gossip/AlgorithmGossip/">約瑟夫問題（Josephus Problem）</a> 好了：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"

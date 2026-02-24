@@ -182,7 +182,7 @@
 <p>Go 包括了一些預先定義型態（Pre-declared Type），這包括了布林、數字與字串型態。</p>
 <h1 id="布林型態"><a class="header" href="#布林型態">布林型態</a></h1>
 <p>預定義型態也是具有名稱的型態（Named Type），布林型態名稱為 <code>bool</code>，只有兩個預先定義的常數 <code>true</code> 與 <code>false</code>，由於只有兩個值，因此在 <a href="https://go.dev/ref/spec#Boolean_types">Go 的規格書</a> 中，並沒有明確提及 <code>bool</code> 的大小，雖然在 Go 官方網站的 <a href="https://go.dev/play/">The Go Playground</a> 執行以下程式碼，會告訴你 <code>bool</code> 大小是 1：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -203,7 +203,7 @@ func main() {
 <p>寫下 <code>10</code> 這樣的整數，預設是 10 進位制；可以在數字前加上 0，Go 1.13 後可使用 0o 來表示八進位制，加上 0x 表示 16 進位制，此時 a-f and A-F 都可以用來表示 10 到 15，例如 <code>0xBadFace</code>，Go 1.13 後可以使用 <code>0x1.0p-1021</code> 來表示浮點數。</p>
 <p>Go 1.13 後，可以使用 <code>0b</code> 來定義二進位數字，例如 <code>0b00101101</code>；數字分隔底線在 Go 1.13 後可以使用，例如 <code>1_000_000</code>、<code>0b_1010_0110</code> 或 <code>3.1415_9265</code>。</p>
 <p><code>math</code> 模組上定義了一些常數，可以讓你得知各整數型態的儲存範圍，例如以下程式顯示了各整數型態的儲存範圍：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -224,7 +224,7 @@ func main() {
 }
 </code></pre>
 <p>執行結果如下：</p>
-<pre><code class="language-prettyprint">uint8  : 0 ~ 255
+<pre><code class="language-go">uint8  : 0 ~ 255
 uint16 : 0 ~ 65535
 uint32 : 0 ~ 4294967295
 uint64 : 0 ~ 18446744073709551615
@@ -237,7 +237,7 @@ int64  : -9223372036854775808 ~ 9223372036854775807
 <p>注意到，程式中使用了 <code>uint64</code> 函式，對 <code>math</code> 的一些常數做了明確的型態轉換（Type conversion），這是因為在 Go 中，常數可以是未定型態（Untyped），實際型態會視當時程式環境而定，如果沒有可參考的環境資訊，會使用預設型態。</p>
 <p>在這邊的例子中，若是拿掉 <code>uint64</code>，<code>math.MaxUint64</code> 就會採用 <code>int</code> 型態而發生 overflow 的錯誤，使用 <code>uint64</code> 函式進行型態轉換，讓常數有明確的環境資訊可以參考，就不會產生這個錯誤。</p>
 <p>在 Go 中，不同型態之間也無法直接進行運算，就算都是整數也不行，例如以下會發生 mismatched types 錯誤：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -248,7 +248,7 @@ func main() {
 }
 </code></pre>
 <p>想要避免錯誤，你必須明確進行型態轉換，例如寫為 <code>x + int32(y)</code>（或者是 <code>int16(x) + y</code>）。那麼，下面這個會不會發生錯誤呢？</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 

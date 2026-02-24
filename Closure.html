@@ -182,7 +182,7 @@
 <p>除了作為值傳遞之外，Go 的函式還可以是匿名函式，且具有閉包（Closure）的特性，由於 Go 具有指標，在理解閉包時反而容易一些了。</p>
 <h1 id="匿名函式"><a class="header" href="#匿名函式">匿名函式</a></h1>
 <p>在〈<a href="http://openhome.cc/Gossip/Go/FirstClassFunction.html">一級函式</a>〉中，我們看過函式可作為值傳遞的一個應用是，可將函式傳入另一函式作為回呼（Callback），除了傳遞具名的函式之外，有時會想要臨時建立一個函式進行傳遞，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -212,7 +212,7 @@ func main() {
 </div>
 <p>這個函式與〈<a href="http://openhome.cc/Gossip/Go/FirstClassFunction.html">一級函式</a>〉中最後一個範例的作用相同，不過這次傳遞了匿名函式給 <code>filter</code>，可以看到，匿名函式可使用 <code>func</code> 建立，同樣必須指定參數與傳回值型態。</p>
 <p>在 Go 中，不允許在函式中又宣告函式，例如，以下是不允許的：</p>
-<pre><code class="language-prettyprint">func funcA() {
+<pre><code class="language-go">func funcA() {
     func funcB() {
         ...
     }
@@ -222,7 +222,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>這會出現 “nested func not allowed” 的錯誤，然而，你可以建立匿名函式，然後將之指定給某個變數：</p>
-<pre><code class="language-prettyprint">func funcA() {
+<pre><code class="language-go">func funcA() {
     funcB := func() {
        ...
     }
@@ -230,7 +230,7 @@ func main() {
 }
 </code></pre>
 <p>你也可以在函式中建立匿名函式，並將之傳回：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -252,7 +252,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>可以在函式中建立匿名函式，引發了一個有趣的事實，先來看個例子：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -274,7 +274,7 @@ func main() {
 }
 </code></pre>
 <p>乍看之下，似乎有點像是：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -298,7 +298,7 @@ func main() {
 <p>然而意義完全不同。在使用 <code>forEach</code> 函式的範例中，<code>sum</code> 變數被匿名函式包覆並傳入 <code>forEach</code> 之中，在 <code>forEach</code> 執行迴圈的過程中，每次呼叫傳入的函式（被 <code>consumer</code> 參考），就會改變 <code>sum</code> 的值，因此，最後得到的是加總後的值 15。</p>
 <p>實際上，使用 <code>forEach</code> 函式的範例中，建立了一個閉包，閉包本質上就是一個匿名函式，<code>sum</code> 變數被閉包包覆，讓 <code>sum</code> 變數可以存活於閉包的範疇中，其實，更之前從 <code>funcA</code> 傳回函式的範例中，也建立了閉包，<code>funcA</code> 的 <code>x</code> 區域變數被閉包包覆，因此，你執行傳回的函式時，即使 <code>funcA</code> 已執行完畢，<code>x</code> 變數依然是存活著在傳回的閉包範疇中，所以，你指定的引數總是會與 <code>x</code> 的值進行相加。</p>
 <p>重點在於，閉包將<strong>變數本身</strong>關閉在自己的範疇中，而不是變數的值，可以用以下這個範例來做個示範：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -327,7 +327,7 @@ func main() {
 <h1 id="閉包與指標"><a class="header" href="#閉包與指標">閉包與指標</a></h1>
 <p>如果你寫過 JavaScript，對於方才的範例，應該不會陌生，也因為 JavaScript 的普及，現在開發者多半對閉包不會覺得神秘難解了，而對於「閉包將變數本身關閉在自己的範疇中，而不是變數的值」，也比較瞭解其應用所在。</p>
 <p>由於 Go 語言有指標，我們可以將指標的值顯示出來，這代表著變數的位址值，來看看被閉包關閉的變數，到底是怎麼一回事好了：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -357,7 +357,7 @@ func main() {
 }
 </code></pre>
 <p>這個範例與前一個範例類似，只不過呼叫函式時，都會顯示 <code>x</code> 變數的位址值與儲存值，一個執行結果是：</p>
-<pre><code class="language-prettyprint">the parameter : x (0x104382e0) = 10
+<pre><code class="language-go">the parameter : x (0x104382e0) = 10
 getter invoked: x (0x104382e0) = 10
 10
 setter invoked: x (0x104382e0) = 20

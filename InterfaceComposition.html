@@ -180,7 +180,7 @@
 <h1 id="介面組合"><a class="header" href="#介面組合">介面組合</a></h1>
 </div>
 <p>有時，可能會想要基於某個已定義的介面，並新增自己的行為，在 Go 中，這類似於結構中方法的查找，只要在定義介面時，內嵌想要的介面名稱就可以了。例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -212,7 +212,7 @@ func main() {
 }
 </code></pre>
 <p>在上面，<code>Subject</code> 必須實作 <code>ParentTester</code> 與 <code>ChildTest</code> 中定義的全部行為，其實例才可以被指定 <code>ChildTest</code>。你也可以介面中包含多個介面：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -255,7 +255,7 @@ func main() {
 </code></pre>
 <p>如果多個介面間的行為重複定義了，就會出現 duplicate method 的錯誤。（這是個有爭議性的特性，因為許多人認為，實際上雖然在介面語法上確實重複定義了行為，然而就 Duck typing 的精神來看，結構上只要有實作行為就可以了，事實上在其他語言中，像是 Java 中，類似的情況並不會發生編譯錯誤，有關此議題，可參考 <a href="https://github.com/golang/go/issues/6977">golang/go 的 此 issue</a>）。</p>
 <p>雖然說這像是介面有了繼承方面的語法，然而更精確地說，應該是行為的內嵌，因此，只要是有實現相關行為，就算沒有被包含在某個介面中，也可以做介面轉換：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -308,7 +308,7 @@ func main() {
 <h1 id="go-118型別條件中的介面組合"><a class="header" href="#go-118型別條件中的介面組合">Go 1.18+：型別條件中的介面組合</a></h1>
 <p>從 Go 1.18 開始，介面除了行為組合，也能在泛型中用來組合型別條件。這類介面通常不是拿來建立執行期介面值，而是用在型別參數限制上。</p>
 <p>例如，可以先定義數值族群，再組合成更大的條件：</p>
-<pre><code class="language-prettyprint">type Integer interface {
+<pre><code class="language-go">type Integer interface {
     ~int | ~int8 | ~int16 | ~int32 | ~int64
 }
 
@@ -324,10 +324,10 @@ type Number interface {
 </code></pre>
 <p>這裡的 <code>Number</code> 是透過介面內嵌（組合）與 union type element（<code>|</code>）建立出來的型別條件。</p>
 <p>Go 1.24 起，generic type aliases 完整支援，因此可以更自然地把這類條件用在 alias 上，例如：</p>
-<pre><code class="language-prettyprint">type Set[T comparable] = map[T]struct{}
+<pre><code class="language-go">type Set[T comparable] = map[T]struct{}
 </code></pre>
 <p>Go 1.26 也放寬了限制：泛型型別可以在自己的型別參數列表中參照自己，像是：</p>
-<pre><code class="language-prettyprint">type Adder[A Adder[A]] interface {
+<pre><code class="language-go">type Adder[A Adder[A]] interface {
     Add(A) A
 }
 </code></pre>

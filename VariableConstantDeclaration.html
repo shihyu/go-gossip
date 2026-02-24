@@ -185,10 +185,10 @@
 <pre><code class="language-go">var x int = 10
 </code></pre>
 <p>這麼一來，從 <code>x</code> 這個位置開始，儲存了 <code>int</code> 長度的值 10，在宣告變數時，型態是寫在名稱之後。你也可以同時建立多個變數並指定初值：</p>
-<pre><code class="language-prettyprint">var x, y, z int = 10, 20, 30
+<pre><code class="language-go">var x, y, z int = 10, 20, 30
 </code></pre>
 <p>這樣的話，<code>x</code>、<code>y</code>、<code>z</code> 的型態都是 <code>int</code>，值分別是 <code>10</code>、<code>20</code>、<code>30</code>。如果宣告多個變數時，想要指定不同的型態，可以使用批量宣告：</p>
-<pre><code class="language-prettyprint">var (
+<pre><code class="language-go">var (
     x int = 10
     y string = "Justin"
     z bool = true
@@ -197,7 +197,7 @@
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>如果宣告變數時指定了型態，但未指定初值，那麼編輯器會提供預設初值，例如：</p>
-<pre><code class="language-prettyprint">var (
+<pre><code class="language-go">var (
     a bool        
     b int32
     c float32
@@ -208,15 +208,15 @@
 <p>在上面的宣告中，<code>a</code>、<code>b</code>、<code>c</code>、<code>d</code>、<code>e</code> 的值分別會是 <code>false</code>、<code>0</code>、<code>0.0</code>、<code>""</code> 與 <code>0 + 0i</code>。在 Go 中，宣告了變數，程式中卻沒有取用的動作，那麼會發生 declared and not used 的編譯錯誤。</p>
 <h1 id="自動推斷型態"><a class="header" href="#自動推斷型態">自動推斷型態</a></h1>
 <p>在 Go 中宣告變數並指定值時，可以不用提供型態，由編譯器自動推斷型態，例如：</p>
-<pre><code class="language-prettyprint">var x = 10
+<pre><code class="language-go">var x = 10
 </code></pre>
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>上頭的 <code>x</code> 型態會是 <code>int</code>，而底下的宣告：</p>
-<pre><code class="language-prettyprint">var x, y, z = 10, 3.14, "Justin"
+<pre><code class="language-go">var x, y, z = 10, 3.14, "Justin"
 </code></pre>
 <p><code>x</code>、<code>y</code>、<code>z</code> 的型態分別會是 <code>int</code>、<code>float64</code> 與 <code>string</code>，批量宣告時也可以自動推斷型態，例如：</p>
-<pre><code class="language-prettyprint">var (
+<pre><code class="language-go">var (
     x = 10        // int 型態
     y = 3.14      // float64 型態
     z = "Justin"  // string 型態
@@ -224,23 +224,23 @@
 </code></pre>
 <h1 id="短變數宣告"><a class="header" href="#短變數宣告">短變數宣告</a></h1>
 <p>在函式中，想要定義變數值的場合，可以使用短變數宣告，例如：</p>
-<pre><code class="language-prettyprint">x := 10
+<pre><code class="language-go">x := 10
 y := 3.14
 z := "Justin"
 </code></pre>
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>如果 <code>x</code> 是首次定義，就等於是宣告變數並指定值。上例也可以寫成一行：</p>
-<pre><code class="language-prettyprint">x, y, z := 10, 3.14, "Justin"
+<pre><code class="language-go">x, y, z := 10, 3.14, "Justin"
 </code></pre>
 <p>由於 Go 的函式外，每個語法都必須以關鍵字開始，因此短變數宣告不能在函式外使用。</p>
 <p><code>var</code> 宣告的變數名稱不可重複，然而，短變數宣告時，若同一行內有新宣告了另一變數，就可以重複宣告已存在的變數，例如，以下是合法的，因為使用 <code>:=</code> 時有一個新的 <code>y</code> 變數：</p>
-<pre><code class="language-prettyprint">var x = 10
+<pre><code class="language-go">var x = 10
 x, y :=  20, 30
 </code></pre>
 <p>此時，並沒有建立一個新的 <code>x</code> 變數，只是將新值指定給 <code>x</code> 而已。</p>
 <p>由於短變數宣告可以同時宣告變數並指定值，因此對於底下這類需求：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -252,7 +252,7 @@ func main() {
 }
 </code></pre>
 <p>在上例，<code>x</code> 的範圍是整個 <code>main</code>，若改為底下，範圍就只會是 <code>if</code> 區塊：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -266,34 +266,34 @@ func main() {
 <p>（在數學上 <code>A := B</code> 的寫法，涵義是藉由 B 來定義 A，例如數學上若已經定義 <code>x</code> 以及 <code>f(x)</code>，<code>x := f(x)</code> 表示用舊的 <code>x</code> 定義新的 <code>x</code>，這反而像是程式語言中的 <code>x = f(x)</code> 指定的概念，當然，數學上的符號與程式語言中的符號是有出入的，Go 在這邊只是借用了 <code>:=</code> 來作為另一種變數宣告符號。）</p>
 <h1 id="調換變數值"><a class="header" href="#調換變數值">調換變數值</a></h1>
 <p>在 Go 中，要調換兩變數的值很簡單，例如底下的程式執行過後，<code>x</code> 會是 <code>20</code>，而 <code>y</code> 會是 <code>10</code>：</p>
-<pre><code class="language-prettyprint">var x = 10
+<pre><code class="language-go">var x = 10
 var y = 20
 x, y = y, x
 </code></pre>
 <h1 id="基本常數宣告"><a class="header" href="#基本常數宣告">基本常數宣告</a></h1>
 <p>如一開始談到的，在 Go 中寫下的 <code>10</code>、<code>3.14</code>、<code>true</code>、<code>"Justin"</code> 等稱之為常數（Constant），常數宣告可給予這些常數識別名稱，要給予名稱時使用的是 <code>const</code> 關鍵字，例如：</p>
-<pre><code class="language-prettyprint">const x = 10
+<pre><code class="language-go">const x = 10
 </code></pre>
 <p>正如〈<a href="http://openhome.cc/Gossip/Go/PreDeclaredType.html">認識預定義型態</a>〉中談過的，10 會是一個整數常數，不過型態未定，如果要定義一個常數的型態，可以使用 <code>int32()</code>、<code>int64()</code> 之類的函式進行型態轉換，或者是在使用 <code>const</code> 宣告常數名稱時指定型態，例如：</p>
-<pre><code class="language-prettyprint">const x int32 = 10
+<pre><code class="language-go">const x int32 = 10
 </code></pre>
 <p>這邊的 <code>10</code> 就是 <code>int32</code> 型態了，注意，這邊的 <code>x</code> 並不是一個變數，而是一個識別名稱罷了，因此，會說 <code>x</code> 常數的型態是 <code>int32</code>，而不能說 <code>x</code> 變數的型態是 <code>int32</code>。</p>
 <p>如果有多個常數要宣告，也可以批量宣告，例如：</p>
-<pre><code class="language-prettyprint">const (
+<pre><code class="language-go">const (
     x = 10
     y = 3.14
     z = "Justin"
 )
 </code></pre>
 <p>再次地，<code>x</code>、<code>y</code>、<code>z</code> 分別是未定型態的整數、浮點數與字串常數（而不是 <code>int</code>、<code>float64</code>、<code>string</code> 這三個 Go 中定義的型態），如果你想要讓他們為已定義型態的整數、浮點數與字串常數，可以在宣告時指定型態：</p>
-<pre><code class="language-prettyprint">const (
+<pre><code class="language-go">const (
     x int = 10
     y float32 = 3.14
     z string = "Justin"
 )
 </code></pre>
 <p>由於常數並非變數，因此，宣告了常數並不一定要用到，底下的程式不會發生錯誤：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -311,7 +311,7 @@ func main() {
 <h1 id="常數運算式"><a class="header" href="#常數運算式">常數運算式</a></h1>
 <p>由於常數可以是未定型態，因此一個有趣的地方就是，像 <code>2 + 3.0</code>、<code>15 / 4</code>、<code>15 / 4.0</code> 這樣的常數運算式，該怎麼在編譯時期決定它們的值？答案是根據運算式中的常數運算元是整數、<code>rune</code>（單引號括住的常數）、浮點數或複數來決定，如果運算式中包括了越後面的常數，就會用它來決定。</p>
 <p>因此，<code>2 + 3.0</code> 會是未定型態的浮點數 <code>5.0</code>，<code>15 / 4</code> 會是未定型態的整數 <code>3</code>，然而，<code>15 / 4.0</code>，會是浮點數型態的 <code>3.75</code>，在規格書的〈<a href="https://go.dev/ref/spec#Constant_expressions">Constant expressions</a>〉中，列出了說明以及一些範例，例如：</p>
-<pre><code class="language-prettyprint">const a = 2 + 3.0          // a == 5.0   (untyped floating-point constant)
+<pre><code class="language-go">const a = 2 + 3.0          // a == 5.0   (untyped floating-point constant)
 const b = 15 / 4           // b == 3     (untyped integer constant)
 const c = 15 / 4.0         // c == 3.75  (untyped floating-point constant)
 const Θ float64 = 3/2      // Θ == 1.0   (type float64, 3/2 is integer division)
@@ -333,33 +333,33 @@ const Φ = iota*1i - 1/1i   //            (untyped complex constant)
 <p>附帶一提的是，在 Go 中，模組中定義的名稱若要能在模組外可見，必須是首字大寫，而對於像 <code>math.MaxInt64</code> 這類的公用常數，可以定義在一個 .go 檔案之中，例如 <code>math.MaxInt64</code>，就是定義在一個 <a href="https://go.dev/src/math/const.go">const.go</a> 之中。</p>
 <h1 id="使用-iota-列舉"><a class="header" href="#使用-iota-列舉">使用 iota 列舉</a></h1>
 <p>如果要需要列舉一些常數時，可以使用 <code>iota</code>，它每遇到一次 <code>const</code>，就會重置為 <code>0</code>，若它在批量常數宣告中使用時，第一次出現時的預設值是 <code>0</code>，每出現一次就遞增 <code>1</code>，例如：</p>
-<pre><code class="language-prettyprint">const (
+<pre><code class="language-go">const (
     x = iota   // 0
     y = iota   // 1
     z = iota   // 2
  )
 </code></pre>
 <p>因為 <code>const</code> 批量宣告時，若後面的值沒寫出，會使用前一個值設定，例如：</p>
-<pre><code class="language-prettyprint">const (
+<pre><code class="language-go">const (
     x = 1
     y      // 1
     z      // 1
  )
 </code></pre>
 <p>因此，如果是連續的列舉，只要寫一次 <code>iota</code> 就可以了，這表示後續的值，也都使用 <code>iota</code>，結果就是：</p>
-<pre><code class="language-prettyprint">const (
+<pre><code class="language-go">const (
     x = iota   // 0
     y          // 1
     z          // 2
  )
 </code></pre>
 <p>其實也可以這麼寫來列舉常數，只是比較麻煩：</p>
-<pre><code class="language-prettyprint">const x, y, z = iota, iota, iota
+<pre><code class="language-go">const x, y, z = iota, iota, iota
 </code></pre>
 <h1 id="go-120--121--126-補充"><a class="header" href="#go-120--121--126-補充">Go 1.20+ / 1.21+ / 1.26 補充</a></h1>
 <p>本章談變數、常數與型別轉換，這裡補充幾個較新的語法與內建函式。</p>
 <p>Go 1.17 起可將 slice 轉成陣列指標，Go 1.20 起也可直接轉成陣列（長度不足時會 panic）：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -374,7 +374,7 @@ func main() {
 }
 </code></pre>
 <p>Go 1.21 新增 <code>min</code>、<code>max</code>、<code>clear</code> 三個內建函式：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -392,7 +392,7 @@ func main() {
 }
 </code></pre>
 <p>Go 1.26 起，<code>new</code> 的運算元可以是運算式，能直接建立並初始化指標值：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 

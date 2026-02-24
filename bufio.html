@@ -181,7 +181,7 @@
 </div>
 <p><code>io.Reader</code>、<code>io.Writer</code> 定義了基於位元組的讀寫行為，然而許多情況下，你會想要基於字串、行來進行讀寫，這可以透過 <code>bufio</code> 套件的 <code>bufio.Reader</code>、<code>bufio.Writer</code> 等達到。</p>
 <p><code>bufio.Reader</code> 可以透過 <code>NewReader</code>、<code>NewReaderSize</code> 指定 <code>io.Reader</code> 來建立實例，前者指定預設緩衝區大小 4096 位元組呼叫後者，<code>bufio.Reader</code> 在讀取來源時會從底層的 <code>io.Reader</code> 將資料讀入，在建立 <code>bufio.Reader</code> 實例之後，可以使用的方法有：</p>
-<pre><code class="language-prettyprint">func (b *Reader) Buffered() int
+<pre><code class="language-go">func (b *Reader) Buffered() int
 func (b *Reader) Discard(n int) (discarded int, err error)
 func (b *Reader) Peek(n int) ([]byte, error)
 func (b *Reader) Read(p []byte) (n int, err error)
@@ -200,7 +200,7 @@ func (b *Reader) WriteTo(w io.Writer) (n int64, err error)
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>因此對於逐行讀取一個 UTF-8 文字檔案來說，可以簡單地撰寫如下：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "bufio"
@@ -239,7 +239,7 @@ func main() {
 }
 </code></pre>
 <p>如果實際上是要讀取之後寫到另一個輸出，使用 <code>WriteTo</code> 方法更為方便：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "bufio"
@@ -262,12 +262,12 @@ func main() {
 }
 </code></pre>
 <p>Go 在 <code>io.WriteTo</code> 介面定義了 <code>WriteTo</code> 行為：</p>
-<pre><code class="language-prettyprint">type WriterTo interface {
+<pre><code class="language-go">type WriterTo interface {
     WriteTo(w Writer) (n int64, err error)
 }
 </code></pre>
 <p>實際上 <code>bufio.Reader</code> 實作了 <code>io</code> 中一些介面，<code>io.WriteTo</code> 只是其中之一；類似地，如果要建立 <code>bufio.Writer</code> 實例，可以透過 <code>NewWriter</code>、<code>NewWriterSize</code> 函式，建立之後可用的方法如下：</p>
-<pre><code class="language-prettyprint">func (b *Writer) Available() int
+<pre><code class="language-go">func (b *Writer) Available() int
 func (b *Writer) Buffered() int
 func (b *Writer) Flush() error
 func (b *Writer) ReadFrom(r io.Reader) (n int64, err error)
@@ -279,7 +279,7 @@ func (b *Writer) WriteRune(r rune) (size int, err error)
 func (b *Writer) WriteString(s string) (int, error)
 </code></pre>
 <p><code>bufio.Writer</code> 實作了 <code>io</code> 中一些介面，像是 <code>io.ReadFrom</code>，因此，也可以如下在標準輸出中，顯示讀入的的檔案內容：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "bufio"
@@ -305,7 +305,7 @@ func main() {
 </code></pre>
 <p><code>NewWriter</code> 預設的緩衝區為 4096 位元組，由於這邊使用標準輸出，在緩衝區未滿前，資料不會寫出，可以使用 <code>Flush</code> 來出清緩衝區中的資料。</p>
 <p>事實上，對於需要逐行讀取的需求，使用 <code>bufio.Scanner</code> 會比較方便，可以使用 <code>NewScanner</code> 來建立實例，建立之後有以下的方法可以使用：</p>
-<pre><code class="language-prettyprint">func (s *Scanner) Buffer(buf []byte, max int)
+<pre><code class="language-go">func (s *Scanner) Buffer(buf []byte, max int)
 func (s *Scanner) Bytes() []byte
 func (s *Scanner) Err() error
 func (s *Scanner) Scan() bool
@@ -313,7 +313,7 @@ func (s *Scanner) Split(split SplitFunc)
 func (s *Scanner) Text() string
 </code></pre>
 <p>來看看讀取文字檔案的例子：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "bufio"

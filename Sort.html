@@ -181,7 +181,7 @@
 </div>
 <p>Go 提供了 <code>sort</code> 套件來協助排序、搜尋任務，對於 <code>[]int</code>、<code>[]float64</code> 與 <code>[]string</code>，可以透過 <code>Ints</code>、<code>Float64s</code>、<code>Strings</code> 來由小而大排序，可以使用 <code>IntsAreSorted</code>、<code>Float64sAreSorted</code>、<code>StringsAreSorted</code> 來看看是否已經排序。</p>
 <p>若想在已由小而大排序的 <code>[]int</code>、<code>[]float64</code> 與 <code>[]string</code> 中進行搜尋，可以使用 <code>SearchInts</code>、<code>SearchFloat64s</code>、<code>SearchStrings</code> 函式，搜尋結果將傳回找到搜尋值的索引位置，<strong>沒有搜尋到的話，傳回的會是可以安插搜尋值的索引位置</strong>。例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -199,7 +199,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>如果想要由大而小排序呢？可以透過 <code>Slice</code>、<code>SliceStable</code>，指定一個 <code>less</code> 函式，該函式接受兩個索引，你要傳回布林值表示 <code>i</code> 處的值順序上是否小於 <code>j</code>：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -215,7 +215,7 @@ func main() {
 }
 </code></pre>
 <p>實際上，<code>Slice</code>、<code>SliceStable</code> 可用於任意的結構，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -239,7 +239,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>那麼怎麼搜尋上面的 <code>family</code> 呢？例如，找出年齡 45 歲的資料？這可以用 <code>Search</code>，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -269,7 +269,7 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>在 <a href="https://pkg.go.dev/sort/#Search">Search</a> 說明中，還有個猜數字的有趣範例，由程式猜出你心中想的數字：</p>
-<pre><code class="language-prettyprint">func GuessingGame() {
+<pre><code class="language-go">func GuessingGame() {
     var s string
     fmt.Printf("Pick an integer from 0 to 100.\n")
     answer := sort.Search(100, func(i int) bool {
@@ -283,25 +283,25 @@ func main() {
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p><code>sort</code> 還提供了 <code>Sort</code>、<code>Stable</code> 函式，乍看很奇怪：</p>
-<pre><code class="language-prettyprint">func Sort(data Interface)
+<pre><code class="language-go">func Sort(data Interface)
 func Stable(data Interface)
 </code></pre>
 <p><code>Interface</code> 的定義是：</p>
-<pre><code class="language-prettyprint">type Interface interface {
+<pre><code class="language-go">type Interface interface {
     Len() int
     Less(i, j int) bool
     Swap(i, j int)
 }
 </code></pre>
 <p>這是給有序、具索引的資料結構實現的行為，任何具有 <code>Interface</code> 行為的資料結構，都可以透過 <code>Sort</code>、<code>Stable</code> 函式排序，<code>sort</code> 套件提供的實作有 <code>IntSlice</code>、<code>Float64Slice</code>、<code>StringSlice</code>，以 <code>IntSlice</code> 的原始碼實現為例：</p>
-<pre><code class="language-prettyprint">type IntSlice []int
+<pre><code class="language-go">type IntSlice []int
 
 func (p IntSlice) Len() int           { return len(p) }
 func (p IntSlice) Less(i, j int) bool { return p[i] &lt; p[j] }
 func (p IntSlice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
 </code></pre>
 <p>因此，若要對整數排序，也可以如下：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -315,12 +315,12 @@ func main() {
 }
 </code></pre>
 <p>實際上，<code>Ints</code>、<code>Float64s</code>、<code>Strings</code> 函式，內部也只是轉換為 <code>IntSlice</code>、<code>Float64Slice</code>、<code>StringSlice</code>，然後呼叫 <code>Sort</code> 罷了：</p>
-<pre><code class="language-prettyprint">func Ints(a []int) { Sort(IntSlice(a)) }
+<pre><code class="language-go">func Ints(a []int) { Sort(IntSlice(a)) }
 func Float64s(a []float64) { Sort(Float64Slice(a)) }
 func Strings(a []string) { Sort(StringSlice(a)) }
 </code></pre>
 <p>對於一個實現了 <code>Interface</code> 的資料結構，除了可以使用 <code>Sort</code>、<code>Stable</code> 函式外，若需要反向排序，可以有個簡單方式，透過 <code>Reverse</code> 來包裹。例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"
@@ -334,7 +334,7 @@ func main() {
 }
 </code></pre>
 <p>有趣的是 <code>Reverse</code> 的實作，它不過就是將給原本資料結構 <code>Less</code> 方法的 <code>i</code>、<code>j</code> 對調罷了：</p>
-<pre><code class="language-prettyprint">type reverse struct {
+<pre><code class="language-go">type reverse struct {
     Interface
 }
 
@@ -347,7 +347,7 @@ func Reverse(data Interface) Interface {
 } 
 </code></pre>
 <p>來自己實現一下 <code>Interface</code>，使用家人的年齡來排序：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import (
     "fmt"

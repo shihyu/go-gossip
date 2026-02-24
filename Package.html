@@ -187,7 +187,7 @@
 <p>在〈<a href="http://openhome.cc/Gossip/Go/HelloWorld.html">來個 Hello, World</a>〉已經稍微瞭解了 <code>package</code> 與 <code>GOPATH</code> 的關係，原始碼會是在 <code>GOPATH</code> 中設定的目錄之 src 中，並有著對照於 <code>package</code> 設定名稱之目錄包括著它，當 Go 的工具（<code>go build</code>、<code>go install</code> 等）需要原始碼時，會到 <code>GOROOT</code> 底下，或者是 <code>GOPATH</code> 底下，查看是否有相應於套件的原始碼存在，編譯出來的結果，會是在相對應的 pkg 或 bin 底下。</p>
 <h1 id="本地套件"><a class="header" href="#本地套件">本地套件</a></h1>
 <p>在當時，為了簡化說明，原始碼主檔名故意與 <code>package</code> 設定的名稱同名，這不是必要的，一個相應於 <code>package</code> 的目錄底下，可以有許多個原始碼，而每個原始碼開頭，只要 <code>package</code> 設定的名稱都與目錄相符就可以了。例如，你可以有個原始碼是 hello.go，位於 src/goexample 底下：</p>
-<pre><code class="language-prettyprint">package goexample
+<pre><code class="language-go">package goexample
 
 import "fmt"
 
@@ -196,7 +196,7 @@ func Hello() {
 }
 </code></pre>
 <p>還可以有個 hi.go，位於 src/goexample 底下：</p>
-<pre><code class="language-prettyprint">package goexample
+<pre><code class="language-go">package goexample
 
 import "fmt"
 
@@ -205,7 +205,7 @@ func Hi() {
 }
 </code></pre>
 <p>也就是說，一個 <code>package</code> 可以有數個原始碼檔案，各自組織自己的任務，在執行 <code>go install goexample</code> 之後，上面兩個原始碼會在 pkg 目錄的 <code>$GOOS</code>_<code>$GOARCH</code> 目錄中產生 goexample.a 檔案。這包括了 <code>goexample</code> 套件編譯後的結果，如果想使用 <code>goexample</code> 套件的功能，只需要撰寫個 main.go：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "goexample"
 
@@ -215,7 +215,7 @@ func main() {
 }
 </code></pre>
 <p>你可以在套件目錄之前增加父目錄，例如，可以建立一個 src/cc/openhome 目錄，然後將方才的 hello.go 與 hi.go 移至該目錄之中，接著執行 <code>go install cc/openhome/goexample</code>，那麼，在 pkg 目錄的 $GOOS_$GOARCH 目錄中，會產生對應的 cc/openhome 目錄，其中放置著 goexample.a 檔案，想要使用這個套件的話，可以撰寫個 main.go：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "cc/openhome/goexample"
 
@@ -226,7 +226,7 @@ func main() {
 </code></pre>
 <h1 id="遠端套件"><a class="header" href="#遠端套件">遠端套件</a></h1>
 <p>由於 Go 的 workspace 設置，都必須是如此規範，因此，若你想將原始碼發佈給他人使用時就很方便，例如，你可以建立 src/github.com/JustinSDK 目錄，然後將方才的 goexample 目錄移到 src/github.com/JustinSDK 當中，這麼一來，顯然地，你的 main.go 就要改成：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "github.com/JustinSDK/goexample"
 
@@ -236,13 +236,13 @@ func main() {
 }
 </code></pre>
 <p>也就是說，你可以直接將 /src/github.com/JustinSDK/goexample 當作檔案庫（repository）發佈到 Github，那麼，其他人需要你的原始碼時，在當時常會使用 <code>go get</code> 指令。我將這個範例發佈在 Github 的 <a href="https://github.com/JustinSDK/goexample">JustinSDK/goexample</a> 了，因此，你可以執行以下指令：</p>
-<pre><code class="language-prettyprint">go get github.com/JustinSDK/goexample
+<pre><code class="language-go">go get github.com/JustinSDK/goexample
 </code></pre>
 <p><code>go get</code> 會自行判斷該使用的協定，以這邊的例子來說，就會使用 <code>git</code> 來複製檔案庫至 src 目錄底下，結果就是 src/github.com/JustinSDK 底下，會有個 goexample 目錄，其中就是原始碼，<code>go get</code> 在下載原始碼之後，就會開始進行編譯，因此，你也會在 pkg 目錄中的 $GOOS_$GOARCH 目錄底下，github.com/JustinSDK 中找到編譯好的 .a 檔案。</p>
 <p>補充（Go 1.26 現況）：在模組模式下，<code>go get</code> 主要用於調整目前模組的依賴版本；若是安裝命令列工具，請改用 <code>go install module/path/cmd@version</code>（例如 <code>@latest</code>）。</p>
 <p>接著，你就可以如上頭的程式撰寫 <code>import "github.com/JustinSDK/goexample"</code> 來使用這個套件。</p>
 <p>當然，執行 <code>go install main</code> 的話，你的 pkg 目錄中的 <code>$GOOS_$GOARCH</code> 目錄，會有個 github.com/JustinSDK 目錄，裏頭放置著 goexample.a 檔案，而編譯出來的可執行檔，則會放置在 bin 目錄之中，此時，你的目錄應該會像是：</p>
-<pre><code class="language-prettyprint">go-exercise
+<pre><code class="language-go">go-exercise
         ├─bin
         │      main.exe
         │
@@ -271,7 +271,7 @@ func main() {
 <p>如果你在 <code>GOPATH</code> 中設定多個路徑，那麼，<code>go get</code> 複製回來的原始碼，會被放置在 <code>GOPATH</code> 中設置的第一個目錄 src 之中，同理，對應的 .a 檔案，也會是 <code>GOPATH</code> 中設置的第一個目錄的 pkg 之中。</p>
 <h1 id="有關-import"><a class="header" href="#有關-import">有關 import</a></h1>
 <p>在 <code>import</code> 時預設會使用套件名稱作為呼叫套件中函式等的前置名稱，你可以在 <code>import</code> 時指定別名。例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import f "fmt"
 
@@ -280,7 +280,7 @@ func main() {
 }
 </code></pre>
 <p>若指定別名時使用 <code>.</code>，就不需要套件名稱作為前置名稱，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import . "fmt"
 

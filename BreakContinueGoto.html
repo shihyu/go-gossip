@@ -183,7 +183,7 @@
 <h1 id="break"><a class="header" href="#break">break</a></h1>
 <p>在〈<a href="http://openhome.cc/Gossip/Go/IfSElsewitch.html">if … else、switch 條件式</a>〉中說明過，<code>switch</code> 的 <code>case</code> 中不必特別使用 <code>break</code>，因為 <code>switch</code> 中預設不會 <code>fallthrough</code>，但 <code>case</code> 中若必要，還是可以使用 <code>break</code>，中斷 <code>break</code> 之後與下個 <code>case</code> 前的流程。</p>
 <p><code>break</code> 使用於 <code>for</code> 迴圈時，會結束迴圈，例如：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -198,7 +198,7 @@ func main() {
 </code></pre>
 <p>這段程式會顯示 i = 1 到 i = 4，因為在 i 等於 5 時就會執行 <code>break</code> 而離開 <code>for</code> 迴圈。</p>
 <p><code>break</code> 可以配合標籤使用，例如本來 <code>break</code> 只會離開一層 <code>for</code> 迴圈，若設定標籤，並於 <code>break</code> 時指定標籤，就可以直接離開多層 <code>for</code> 迴圈：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -219,7 +219,7 @@ BACK:
 <p>你可以執行看看上面的範例，之後將 <code>BACK:</code> 與 <code>BACK</code> 拿掉看看，前者 <code>break BACK</code> 時會離開兩層 <code>for</code> 迴圈，後者只會離開內層 <code>for</code> 迴圈。</p>
 <h1 id="continue"><a class="header" href="#continue">continue</a></h1>
 <p><code>continue</code> 只用於 <code>for</code> 迴圈，略過之後陳述句，並回到迴圈開頭進行下一次迴圈，例如將先前第一個範例程式的 <code>break</code> 改成 <code>continue</code>：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -234,7 +234,7 @@ func main() {
 </code></pre>
 <p>這段程式會顯示 i = 1 到 4，以及 6 到 9，當 <code>i</code> 等於 5 時，會執行 <code>continue</code> 直接略過之後陳述句，也就是該次的 <code>fmt.Printf()</code> 該行並沒有被執行，直接從 <code>for</code> 開頭執行下一次迴圈，所以 i = 5 沒有被顯示。</p>
 <p><code>continue</code> 也有搭配標籤的用法：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -254,7 +254,7 @@ BACK:
 <h1 id="goto"><a class="header" href="#goto">goto</a></h1>
 <p>在 C/C++ 中，<code>goto</code> 是一個很方便，但是常不建議使用的語法，因為濫用它的話，經常會破壞程式的架構、使得程式的邏輯混亂，然而，在 Go 中，亦有提供有 <code>goto</code> 語法。</p>
 <p>相對於 <code>break</code> 與 <code>continue</code> 跳躍時，只能前往 <code>for</code> 迴圈開頭處設定的標籤，<code>goto</code> 可以在函式中，從某區塊內跳躍至區塊外任何位置，一個簡單的例子如下：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
@@ -274,7 +274,7 @@ RETRY:
 </code></pre>
 <p>如果你輸入 0，程式會顯示錯誤訊息後跳至 <code>RETRY:</code>，再執行一次提示與輸入。</p>
 <p>注意，<code>goto</code> 可以在函式中，從某區塊內跳躍至區塊外任何位置，但不能從某區塊跳入另一區塊內，例如，以下是錯誤的，會發生 goto TEST jumps into block 的錯誤：</p>
-<pre><code class="language-prettyprint">package main
+<pre><code class="language-go">package main
 
 import "fmt"
 
