@@ -10,7 +10,7 @@
 
 對於錯誤，Go 不採取例外處理機制，而是透過傳回 `error` 值來表示是否發生了什麼錯誤，最基本的做法就是：
 
-``` prettyprint
+``` go
 if err != nil {
     // 做些什麼
 }
@@ -22,7 +22,7 @@ if err != nil {
 
 只不過，如果想寫出較通用、具有穩固性的程式，錯誤檢查就是必需的，Go 也鼓勵開發者積極地檢查錯誤；那麼…乾脆全 `panic` 好了？
 
-``` prettyprint
+``` go
 func check(err) {
     if err != nil {
         panic(err)
@@ -44,7 +44,7 @@ func check(err) {
 
 為了能在錯誤發生時中斷流程，就有可能寫出這類的程式碼：
 
-``` prettyprint
+``` go
 _, err = fd.Write(p0[a:b])
 if err != nil {
     return err
@@ -66,7 +66,7 @@ if err != nil {
 
 這段程式碼摘自〈[Errors are values](https://go.dev/blog/errors-are-values)〉，該文章中提到一個解決的方式是：
 
-``` prettyprint
+``` go
 var err error
 write := func(buf []byte) {
     if err != nil {
@@ -91,7 +91,7 @@ if err != nil {
 
 匿名函式的方式建立了 Closure，捕捉了 `err` 變數，這麼一來就得做些迴避同名變數的問題，另外匿名函式的寫法也不是那麼簡明，因此文章中定義了：
 
-``` prettyprint
+``` go
 type errWriter struct {
     w   io.Writer
     err error
@@ -107,7 +107,7 @@ func (ew *errWriter) write(buf []byte) {
 
 這麼一來，每個 `io.Writer` 可以有個別的 `err` 可以使用，而原本的程式就可以改寫為：
 
-``` prettyprint
+``` go
 ew := &errWriter{w: fd}
 ew.write(p0[a:b])
 ew.write(p1[c:d])
@@ -120,7 +120,7 @@ if ew.err != nil {
 
 在〈[bufio 套件](bufio.html)〉中看過的 `bufio.Writer` 就是這類的設計：
 
-``` prettyprint
+``` go
 type Writer struct {
     err error
     buf []byte
@@ -182,7 +182,7 @@ func (b *Writer) Flush() error {
 
 在 `b.err` 不為 `nil` 的情況下，實際上不會有實際的寫出，而 `Flush` 時，若 `b.err` 不為 `nil` 就會被 `return`，因此在使用 `bufio.Writer` 時，可以如下撰寫，在最後檢查
 
-``` prettyprint
+``` go
 b := bufio.NewWriter(fd)
 b.Write(p0[a:b])
 b.Write(p1[c:d])
@@ -195,7 +195,7 @@ if b.Flush() != nil {
 
 這個模式可以進一步應用，例如在〈[bufio 套件](bufio.html)〉中看過 `bufio.Scanner` 的使用，語意上比較高階：
 
-``` prettyprint
+``` go
 scanner := bufio.NewScanner(f)
 for scanner.Scan() {
     fmt.Println(scanner.Text())
@@ -209,7 +209,7 @@ if err := scanner.Err(); err != nil {
 
 `bufio.Scanner` 本身的組成中有 `io.Reader` 與 `err`：
 
-``` prettyprint
+``` go
 type Scanner struct {
     r            io.Reader 
     ...略
@@ -220,7 +220,7 @@ type Scanner struct {
 
 若你查看 `Scan` 方法的實作，會傳回 `false` 的情況之一，就是 `Scanner` 的 `err` 不是 `nil`：
 
-``` prettyprint
+``` go
     ...略
     if s.err != nil {
         // Shut it down.

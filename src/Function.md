@@ -10,7 +10,7 @@
 
 在 Go 中要定義函式，是使用 `func` 來定義，其基本格式如下：
 
-``` prettyprint
+``` go
 func funcName(param1 type1, param2 type2) (return1 type1, return2 type2) {
     // 一些程式碼...
     return value1, value2
@@ -27,7 +27,7 @@ func funcName(param1 type1, param2 type2) (return1 type1, return2 type2) {
 
 來看個簡單的函式定義，以下是個求最大公因數的函式定義：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -47,7 +47,7 @@ func main() {
 
 當只有一個傳回值且沒有宣告名稱時，傳回值的宣告可以不用使用 `()`，傳回值的名稱可以在函式中使用，傳回值名稱設定的值，會自動於函式 `return` 時傳回，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -76,7 +76,7 @@ func main() {
 
 Go 中允許多個傳回值，例如，定義一個函式，可搜尋 slice 的元素中是否指定的子字串，若有就傳回元素索引位置與字串，若無就傳回 -1 與空字串：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -103,13 +103,13 @@ func main() {
 
 傳回多值時，指定給變數時必須依順序，若不需要某個傳回值，可以使用 `_` 略過：
 
-``` prettyprint
+``` go
 _, name := FirstMatch(names, "Huang")
 ```
 
 另一種多值傳回的場合之一是錯誤處理，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -133,13 +133,13 @@ func main() {
 
 若函式簽署上有傳回 `error`，應透過檢查其是否為 `nil` 來確認執行時是否有錯誤發生，這是 Go 的錯誤處理風格之一，例如，`os.Open` 的函式簽署是：
 
-``` prettyprint
+``` go
 func Open(name string) (file *File, err error)
 ```
 
 透過 `os.Open` 開啟檔案時的一個基本範例就是：
 
-``` prettyprint
+``` go
 file, err := os.Open("file.go")
 if err != nil {
     log.Fatal(err)
@@ -150,7 +150,7 @@ if err != nil {
 
 在呼叫方法時，若方法的引數個數事先無法決定該如何處理？在 Go 中支援不定長度引數（Variable-length Argument），可以輕鬆的解決這個問題。直接來看示範：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -175,7 +175,7 @@ func main() {
 
 雖然可接受可變長度引數的參數，本質上是個 slice，然而，若已經有個 slice，並不能直接傳遞給它，而必須使用 `...` 展開，否則會發生錯誤：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -198,7 +198,7 @@ func main() {
 
 Go 語言有指標，因此，在變數傳遞就多了一種選擇，直接來看個例子，以下的執行結果會顯示 1：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -218,7 +218,7 @@ func main() {
 
 那麼來看下面這個例子：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -240,7 +240,7 @@ func main() {
 
 從 Go 1.18 開始，函式宣告可以帶有型別參數（type parameters），可讓同一個函式套用在多種型態上。例如，底下示範搜尋 slice 中第一個相等元素的位置：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -270,7 +270,7 @@ func main() {
 
 雖然 `min`、`max`、`clear` 是內建函式（built-ins），不是一般套件函式，不過常會跟函式主題一起學習。從 Go 1.21 開始，可以直接使用：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"

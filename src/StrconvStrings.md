@@ -12,7 +12,7 @@ Go 的字串基本上是個 `[]byte`，在程式語言強弱型別的光譜中�
 
 例如，最常用的是將字串剖析為某個型態：
 
-``` prettyprint
+``` go
 func ParseBool(str string) (bool, error)
 func ParseFloat(s string, bitSize int) (float64, error)
 func ParseInt(s string, base int, bitSize int) (i int64, err error)
@@ -21,7 +21,7 @@ func ParseUint(s string, base int, bitSize int) (uint64, error)
 
 若是剖析失敗，傳回的錯誤會是 `*NumError`：
 
-``` prettyprint
+``` go
 type NumError struct {
     Func string // 來源函式（ParseBool、ParseInt、ParseUint、ParseFloat）
     Num  string // 輸入字串
@@ -31,7 +31,7 @@ type NumError struct {
 
 如果要將其他型態附加至字串，可以使用 Append 名稱開頭的函式：
 
-``` prettyprint
+``` go
 func AppendBool(dst []byte, b bool) []byte
 func AppendFloat(dst []byte, f float64, fmt byte, prec, bitSize int) []byte
 func AppendInt(dst []byte, i int64, base int) []byte
@@ -46,7 +46,7 @@ func AppendUint(dst []byte, i uint64, base int) []byte
 
 以上的附加函式設計上接收 `[]byte`，Go 字串本質上是個 `[]byte`，呼叫這些函式時只要明確型態轉換就可以了，例如：
 
-``` prettyprint
+``` go
 b := []byte("bool:")
 b = strconv.AppendBool(b, true)
 fmt.Println(string(b))
@@ -54,7 +54,7 @@ fmt.Println(string(b))
 
 對於大量的字串附加處理，可以使用 [`strings` 套件](https://pkg.go.dev/strings/)的 `Builder`，一來操作上比較方便，二來可看看是否可取得較好的效能表現：
 
-``` prettyprint
+``` go
 type Builder
     func (b *Builder) Cap() int
     func (b *Builder) Grow(n int)
@@ -69,7 +69,7 @@ type Builder
 
 例如，來個簡單的評測：
 
-``` prettyprint
+``` go
 package mypackage
 
 import (
@@ -108,7 +108,7 @@ func BenchmarkBuilderAppend(b *testing.B) {
 
 看一下效能上是否有差異：
 
-``` prettyprint
+``` go
 C:\workspace\go-exercise>go test -bench="." mypackage
 goos: windows
 goarch: amd64
@@ -121,7 +121,7 @@ ok      mypackage       6.614s
 
 如果想將字串當成是個 `io.Reader` 來源，可以使用 `strings.Reader`：
 
-``` prettyprint
+``` go
 type Reader
     func NewReader(s string) *Reader
     func (r *Reader) Len() int
@@ -139,7 +139,7 @@ type Reader
 
 `strings` 還有個 `Replacer`，用於一對一的字串取代：
 
-``` prettyprint
+``` go
 type Replacer
     func NewReplacer(oldnew ...string) *Replacer
     func (r *Replacer) Replace(s string) string
@@ -148,7 +148,7 @@ type Replacer
 
 什麼是一對一的取代呢？看看官方文件中提到的範例就知道了：
 
-``` prettyprint
+``` go
 package main
 
 import (

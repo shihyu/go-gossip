@@ -12,7 +12,7 @@ Go 提供了 `sort` 套件來協助排序、搜尋任務，對於 `[]int`、`[]f
 
 若想在已由小而大排序的 `[]int`、`[]float64` 與 `[]string` 中進行搜尋，可以使用 `SearchInts`、`SearchFloat64s`、`SearchStrings` 函式，搜尋結果將傳回找到搜尋值的索引位置，**沒有搜尋到的話，傳回的會是可以安插搜尋值的索引位置**。例如：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -35,7 +35,7 @@ func main() {
 
 如果想要由大而小排序呢？可以透過 `Slice`、`SliceStable`，指定一個 `less` 函式，該函式接受兩個索引，你要傳回布林值表示 `i` 處的值順序上是否小於 `j`：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -54,7 +54,7 @@ func main() {
 
 實際上，`Slice`、`SliceStable` 可用於任意的結構，例如：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -83,7 +83,7 @@ func main() {
 
 那麼怎麼搜尋上面的 `family` 呢？例如，找出年齡 45 歲的資料？這可以用 `Search`，例如：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -119,7 +119,7 @@ func main() {
 
 在 [Search](https://pkg.go.dev/sort/#Search) 說明中，還有個猜數字的有趣範例，由程式猜出你心中想的數字：
 
-``` prettyprint
+``` go
 func GuessingGame() {
     var s string
     fmt.Printf("Pick an integer from 0 to 100.\n")
@@ -138,14 +138,14 @@ func GuessingGame() {
 
 `sort` 還提供了 `Sort`、`Stable` 函式，乍看很奇怪：
 
-``` prettyprint
+``` go
 func Sort(data Interface)
 func Stable(data Interface)
 ```
 
 `Interface` 的定義是：
 
-``` prettyprint
+``` go
 type Interface interface {
     Len() int
     Less(i, j int) bool
@@ -155,7 +155,7 @@ type Interface interface {
 
 這是給有序、具索引的資料結構實現的行為，任何具有 `Interface` 行為的資料結構，都可以透過 `Sort`、`Stable` 函式排序，`sort` 套件提供的實作有 `IntSlice`、`Float64Slice`、`StringSlice`，以 `IntSlice` 的原始碼實現為例：
 
-``` prettyprint
+``` go
 type IntSlice []int
 
 func (p IntSlice) Len() int           { return len(p) }
@@ -165,7 +165,7 @@ func (p IntSlice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
 
 因此，若要對整數排序，也可以如下：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -182,7 +182,7 @@ func main() {
 
 實際上，`Ints`、`Float64s`、`Strings` 函式，內部也只是轉換為 `IntSlice`、`Float64Slice`、`StringSlice`，然後呼叫 `Sort` 罷了：
 
-``` prettyprint
+``` go
 func Ints(a []int) { Sort(IntSlice(a)) }
 func Float64s(a []float64) { Sort(Float64Slice(a)) }
 func Strings(a []string) { Sort(StringSlice(a)) }
@@ -190,7 +190,7 @@ func Strings(a []string) { Sort(StringSlice(a)) }
 
 對於一個實現了 `Interface` 的資料結構，除了可以使用 `Sort`、`Stable` 函式外，若需要反向排序，可以有個簡單方式，透過 `Reverse` 來包裹。例如：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -207,7 +207,7 @@ func main() {
 
 有趣的是 `Reverse` 的實作，它不過就是將給原本資料結構 `Less` 方法的 `i`、`j` 對調罷了：
 
-``` prettyprint
+``` go
 type reverse struct {
     Interface
 }
@@ -223,7 +223,7 @@ func Reverse(data Interface) Interface {
 
 來自己實現一下 `Interface`，使用家人的年齡來排序：
 
-``` prettyprint
+``` go
 package main
 
 import (

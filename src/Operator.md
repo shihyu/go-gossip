@@ -16,7 +16,7 @@ Go 語言中的運算子，大致上與 C 語系的語言中提供的運算子�
 
 `+`、`-`、`*`、`/` 使用上應該沒什麼問題，主要就是注意運算的順序是先乘除後加減，必要時使用括號讓順序清楚，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -39,7 +39,7 @@ func main() {
 
 在二進位運算上有 AND、OR、XOR 等運算，底下是 Go 中的一些例子：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -77,7 +77,7 @@ func main() {
 
 執行結果如下：
 
-``` prettyprint
+``` go
 AND運算：
 0 AND 0     0
 0 AND 1     0
@@ -109,7 +109,7 @@ AND NOT運算：
 
 位元運算是逐位元運算，例如 10010001 與 01000001 作 AND 運算，是一個一個位元對應運算，答案就是 00000001。補數運算是將所有位元 0 變 1，1 變 0。例如 00000001 經補數運算就會變為 11111110。Go 的補數運算子是 `^`，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -124,7 +124,7 @@ func main() {
 
 `<<` 左移運算子會將所有位元往左移指定位數，左邊被擠出去的位元會被丟棄，而右邊補上 0；`>>` 右移運算則是相反，會將所有位元往右移指定位數，右邊被擠出去的位元會被丟棄，至於最左邊補上原來的位元，如果左邊原來是 0 就補0，1 就補 1。
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -144,7 +144,7 @@ func main() {
 
 實際來左移看看就知道為何可以如此作次方運算了：
 
-``` prettyprint
+``` go
 00000001 -> 1 
 00000010 -> 2 
 00000100 -> 4 
@@ -157,7 +157,7 @@ func main() {
 
 數學上有大於、等於、小於的比較運算，Go 中也提供了這些運算子，它們有大於（`>`）、不小於（`>=`）、小於（`<`）、不大於（`<=`）、等於（`==`）以及不等於（`!=`），比較條件成立時用 `true` 表示，比較條件不成立用 `false` 表示。以下程式片段示範了幾個比較運算的使用：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -180,7 +180,7 @@ Go 中沒有 `?:` 三元條件運算子。
 
 在邏輯上有所謂的「且」、「或」與「反相」，在 Go 中提供對應的邏輯運算子（Logical operator），分別為 `&&`、`||`及 `!`。看看以下的程式片段會輸出什麼結果？
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -197,7 +197,7 @@ func main() {
 
 來舉個運用捷徑運算的例子，在 Go 中兩個整數相除，若除數為 0 會發生 integer divide by zero 的錯誤，以下運用 `&&` 捷徑運算避免了這個問題：
 
-``` prettyprint
+``` go
 if(number2 != 0 && number1 / number2 > 1) {
     fmt.Println(number1 / number2)
 }
@@ -209,13 +209,13 @@ if(number2 != 0 && number1 / number2 > 1) {
 
 Go 語言中有指標（Pointer），你可以在宣告變數時於型態前加上 `*`，這表示建立一個指標，例如：
 
-``` prettyprint
+``` go
 var i *int
 ```
 
 這時 `i` 是個空指標，也就是值為 `nil`，上頭等同於 `var i *int = nil`，目前並沒有儲存任何位址，如果想讓它儲存另一個變數的記憶體位址，可以使用 `&` 取得變數位址並指定給 `i`，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -242,7 +242,7 @@ func main() {
 
 其應用的實例之一是使用 `fmt.Scanf` 取得標準輸入時，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"

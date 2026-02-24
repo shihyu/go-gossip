@@ -14,7 +14,7 @@
 
 Go 語言中有 `struct`，可以用來將相關的資料組織在一起，如果你學過 C 語言，這對你應該不陌生。舉個例子來說，相對於個別地存取 `x`、`y` 變數：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -36,7 +36,7 @@ func main() {
 
 若 `x` 與 `y` 變數，相當於 XY 平面上的 (x, y) 座標，那麼將之組織在一起同時存取會比較好：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -64,7 +64,7 @@ func main() {
 
 上面的例子中，建立了一個匿名型態的結構，你可以使用 `type` 基於 `struct` 來定義新型態，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -90,7 +90,7 @@ func main() {
 
 如果一開始不知道結構的值域數值為何，可以使用 `var` 宣告即可，那麼值域會依型態而有適當的預設值。例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -111,7 +111,7 @@ func main() {
 
 如果你建立了一個結構的實例，並將之指定給另一個結構變數，那麼會進行值域的複製。例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -137,7 +137,7 @@ func main() {
 
 這對於函式的參數傳遞也是一樣的：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -161,7 +161,7 @@ func main() {
 
 `point` 的位置開始儲存了結構，可以對 `point` 使用 `&` 取值，將位址值指定給指標，因此若指定或傳遞結構時，不是想要複製值域，可以使用指標。例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -185,7 +185,7 @@ func main() {
 
 類似地，也可以在傳遞參數給函式時使用指標：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -211,7 +211,7 @@ func main() {
 
 你也可以透過 `new` 來建立結構實例，這會傳回結構實例的位址：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -237,7 +237,7 @@ func main() {
 
 結構的值域也可以是指標型態，也可以是結構自身型態之指標，因此可實現鏈狀參考，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"

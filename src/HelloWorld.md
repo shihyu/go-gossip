@@ -20,7 +20,7 @@
 
 要撰寫第一個 Hello, World 程式，你可以建立一個 main.go，在當中撰寫以下的內容：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -41,7 +41,7 @@ Go 的創建者之一也是 UTF-8 的創建者，因此，Go 可以直接處理�
 
 Go 可以用直譯的方式來執行程式，第一個 Hello, World 程式就是這麼做的，執行 `go run` 指定你的原始碼檔名就可以了：
 
-``` prettyprint
+``` go
 $ go run main.go
 Hello, World
 哈囉！世界！
@@ -57,7 +57,7 @@ Hello, World
 
 那麼，一開始的 `package` 是怎麼回事？試著先來建立一個 hello.go：
 
-``` prettyprint
+``` go
 package hello
 
 import "fmt"
@@ -71,7 +71,7 @@ func HelloWorld() {
 
 接著，原本的 main.go 修改為：
 
-``` prettyprint
+``` go
 package main
 
 import "hello"
@@ -89,13 +89,13 @@ func main() {
 
 為了方便，通常會設定 `GOPATH`，例如，指向目前的工作目錄：
 
-``` prettyprint
+``` go
 set GOPATH=c:\workspace\go-exercise
 ```
 
 如果沒有設定 `GOPATH` 的話，Go 預設會是使用者目錄的 go 目錄，雖然目前 `GOPATH` 中只一個目錄，不過 `GOPATH` 中可以設定數個目錄，現在我的 go-exercise 目錄底下會有這些東西：
 
-``` prettyprint
+``` go
 go-exercise
           └─src
               ├─hello
@@ -117,7 +117,7 @@ go-exercise
 
 每次使用 `go build`，都是從原始碼編譯為可執行檔，這比較沒有效率，如果想要編譯時更有效率一些，可以使用 `go install`，例如，在目前既有的目錄與原始碼架構之下，於 go 目錄中執行 `go install hello` 的話，你就會發現有以下的內容：
 
-``` prettyprint
+``` go
 go-exercise
         ├─bin
         │      main.exe
@@ -138,7 +138,7 @@ go-exercise
 
 （補充：上面這段是以傳統 `GOPATH` 工作模式來理解；在現代模組模式下，編譯快取主要在 `GOCACHE`，模組原始碼快取在 `GOMODCACHE`，不一定會看到同樣的 `pkg/$GOOS_$GOARCH/*.a` 使用方式。）
 
-``` prettyprint
+``` go
 set GO111MODULE=
 set GOARCH=amd64
 set GOBIN=
@@ -179,7 +179,7 @@ set GOGCCFLAGS=-m64 -mthreads -fno-caret-diagnostics -Qunused-arguments -fmessag
 
 那麼，如果想在執行 Go 程式時使用命令列引數呢？可以使用 `os` 套件的 `Args`，例如，寫一個 main.go：
 
-``` prettyprint
+``` go
 package main
 
 import "os"
@@ -193,7 +193,7 @@ func main() {
 
 `os.Args` 是個陣列，索引從 0 開始，索引 0 會是編譯後的可執行檔名稱，索引 1 開始會是你提供的引數，例如，在執行過 go build 或 go install 之後，如下直接執行編譯出來的執行檔，會產生的訊息是…
 
-``` prettyprint
+``` go
 $ ./bin/main Justin
 Command: ./bin/main
 Hello, Justin
@@ -203,7 +203,7 @@ Hello, Justin
 
 `fmt` 的 Printf，就像是 C 的 `printf`，可用的格式控制可參考 [Package fmt](https://pkg.go.dev/fmt) 的說明。實際上，Go 本身附帶了說明文件，可以執行 `go doc <pkg> <sym>[.<method>]` 來查詢說明。例如：
 
-``` prettyprint
+``` go
 $ go doc fmt.Printf
 func Printf(format string, a ...interface{}) (n int, err error)
 

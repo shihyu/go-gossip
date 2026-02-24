@@ -14,7 +14,7 @@
 
 假設可能原本有如下的程式內容，負責銀行帳戶的建立、存款與提款：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -62,7 +62,7 @@ func main() {
 
 實際上，`Desposit`、`Withdraw`、`String` 的函式操作，都是與傳入的 `Account` 實例有關，何不將它們組織在一起呢？這樣比較容易使用些，在 Go 語言中，你可以重新修改函式如下：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -112,7 +112,7 @@ func main() {
 
 注意到，在這邊使用的是 `(ac *Account)`，也就是指標，如果你是如下使用 `(ac Account)`：
 
-``` prettyprint
+``` go
 func (ac Account) Deposit(amount float64) {
     if amount <= 0 {
         panic("必須存入正數")
@@ -123,7 +123,7 @@ func (ac Account) Deposit(amount float64) {
 
 那麼執行像是 `account.Deposit(500)`，就像是以 `Deposit(*account, 500)` 呼叫以下函式：
 
-``` prettyprint
+``` go
 func Deposit(account Account, amount float64) {
     if amount <= 0 {
         panic("必須存入正數")
@@ -148,7 +148,7 @@ func Deposit(account Account, amount float64) {
 
 之前談過，Go 語言中不允許方法重載（Overload），因此，對於以下的程式，是會發生 `String` 重複宣告的編譯錯誤：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -182,7 +182,7 @@ func main() {
 
 然而，若是將函式定義為方法，就不會有這個問題，Go 可以從方法的接收者辨別，該使用哪個 `String` 方法：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -218,7 +218,7 @@ func main() {
 
 在 Go 語言中，函式也可以作為值傳遞，那麼就產生了一個問題，方法呢？既然方法本質上也是個函式，那麼是否也可以作為值傳遞，答案是可以的，不過，以上面的程式為例，你不能直接以 `String := String` 這樣的方式傳遞，而必須使用方法運算式（Method expression）。例如：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -271,7 +271,7 @@ func main() {
 
 可以看到，這樣取得的函式，就像是本文一開始的範例那樣，你可以傳入任何的 `Account` 實例。另一個取得方法的方式是方法值（Method value），這會保有取得方法當時的接收者：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -332,7 +332,7 @@ func main() {
 
 例如，以下的範例為 `[]int` 定義了一個新的型態名稱，並定義了一個 `ForEach` 方法：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -356,7 +356,7 @@ func main() {
 
 這個範例會顯示 10 到 50 作為結果，必須留意的是，`type` 定義了新型態 `Funcint`，因為 `ForEach` 是針對 `Funcint` 定義，而不是針對 `[]int`，因此底下是行不通的：
 
-``` prettyprint
+``` go
 lt2 := []int {10, 20, 30, 40, 50}
 
 // lt2.ForEach undefined (type []int has no field or method ForEach)
@@ -367,7 +367,7 @@ lt2.ForEach(func(ele int) {
 
 編譯器認為 `[]int` 並沒有定義 `ForEach`，因此發生錯誤，想要通過編譯的話，可以進行型態轉換：
 
-``` prettyprint
+``` go
 lt2 := IntList([]int {10, 20, 30, 40, 50})
 lt2.ForEach(func(ele int) {
     fmt.Println(ele)
@@ -376,7 +376,7 @@ lt2.ForEach(func(ele int) {
 
 你甚至可以基於 `int` 等基本型態定義方法，同樣地，必須定義一個新的型態名稱：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -411,7 +411,7 @@ func main() {
 
 在 Go 中，接收者可以是 `nil`，這讓你有機會在方法中處理接收者為 `nil` 的情況，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -452,7 +452,7 @@ func main() {
 
 Go 沒有物件導向語言中建構式或初始式之類的概念，然而可以自行模擬，例如在 [container/list](https://pkg.go.dev/container/list/) 的[原始碼](https://go.dev/src/container/list/list.go)可以看到 `New` 作為一個工廠函式，用來建立新的 `List`，初始的流程寫在 `Init` 方法之中：
 
-``` prettyprint
+``` go
 ...
 // Init initializes or clears list l.
 func (l *List) Init() *List {

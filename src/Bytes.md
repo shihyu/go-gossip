@@ -14,7 +14,7 @@ Go 字串的本質是 `[]byte`，如果想基於位元組來處理字串，或�
 
 類似地，對於頻繁性的字串操作，可以使用 `strings.Builder`，對於對於頻繁性的位元組操作，可以使用 `bytes.Buffer`：
 
-``` prettyprint
+``` go
 type Buffer
     func NewBuffer(buf []byte) *Buffer
     func NewBufferString(s string) *Buffer
@@ -43,7 +43,7 @@ type Buffer
 
 建立 `Buffer` 時可以使用 `NewBuffer` 指定初始的位元組大小，如果你想要處理的是字串的 UTF-8 位元組，可以使用 `NewBufferString`。例如，來簡單地針對中文做百分比編碼：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -74,7 +74,7 @@ func main() {
 
 類似地，你也可以透過 `bytes.Reader`，將 `[]byte` 作為來源讀取：
 
-``` prettyprint
+``` go
 type Reader
     func NewReader(b []byte) *Reader
     func (r *Reader) Len() int

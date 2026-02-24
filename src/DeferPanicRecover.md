@@ -14,7 +14,7 @@
 
 在 Go 語言中，可以使用 `defer` 指定某個函式延遲執行，那麼延遲到哪個時機？簡單來說，在函式 `return` 之前，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -37,7 +37,7 @@ func main() {
 
 如果有多個函式被 `defer`，那麼在函式 `return` 前，會依 `defer` 的相反順序執行，也就是 LIFO，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -65,7 +65,7 @@ func main() {
 
 上頭是為了清楚表示出 `defer` 與函式的關係，實際上，你也可以寫成這樣就好：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -89,7 +89,7 @@ func main() {
 
 有趣的一點是，被 `defer` 的函式若有接受某變數作為引數，那麼會是被 `defer` 當時的變數值，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -108,7 +108,7 @@ func main() {
 
 那麼要用在何處？記得 `defer` 的特性是在函式 `return` 前執行，而且一定會被執行，因此，對於以下的這個程式：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -140,7 +140,7 @@ func main() {
 
 你可以使用 `defer` 來執行函式的關閉：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -182,7 +182,7 @@ func main() {
 
 可以將方才的範例改寫為以下：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -224,7 +224,7 @@ func main() {
 
 因此，雖然 Go 語言中沒有例外處理機制，也可使用 `defer`、`panic` 與 `recover` 來進行類似的錯誤處理。例如，將上頭的範例，再修改為：
 
-``` prettyprint
+``` go
 package main
 
 import (

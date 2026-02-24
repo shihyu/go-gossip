@@ -14,7 +14,7 @@
 
 例如你定義一個取最大值的函式 `max`，你可以將此函式作為值傳遞給 `maximum`：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -41,7 +41,7 @@ func main() {
 
 因為 Go 型態推斷能力的關係，上頭的 `maximum` 並不用宣告型態，而可以直接參考 `max` 函式的型態，那麼，`max` 或者是 `maximum` 的型態是什麼呢？
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -71,7 +71,7 @@ func main() {
 
 你可以僅宣告一個變數可用來參考特定型態的函式，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -94,7 +94,7 @@ func main() {
 
 若想先宣告一個 `maximum` 變數，可以在之後參考 `max` 函式，可以使用型態 `func(int, int) int` 來宣告，通常，宣告函式變數時，若想免於冗長的函式型態宣告，可以使用 `type` 來定義一個新的型態名稱：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -125,7 +125,7 @@ func main() {
 
 不過，就這邊來說，實際上只是想要 `func(int, int) int` 能有個簡短一點的名稱，從 Go 1.9 開始，可以為型態取別名，別名就只是同一型態的另一個名稱，：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -152,7 +152,7 @@ func main() {
 
 函式變數既然是個變數，也就可以對它取指標，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -179,7 +179,7 @@ func main() {
 
 因為函式可以當作值傳遞，因此，對於函式中流程幾乎相同，只有少數操作不同的情況，就可以將操作不同的部份以回呼（Callback）函式取代。例如，可以設計一個 `filter` 函式，用來過濾出符合特定條件的值：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"

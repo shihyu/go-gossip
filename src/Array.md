@@ -14,7 +14,7 @@
 
 建立陣列的方式是 `[n]type`，其中 `n` 為陣列的元素數量，`type` 是元素的型態。例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -32,7 +32,7 @@ func main() {
 
 陣列使用索引存取，如同其他語言的慣例，索引從 0 開始，`len` 函式可以取得陣列的長度，如果想在建立陣列時指定初始，可以如下：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -53,7 +53,7 @@ func main() {
 
 在 Go 中，陣列指定會逐一複製值，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -75,7 +75,7 @@ func main() {
 
 Go 的陣列是線性的，如果想模擬多維，可以使用巢狀陣列。例如，建立一個二維陣列：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -88,7 +88,7 @@ func main() {
 
 顯然地，第一個 `[]` 中數字指定了陣列中會有兩個 `[3]int` 陣列，因此，若要同時宣告陣列中的元素，可以如下：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -119,7 +119,7 @@ func main() {
 
 想要逐一走訪陣列的話，基本上可以使用 `for` 迴圈，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -134,7 +134,7 @@ func main() {
 
 另一個方式是使用 `for range`：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -149,7 +149,7 @@ func main() {
 
 在不需要索引的情況下，可以使用 `_` 忽略傳回的索引值，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"

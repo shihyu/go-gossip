@@ -14,7 +14,7 @@
 
 例如，[General Category](https://en.wikipedia.org/wiki/Template:General_Category_(Unicode)) 特性有 Letter/L 代表字母、Number/N 代表數字等，在 Go 的 [unicode 套件文件的 Variables](https://pkg.go.dev/unicode/#pkg-variables) 一開頭，列出的就是這類特性的變數：
 
-``` prettyprint
+``` go
 var (
     ...
     Digit  = _Nd // 十進位數字的集合
@@ -30,7 +30,7 @@ var (
 
 每個變數的型態都是 `*RangeTable`，由碼點的範圍等欄位組成：
 
-``` prettyprint
+``` go
 type RangeTable struct {
     R16         []Range16   // 用 uint16 記錄碼點低位至高位
     R32         []Range32   // 記錄 R16 無法表示的範圍，用 uint32 記錄碼點低位至高位
@@ -44,7 +44,7 @@ type RangeTable struct {
 
 碼點範圍表可以在 [tables.go](https://go.dev/src/unicode/tables.go) 找到。舉例來說，字母集合的碼點範圍：
 
-``` prettyprint
+``` go
 var _L = &RangeTable{
     R16: []Range16{
         {0x0041, 0x005a, 1},
@@ -55,7 +55,7 @@ var _L = &RangeTable{
 
 透過指定 `RangeTable`，就可以簡單地判斷碼點是否有某特性，例如，`²³¹¼½¾𝟏𝟐𝟑𝟜𝟝𝟞𝟩𝟪𝟫𝟬𝟭𝟮𝟯𝟺𝟻𝟼㉛㉜㉝ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫⅬⅭⅮⅯⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹⅺⅻⅼⅽⅾⅿ` 都是數字：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -84,13 +84,13 @@ Unicode 將希臘文、漢字等以[文字（Script）](https://en.wikipedia.org
 
 如果想要使用多個 RangeTable，`可以透過 IsOneOf`：
 
-``` prettyprint
+``` go
 func IsOneOf(ranges []*RangeTable, r rune) bool
 ```
 
 `unicode` 也提供了一些常用的判斷函式：
 
-``` prettyprint
+``` go
 func IsControl(r rune) bool
 func IsDigit(r rune) bool
 func IsGraphic(r rune) bool
@@ -108,7 +108,7 @@ func IsUpper(r rune) bool
 
 在大小寫或特定轉換上，有以下的函式：
 
-``` prettyprint
+``` go
 func To(_case int, r rune) rune
 func ToLower(r rune) rune
 func ToTitle(r rune) rune
@@ -117,7 +117,7 @@ func ToUpper(r rune) rune
 
 基本上，這可以應付大多數語言的轉換，像是全形字母的大小寫或首字母大寫等，`To` 可使用的常數有：
 
-``` prettyprint
+``` go
 const (
     UpperCase = iota
     LowerCase
@@ -132,20 +132,20 @@ const (
 
 `unicode/utf8` 套件提供的函式，主要是進行 `rune` 與 UTF-8 編碼之間的處理。例如驗證是否為合法的 UTF-8 `[]byte` 或字串：
 
-``` prettyprint
+``` go
 func Valid(p []byte) bool
 func ValidString(s string) bool
 ```
 
 驗證 `rune` 可否編碼為 UTF-8：
 
-``` prettyprint
+``` go
 func ValidRune(r rune) bool
 ```
 
 在 `rune` 與 UTF-8 編碼之間轉換：
 
-``` prettyprint
+``` go
 func DecodeLastRune(p []byte) (r rune, size int)
 func DecodeLastRuneInString(s string) (r rune, size int)
 func DecodeRune(p []byte) (r rune, size int)
@@ -155,7 +155,7 @@ func EncodeRune(p []byte, r rune) int
 
 `unicode/utf16` 主要是進行 `rune` 與 UTF-16 編碼之間的處理，只不過目前函式只有幾個：
 
-``` prettyprint
+``` go
 func Decode(s []uint16) []rune
 func DecodeRune(r1, r2 rune) rune
 func Encode(s []rune) []uint16
@@ -167,7 +167,7 @@ UTF-8 編碼下，碼元（code unit）是 8 個位元，Go 中使用 `byte` 也
 
 來看個簡單的範例，使用 `unicode/utf8` 與 `unicode/utf16` 套件來顯示「Hello, 世界」的 UTF-16 碼元：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -190,7 +190,7 @@ func main() {
 
 顯示結果如下：
 
-``` prettyprint
+``` go
 U+0048 'H':       
   Code unit [0048]
 U+0065 'e':       

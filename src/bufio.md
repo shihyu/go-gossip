@@ -12,7 +12,7 @@
 
 `bufio.Reader` 可以透過 `NewReader`、`NewReaderSize` 指定 `io.Reader` 來建立實例，前者指定預設緩衝區大小 4096 位元組呼叫後者，`bufio.Reader` 在讀取來源時會從底層的 `io.Reader` 將資料讀入，在建立 `bufio.Reader` 實例之後，可以使用的方法有：
 
-``` prettyprint
+``` go
 func (b *Reader) Buffered() int
 func (b *Reader) Discard(n int) (discarded int, err error)
 func (b *Reader) Peek(n int) ([]byte, error)
@@ -36,7 +36,7 @@ func (b *Reader) WriteTo(w io.Writer) (n int64, err error)
 
 因此對於逐行讀取一個 UTF-8 文字檔案來說，可以簡單地撰寫如下：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -78,7 +78,7 @@ func main() {
 
 如果實際上是要讀取之後寫到另一個輸出，使用 `WriteTo` 方法更為方便：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -104,7 +104,7 @@ func main() {
 
 Go 在 `io.WriteTo` 介面定義了 `WriteTo` 行為：
 
-``` prettyprint
+``` go
 type WriterTo interface {
     WriteTo(w Writer) (n int64, err error)
 }
@@ -112,7 +112,7 @@ type WriterTo interface {
 
 實際上 `bufio.Reader` 實作了 `io` 中一些介面，`io.WriteTo` 只是其中之一；類似地，如果要建立 `bufio.Writer` 實例，可以透過 `NewWriter`、`NewWriterSize` 函式，建立之後可用的方法如下：
 
-``` prettyprint
+``` go
 func (b *Writer) Available() int
 func (b *Writer) Buffered() int
 func (b *Writer) Flush() error
@@ -127,7 +127,7 @@ func (b *Writer) WriteString(s string) (int, error)
 
 `bufio.Writer` 實作了 `io` 中一些介面，像是 `io.ReadFrom`，因此，也可以如下在標準輸出中，顯示讀入的的檔案內容：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -157,7 +157,7 @@ func main() {
 
 事實上，對於需要逐行讀取的需求，使用 `bufio.Scanner` 會比較方便，可以使用 `NewScanner` 來建立實例，建立之後有以下的方法可以使用：
 
-``` prettyprint
+``` go
 func (s *Scanner) Buffer(buf []byte, max int)
 func (s *Scanner) Bytes() []byte
 func (s *Scanner) Err() error
@@ -168,7 +168,7 @@ func (s *Scanner) Text() string
 
 來看看讀取文字檔案的例子：
 
-``` prettyprint
+``` go
 package main
 
 import (

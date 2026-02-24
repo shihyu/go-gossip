@@ -14,7 +14,7 @@
 
 在 Go 語言中，可以使用 `interface` 定義行為，舉例來說，若現在想要定義儲蓄的行為，可以如下：
 
-``` prettyprint
+``` go
 type Savings interface {
     Deposit(amount float64)
     Withdraw(amount float64) error
@@ -29,7 +29,7 @@ type Savings interface {
 
 因此，現在可以寫個函式，同時接受 `Account` 與 `CheckingAccount` 實例，在提款後顯示餘額：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -102,7 +102,7 @@ func main() {
 
 如果在實作`Withdraw` 與 `Deposit` 方法時，是使用 `(ac Account)` 或 `(ac CheckingAccount)` 宣告了接受者型態，那麼傳遞實例給接受 `Savings` 的函式時，就可以不用取指標，例如：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -175,7 +175,7 @@ func main() {
 
 如果你定義了一個變數：
 
-``` prettyprint
+``` go
 var savings Savings
 ```
 
@@ -187,13 +187,13 @@ var savings Savings
 
 如果接收者是定義為 `(ac *Account)`，而且有底下的程式，那麼 `savings` 底層儲存的型態會 `*Account`，而值是 `Account` 結構實例的位址值：
 
-``` prettyprint
+``` go
 var savings Savings = &Account{"1234-5678", "Justin Lin", 1000}
 ```
 
 當接收者是指標時，透過介面比對是否為 `nil` 時要留意，例如以下會是 `true`，這是因為 `savings` 在底層儲存的型態為 `nil`，而值沒有指定，介面宣告的變數只有在這個情況下，跟 `nil` 直接相等比較才會是 `true`：
 
-``` prettyprint
+``` go
 var savings Savings = nil
 fmt.Println(savings == nil)
 ```
@@ -201,7 +201,7 @@ fmt.Println(savings == nil)
 然而以下會是 `false`，這是因為 `savings` 在底層儲存的型態為 `*Account`，而值是 `nil`（  
 這時透過 `savings` 是可以呼叫方法的，接收者會是 `nil`，就看你要不要在方法中處理 `nil` 了）：
 
-``` prettyprint
+``` go
 var acct *Account = nil
 var savings Savings = acct
 fmt.Println(savings == nil)
@@ -209,7 +209,7 @@ fmt.Println(savings == nil)
 
 這是個 FAQ 了，在〈[Why is my nil error value not equal to nil?](https://go.dev/doc/faq#nil_error)〉就提到了個例子：
 
-``` prettyprint
+``` go
 func returnsError() error {
     var p *MyError = nil
     if bad() {
@@ -221,13 +221,13 @@ func returnsError() error {
 
 如果對 `returnsError` 傳回值進行 `nil` 比較，結果會是 `false`：
 
-``` prettyprint
+``` go
 fmt.Println(returnsError() == nil) // false
 ```
 
 因此如果傳回型態是個介面，值會是 `nil`，請記得直接傳 `nil`：
 
-``` prettyprint
+``` go
 func returnsError() error {
     if bad() {
         return ErrBad
@@ -238,13 +238,13 @@ func returnsError() error {
 
 如果接收者是定義為 `(ac Account)`，而你有底下的程式：
 
-``` prettyprint
+``` go
 var savings Savings = Account{"1234-5678", "Justin Lin", 1000}
 ```
 
 這時 `savings` 在底層會儲存型態 `Account`，而值為結構實例，這時透過 `Savings` 來進行實例的指定時，底層也會是結構實例的指定，因此會發生複製：
 
-``` prettyprint
+``` go
 var savings1 Savings = Account{"1234-5678", "Justin Lin", 1000}
 var savings2 Savings = savings1
 
@@ -258,7 +258,7 @@ fmt.Println(savings.name) // Justin Lin
 
 例如：
 
-``` prettyprint
+``` go
 type StringKeyed interface {
     ~string
 }
@@ -282,7 +282,7 @@ Go 1.20 之後，像一般介面型別這類「可比較但可能在執行時 pa
 
 Go 語言會檢查類型的實例，是否實現了介面中規範的行為，若是的話，就可以使用介面型態來接受不同型態實例的指定，因此，若要建立一個異質陣列或 slice，也是可以的：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -352,7 +352,7 @@ func main() {
 
 在這邊雖然是以 `Account` 及 `CheckingAccount` 為例，不過，只要實現了 `Savings` 的行為，就算是一隻鴨子，也是可以的：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -398,7 +398,7 @@ func main() {
 
 那麼，如果想要建立一個實例容器，可以收集各種類型的實例，要怎麼做呢？答案就是透過空介面，也就是沒有定義任何行為的 `interface {}`。
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -420,7 +420,7 @@ func main() {
 
 如果你查看 `fmt.Println` 的文件說明，可以發現，它的參數類型就是 `interface {}`：
 
-``` prettyprint
+``` go
 func Print(a ...interface{}) (n int, err error)
 func Printf(format string, a ...interface{}) (n int, err error)
 func Println(a ...interface{}) (n int, err error)
@@ -428,7 +428,7 @@ func Println(a ...interface{}) (n int, err error)
 
 順便一提的是，就目前來說，在使用 `fmt.Println` 顯示結構時，都是使用預設的字串格式，如果想自訂字串格式，必須實現 `Stringer` 這個介面，這定義在 `fmt` 的 print.go 之中：
 
-``` prettyprint
+``` go
 type Stringer interface {
         String() string
 }
@@ -436,7 +436,7 @@ type Stringer interface {
 
 在需要字串的場合中，會呼叫 `String()` 方法。例如，若你想要帳號顯示時，可以出現 Account 或 CheckingAccount 字樣的話，可以如下實作：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"

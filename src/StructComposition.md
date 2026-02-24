@@ -14,7 +14,7 @@
 
 在〈[結構與方法](http://openhome.cc/Gossip/Go/Method.html)〉中使用 `struct` 定義了 `Account`，如果今天你想定義一個支票帳戶，方式之一是…
 
-``` prettyprint
+``` go
 type CheckingAccount struct {
     id string
     name string
@@ -29,7 +29,7 @@ type CheckingAccount struct {
 
 這是個很尋常的作法，也許你想將 `id`、`name` 與 `balance` 組織在一起：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -61,7 +61,7 @@ func main() {
 
 這是一種方式，不過使用起來麻煩，或許你可以這麼做：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -97,7 +97,7 @@ func main() {
 
 在定義結構時，可以將另一已定義的結構直接內嵌：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -132,7 +132,7 @@ func main() {
 
 那麼，如果想要明確地透過 `Account` 的結構來存取呢？也是可以的：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -161,7 +161,7 @@ func main() {
 
 雖然內部型態會提昇，然而，若外部型態中定義了同名值域，就會直接取得外部型態的值域，因此，如果 `CheckingAccount` 定義了相同的值域 `balance`，如果透過 `account.balance`，結果會是找到 `CheckingAccount` 定義的 `balance`，如果想明確找到 `Account` 的 `balance`，可以指定 `Account` 作為前置：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -196,7 +196,7 @@ func main() {
 
 如果內部型態原本定義了方法，這些方法也是查找時的對象：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -240,7 +240,7 @@ func main() {
 
 類似地，若外部型態中定義了同名的方法，那麼就會使用該方法，這類似重新定義（Override）的概念：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -297,7 +297,7 @@ func main() {
 
 如果想指定使用 `Account` 的 `Withdraw` 函式，也還是可以的：
 
-``` prettyprint
+``` go
 func main() {
     account := CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 30000}
     account.Deposit(2000)
@@ -311,7 +311,7 @@ func main() {
 
 雖然可以實現方法重新定義的概念，不過，單純只是如上定義的話，並不支援多型的概念，因為一開始這麼指定就會出錯了：
 
-``` prettyprint
+``` go
 // cannot use CheckingAccount literal (type CheckingAccount) as type Account in assignment
 var account Account = CheckingAccount{Account{"1234-5678", "Justin Lin", 1000}, 30000}
 ```

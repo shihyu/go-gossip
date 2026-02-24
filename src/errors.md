@@ -12,7 +12,7 @@
 
 `Is` 函式是用於取代 `==` 判斷錯誤的場合，例如以下的程式片段：
 
-``` prettyprint
+``` go
 if err == io.EOF {
     ...
 }
@@ -20,7 +20,7 @@ if err == io.EOF {
 
 可以改用 `Is` 函式：
 
-``` prettyprint
+``` go
 if errors.Is(err, io.EOF) {
     ...
 }
@@ -28,7 +28,7 @@ if errors.Is(err, io.EOF) {
 
 `Is` 也可以用於判斷 `nil`，`err` 若有實作 `Is` 方法，也可以使用 `Is` 函式來判斷，因為 `Is` 函式的原始碼是這麼實作的：
 
-``` prettyprint
+``` go
 func Is(err, target error) bool {
     if target == nil {
         return err == target
@@ -56,7 +56,7 @@ func Is(err, target error) bool {
 
 `As` 函式是用於取代型態斷言判斷錯誤類型的場合，例如以下的程式片段：
 
-``` prettyprint
+``` go
 if e, ok := err.(*PathError); ok {
     ...
 }
@@ -64,7 +64,7 @@ if e, ok := err.(*PathError); ok {
 
 可以改用 `As` 函式：
 
-``` prettyprint
+``` go
 var e *PathError
 if errors.As(err, &e) {
     ...
@@ -73,7 +73,7 @@ if errors.As(err, &e) {
 
 來看看 `As` 函式的實作：
 
-``` prettyprint
+``` go
 func As(err error, target interface{}) bool {
     if target == nil {
         panic("errors: target cannot be nil")
@@ -105,7 +105,7 @@ func As(err error, target interface{}) bool {
 
 在 `Is` 與 `As` 的實作中，都看到了 `Unwrap` 函式：
 
-``` prettyprint
+``` go
 func Unwrap(err error) error {
     u, ok := err.(interface {
         Unwrap() error

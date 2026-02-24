@@ -14,7 +14,7 @@
 
 先來看個沒有啟用 Goroutine，卻要寫個龜兔賽跑遊戲的例子，你可能是這麼寫的：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -52,7 +52,7 @@ func main() {
 
 你可以將烏龜的流程與兔子的流程分別寫在一個函式中，並用 `go` 啟動執行：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -111,7 +111,7 @@ func main() {
 
 因此，我們可以使用 `sync.WaitGroup` 來改寫以上的範例：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -165,7 +165,7 @@ func main() {
 
 有個 `runtime.GOMAXPROCS()` 函式，可以設定 Go 同時間能使用的 CPU 數量，它會傳回上一次設定的數字，如果傳入小於 1 的值，不會改變任何設定，因此，可以使用 `runtime.GOMAXPROCS(0)` 知道目前的設定值。想在執行時期得知可用的 CPU 數量，可以使用 `runtime.NumCPU()` 函式，因此，為了確保 Go 會使用全部的 CPU 來運行，可以這麼撰寫：
 
-``` prettyprint
+``` go
 runtime.GOMAXPROCS(runtime.NumCPU()) 
 ```
 

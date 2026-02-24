@@ -14,7 +14,7 @@
 
 在先前的文件中，有時會用到 `reflect.TypeOf()` 來顯示資料的型態名稱，實際上，`reflect.TypeOf()` 傳回 `Type` 的實例，`Type` 是個介面定義，目前包含了以下的方法定義：
 
-``` prettyprint
+``` go
 type Type interface {
     Align() int
     FieldAlign() int
@@ -54,7 +54,7 @@ type Type interface {
 
 因此，你可以透過 `Type` 的方法定義，取得某個型態的相關結構資訊，舉例來說：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -88,7 +88,7 @@ func main() {
 
 如果 `reflect.TypeOf()` 接受的是個指標，因為指標實際上只是個位址值，必須要透過 `Type` 的 `Elem` 方法取得指標的目標 `Type`，才能取得型態的相關成員：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -152,7 +152,7 @@ func main() {
 
 有上面的範例中，也示範了如何取得介面定義的方法資訊，這個範例會顯示以下的結果：
 
-``` prettyprint
+``` go
 Deposit func(*main.Account, float64) error
 Withdraw func(*main.Account, float64) error
 struct
@@ -165,7 +165,7 @@ name string
 
 上面的範例中，使用了 `Type` 的 `Kind()` 方法，這會傳回 `Kind` 列舉值：
 
-``` prettyprint
+``` go
 type Kind uint
 
 const (
@@ -205,7 +205,7 @@ const (
 
 以下是個簡單的型態測試：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -251,7 +251,7 @@ func main() {
 
 如果想實際獲得資料的值，可以使用 `reflect.ValueOf()` 函式，這會傳回 `Value` 實例，`Value` 是個結構，定義了一些方法可以使用，可用來取得實際的值，例如：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -280,7 +280,7 @@ func main() {
 
 如果是個指標，一樣也是要透過 `Elem()` 方法取得目標值，例如：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -309,7 +309,7 @@ func main() {
 
 可以透過 `Value` 對值進行變動，不過，`Value` 必須是可定址的，具體來說，就是 `reflect.ValueOf()` 必須接受指標：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -335,7 +335,7 @@ func main() {
 
 上面的例子若改成以下，就會出現錯誤：
 
-``` prettyprint
+``` go
 package main
 
 import (

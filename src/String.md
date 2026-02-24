@@ -16,7 +16,7 @@
 
 使用 `string` 宣告變數若無指定初值，預設是空字串 `""`，可以使用 `+` 對兩個字串進行串接，由於字串是唯讀的，因此實際上串接的動作，會產生新的字串，如果想比較兩個字串的相等性，可以使用 `==`、`!=`、`<`、`<=`、`>`、`>=` 依字典順序比較。
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -39,14 +39,14 @@ func main() {
 
 使用 `""` 時不可換行，如果你的字串想要換行，方法之一是分兩個字串，並用 `+` 串接。例如：
 
-``` prettyprint
+``` go
     text := "Go語言" +
             "Cool" 
 ```
 
 另一個方式是以重音符 \` 定義字串，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -60,7 +60,7 @@ func main() {
 
 使用 \` 定義的字串，會完全保留換行與空白，因此，在上頭你可以看到被保留的換行與空白字元，如果使用 `fmt.Println(text)`，顯示時也會看到對應的換行與空白。使用 \` 定義的字串，也不會轉譯字元，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -97,7 +97,7 @@ func main() {
 
 那麼，想知道一個字串的長度該怎麼做呢？Go 中有個 `len` 函式，當它作用於字串時，結果可能會令一些從其他程式語言，像是 Java 過來的人感到訝異：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -115,7 +115,7 @@ func main() {
 
 不單是如此，Go 中可以使用 `[]` 與索引來取得字串的位元組資料，是的，位元組！傳回的型態是 `byte`（`uint8`），`"Go語言"[0]` 取得的是 G 的位元組資料，`"Go語言"[1]` 取得的是 o 的位元組資料，`"Go語言"[2]` 呢？取得的是「語」的 UTF-8 實作中，第一個位元組資料，也就是 e8。可以用以下這個程式片段來印證：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -138,7 +138,7 @@ func main() {
 
 雖說字串是唯讀的位元組片段，不過，實際的位元組是隱藏在字串底層，如果你想取得，必須轉為 `[]byte`，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -161,7 +161,7 @@ func main() {
 
 那麼，如果是 `"Go語言"[2:3]` 呢？嗯，傳回的字串是 `"\xe8"`！這是什麼？事實上，Go 中的字串可以是任意位元組片段，因此，你可以如下定義字串：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -176,7 +176,7 @@ func main() {
 
 [`strings` 套件](https://pkg.go.dev/strings/) 中有不少字串可用的方法，想做字串操作時，可以多加利用，不過要看清楚是針對什麼在操作。例如 `strings.Index`：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -192,7 +192,7 @@ func main() {
 
 問題來了，如果對於 `"Go語言"`，想逐一取得 `'G'`、`'o'`、`'語'`、`'言'` 該怎麼辦？當然不能用 `text[n]`，這只會取得第 n 個位元組，可以將字串型態轉換為 `[]rune` ：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -211,7 +211,7 @@ func main() {
 
 想從 `rune` 得到一個 `string`，可以直接寫 `string('語')` 就可以了。如果想以 `rune` 為單位來走訪字串，而不是以位元組走訪，可以使用 `for range`，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -228,7 +228,7 @@ func main() {
 
 這個程式的執行結果會顯示：
 
-``` prettyprint
+``` go
 U+0047 'G' 位元起始位置 0
 U+006F 'o' 位元起始位置 1
 U+8A9E '語' 位元起始位置 2

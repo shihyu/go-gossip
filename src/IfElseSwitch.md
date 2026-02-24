@@ -14,7 +14,7 @@
 
 直接來看個 `if..else` 的實例：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -32,7 +32,7 @@ func main() {
 
 在 Go 中，`if` 之後直接寫判斷式可以不用使用 `()` 括號，而 `{}` 是必要的，這樣應該是比較能避免 [Apple 曾經發生某個函式中有兩個連續縮排而引發的問題](http://support.apple.com/kb/HT6147)：
 
-``` prettyprint
+``` go
 ...       
 if ((err = SSLHashSHA1.update(&hashCtx, &signedParams)) != 0)
         goto fail;
@@ -44,7 +44,7 @@ if ((err = SSLHashSHA1.final(&hashCtx, &hashOut)) != 0)
 
 Go 的 `if` 可以使用 `:=` 宣告與指定變數值，與判斷式之間以分號區隔，因此方才的範例也可以寫成：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -61,7 +61,7 @@ func main() {
 
 這麼一來，`remain` 變數就只在 `if..else` 的區塊中有作用。如果要使用 `:=` 宣告與指定多個變數值，可以寫成 `if var1, var2 := 10, 20; cond` 的形式。`if...else` 可以組成 `if...else if...else` 形式，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -87,7 +87,7 @@ func main() {
 
 實際上，對於上頭的範例，可以改用 `switch` 來撰寫，程式會更為簡潔：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -115,7 +115,7 @@ func main() {
 
 注意，與 C/C++ 或 Java 等語言不同的是，Go 的 `switch` 比對成功後，不會自動往下執行，因而不用撰寫 `break`，有多個條件想符合時，在同一 `case` 中使用逗號區隔。如果真的想在比對成功後，往下一個 `case` 中的陳述執行，可以使用 `fallthrough`，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -147,7 +147,7 @@ func main() {
 
 實際上，Go 的 `switch` 中， `case` 不用是常數，只要 `switch` 的值型態與 `case` 比對的型態符合，也可以是個變數或運算式，甚至還可以接受布林運算式，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"

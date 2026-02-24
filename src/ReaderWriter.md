@@ -12,7 +12,7 @@
 
 `io.Reader` 定義的 `Read` 行為，可以在 [`type Reader`](https://pkg.go.dev/io/#Reader) 查看：
 
-``` prettyprint
+``` go
 type Reader interface {
     Read(p []byte) (n int, err error)
 }
@@ -22,7 +22,7 @@ type Reader interface {
 
 例如，若要讀取一個文字檔案，其中以 UTF-8 儲存中文，可以如下：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -64,7 +64,7 @@ func main() {
 
 `io.Writer` 定義的 `Write` 行為，可以在 [`type Writer`](https://pkg.go.dev/io/#Writer) 查看：
 
-``` prettyprint
+``` go
 type Writer interface {
     Write(p []byte) (n int, err error)
 }
@@ -74,7 +74,7 @@ type Writer interface {
 
 來寫個 `Copy` 函式好了，可以將 `io.Reader` 的資料直接寫到 `io.Writer`：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -130,7 +130,7 @@ func main() {
 
 在這個例子中，可以將指定的檔案讀入並顯示在主控台中，這是因為 `os.Stdout` 具有 `io.Writer` 的行為。實際上，`io.Copy` 就提供了這個功能：
 
-``` prettyprint
+``` go
 package main
 
 import (

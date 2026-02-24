@@ -14,7 +14,7 @@
 
 如果需要一個 slice，可以使用 `make` 函式，舉個例子來說，可以如下建立一個長度與容量皆為 5 的 slice，並傳回 `slice` 的參考，型態為 `[]int`：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -45,7 +45,7 @@ func main() {
 
 上例也可以寫為：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -71,7 +71,7 @@ func main() {
 
 在 Go 中，參考的預設零值都是 `nil`。slice 無法進行 `==` 比較，slice 唯一可以用 `==` 比較的對象是 `nil`，儲存 slice 參考的變數也無法進行 `==` 比較，若真想知道兩個變數參考的是否同一 slice，可以如下透過[反射機制](Reflect.html)來得知：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -92,7 +92,7 @@ func main() {
 
 若事先知道 slice 的值，也可以使用 slice 字面常量：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -112,7 +112,7 @@ func main() {
 
 使用 slice 字面常量時，還可以初始特定索引處的值。例如：
 
-``` prettyprint
+``` go
 slice := []int{10, 20, 30, 10: 100, 20: 200}
 // 顯示 [10 20 30 0 0 0 0 0 0 0 100 0 0 0 0 0 0 0 0 0 200]
 fmt.Println(slice)
@@ -128,7 +128,7 @@ fmt.Println(slice)
 
 如果有個現成的陣列，可以從陣列中建立 slice，例如，從陣列的索引 1 到 4（不包括）建立一個 slice 的話，可以如下：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -171,7 +171,7 @@ func main() {
 
 方才使用 `make([]int, 5)` 函式建立 slice 時，只指定了長度為 5，而容量就預設與長度相同，實際上，可以分別指定容量與長度，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -188,7 +188,7 @@ func main() {
 
 Go 1.2 開始，可以在 `[]` 中指定三個數字，以冒號區隔，第三個數字指定的是 slice 以原陣列哪個索引作為邊界。例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -206,7 +206,7 @@ func main() {
 
 也可以從 slice 中產生 slice，產生的 slice 底層還是同一個陣列。例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -230,7 +230,7 @@ func main() {
 
 可以使用 `append` 對 slice 附加元素，這會傳回一個 slice 的參考：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -258,7 +258,7 @@ func main() {
 
 如果 `append` 的時候，附加元素超出了 slice 的容量，那麼底層會建立一個新的陣列，容量為原 slice 容量的兩倍加 2，接著將舊陣列內容複製到新陣列，然後將指定的值附加上去，`append` 的結果也會傳回新的 slice 參考。例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -286,7 +286,7 @@ func main() {
 
 如果想用 `append` 來直接附加另一個 slice，可以使用 `...`，將另一個 slice 擴展為一列引數，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -302,7 +302,7 @@ func main() {
 
 可以使用 `copy` 函式，將一個 slice 的內容，複製至另一個 slice：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"

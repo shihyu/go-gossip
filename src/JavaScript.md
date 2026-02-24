@@ -22,7 +22,7 @@ Go 與 JavaScript 畢竟是兩個不同的語言，各擁有不同的資料型�
 
 因而，你可以開啟〈[哈囉！WebAssembly！](WebAssembly.html)〉中談到的 wasm_exec.html，在 `<button onClick="run();" id="runButton" disabled>Run</button>` 標籤底下加上 `<div id="c1">Hello, WebAssembly!</div>`：
 
-``` prettyprint
+``` go
 <!doctype html>
 <!--
 Copyright 2018 The Go Authors. All rights reserved.
@@ -51,7 +51,7 @@ license that can be found in the LICENSE file.
 
 若想撰寫 Go 來取得對應的 DOM 物件，並在主控台顯示 `innerHTML` 特性值，可以如下撰寫：
 
-``` prettyprint
+``` go
 package main
 
 import "syscall/js"
@@ -67,7 +67,7 @@ func main() {
 
 這邊特意使用數個變數，代逐一對照取得的各是哪個 JavaScript 值，實際上當然可以直接寫成底下：
 
-``` prettyprint
+``` go
 package main
 
 import "syscall/js"
@@ -97,7 +97,7 @@ func main() {
 
 類似地，如果想在 Go 中呼叫瀏覽器提供的 `alert` 全域函式，可以如下撰寫：
 
-``` prettyprint
+``` go
 package main
 
 import "syscall/js"
@@ -123,7 +123,7 @@ func main() {
 
 因此，如果有個自定義的 JavaScript 函式，而你想在 Go 中呼叫它，就是看看，那個函式是在哪個物件之上，想辦法取得該物件，之後就可以加以呼叫了，例如：
 
-``` prettyprint
+``` go
 <!doctype html>
 <!--
 Copyright 2018 The Go Authors. All rights reserved.
@@ -157,7 +157,7 @@ license that can be found in the LICENSE file.
 
 在上例中，`hi_wasm` 函式實際上是 `window` 的一個特性，因此在 Go 中可以這麼呼叫：
 
-``` prettyprint
+``` go
 package main
 
 import "syscall/js"

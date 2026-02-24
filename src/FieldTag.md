@@ -10,7 +10,7 @@
 
 對於 JSON 或 XML 等具有結構性的資料，在 Go 中經常會使用 `struct` 定義資料結構，例如，底下這個程式可以將簡單的結構轉為 JSON：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -46,7 +46,7 @@ func main() {
 
 然而，Go 的慣例中，公開的結構欄位名稱通常是大寫的，如果你的 JSON 要求的是小寫的欄位名稱，或者是其他名稱，可以使用欄位標籤（Field tag）。例如：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -82,7 +82,7 @@ func main() {
 
 欄位標籤可以在反射時，使用 `Field` 的 `Tag` 來取得，雖然欄位標籤可以是任意格式字串，然而慣例上，會由 `key: "value"` 的格式組成，符合此格式的話，可以使用 `Tag` 的 `Lookup` 來查找 `value`，它傳回兩個值，第一個值是 `value`，第二個值指出是否有對應的名稱，例如：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -119,7 +119,7 @@ func main() {
 
 實際上，如果要將結構轉為 JSON 格式字串，可以使用 `encoding/json`，例如：
 
-``` prettyprint
+``` go
 package main
 
 import (

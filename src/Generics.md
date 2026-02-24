@@ -14,7 +14,7 @@
 
 函式可以在名稱後面宣告型別參數，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -45,7 +45,7 @@ func main() {
 
 如果泛型函式或泛型型別需要使用某些運算（例如 `==`、`<`），就要限制型別參數可接受的型態範圍，這就是型別條件。
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -71,7 +71,7 @@ func main() {
 
 Go 1.18 之後，介面不只描述方法集合，也可以描述型別集合（用於 constraint）。例如：
 
-``` prettyprint
+``` go
 type Integer interface {
     ~int | ~int8 | ~int16 | ~int32 | ~int64
 }
@@ -85,7 +85,7 @@ type Integer interface {
 
 不只函式可以用泛型，型別宣告也可以：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -122,7 +122,7 @@ func main() {
 
 Go 1.24 起，generic type aliases 完整支援，因此可像下面這樣寫：
 
-``` prettyprint
+``` go
 type Set[T comparable] = map[T]struct{}
 ```
 
@@ -132,7 +132,7 @@ type Set[T comparable] = map[T]struct{}
 
 Go 1.26 放寬了限制，泛型型別可在自己的型別參數列表中參照自己。這對某些泛型介面（特別是要求「輸入輸出都是自身型態」）會比較自然：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"

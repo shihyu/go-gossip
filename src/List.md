@@ -14,7 +14,7 @@
 
 想要建立 `list.List` 實例，可以透過 `list.New`，實例可使用的方法有：
 
-``` prettyprint
+``` go
 func (l *List) Back() *Element
 func (l *List) Front() *Element
 func (l *List) Init() *List
@@ -34,7 +34,7 @@ func (l *List) Remove(e *Element) interface{}
 
 從 `PushBack`、`PushFront` 方法的參數型態 `interface{}` 就能知道，`list.List` 可以保存任意型態的資料，它們會傳回 `*Element`，`Element` 是個結構，公開的欄位有 `Value`，公開的方法為 `Next` 與 `Prev`：
 
-``` prettyprint
+``` go
 type Element struct {
     Value interface{}
 }
@@ -48,7 +48,7 @@ func (e *Element) Prev() *Element
 
 `Back`、`Front` 方法，分別傳回 `list.List` 最後、最前一個元素，因此，若要從清單頭走訪至尾，基本的模式就是：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -76,7 +76,7 @@ func main() {
 
 補充（Go 1.18+）：Go 已支援泛型，不過 `container/list` 本身仍是舊有 API 風格（實務上可視為 `any` / `interface{}` 容器），因此若你需要型別安全的清單結構，常見做法是自行包一層泛型型別。
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -111,7 +111,7 @@ func main() {
 
 嚴格來說，不會直接使用 `list.List` 來保存資料，而是如果某資料結構底層需要雙向鏈結的特性，可以透過 `list.List` 來實現。例如，實現一個 `PersonQueue`：
 
-``` prettyprint
+``` go
 package main
 
 import (

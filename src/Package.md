@@ -20,7 +20,7 @@
 
 在當時，為了簡化說明，原始碼主檔名故意與 `package` 設定的名稱同名，這不是必要的，一個相應於 `package` 的目錄底下，可以有許多個原始碼，而每個原始碼開頭，只要 `package` 設定的名稱都與目錄相符就可以了。例如，你可以有個原始碼是 hello.go，位於 src/goexample 底下：
 
-``` prettyprint
+``` go
 package goexample
 
 import "fmt"
@@ -32,7 +32,7 @@ func Hello() {
 
 還可以有個 hi.go，位於 src/goexample 底下：
 
-``` prettyprint
+``` go
 package goexample
 
 import "fmt"
@@ -44,7 +44,7 @@ func Hi() {
 
 也就是說，一個 `package` 可以有數個原始碼檔案，各自組織自己的任務，在執行 `go install goexample` 之後，上面兩個原始碼會在 pkg 目錄的 `$GOOS`\_`$GOARCH` 目錄中產生 goexample.a 檔案。這包括了 `goexample` 套件編譯後的結果，如果想使用 `goexample` 套件的功能，只需要撰寫個 main.go：
 
-``` prettyprint
+``` go
 package main
 
 import "goexample"
@@ -57,7 +57,7 @@ func main() {
 
 你可以在套件目錄之前增加父目錄，例如，可以建立一個 src/cc/openhome 目錄，然後將方才的 hello.go 與 hi.go 移至該目錄之中，接著執行 `go install cc/openhome/goexample`，那麼，在 pkg 目錄的 \$GOOS\_\$GOARCH 目錄中，會產生對應的 cc/openhome 目錄，其中放置著 goexample.a 檔案，想要使用這個套件的話，可以撰寫個 main.go：
 
-``` prettyprint
+``` go
 package main
 
 import "cc/openhome/goexample"
@@ -72,7 +72,7 @@ func main() {
 
 由於 Go 的 workspace 設置，都必須是如此規範，因此，若你想將原始碼發佈給他人使用時就很方便，例如，你可以建立 src/github.com/JustinSDK 目錄，然後將方才的 goexample 目錄移到 src/github.com/JustinSDK 當中，這麼一來，顯然地，你的 main.go 就要改成：
 
-``` prettyprint
+``` go
 package main
 
 import "github.com/JustinSDK/goexample"
@@ -85,7 +85,7 @@ func main() {
 
 也就是說，你可以直接將 /src/github.com/JustinSDK/goexample 當作檔案庫（repository）發佈到 Github，那麼，其他人需要你的原始碼時，在當時常會使用 `go get` 指令。我將這個範例發佈在 Github 的 [JustinSDK/goexample](https://github.com/JustinSDK/goexample) 了，因此，你可以執行以下指令：
 
-``` prettyprint
+``` go
 go get github.com/JustinSDK/goexample
 ```
 
@@ -97,7 +97,7 @@ go get github.com/JustinSDK/goexample
 
 當然，執行 `go install main` 的話，你的 pkg 目錄中的 `$GOOS_$GOARCH` 目錄，會有個 github.com/JustinSDK 目錄，裏頭放置著 goexample.a 檔案，而編譯出來的可執行檔，則會放置在 bin 目錄之中，此時，你的目錄應該會像是：
 
-``` prettyprint
+``` go
 go-exercise
         ├─bin
         │      main.exe
@@ -134,7 +134,7 @@ go-exercise
 
 在 `import` 時預設會使用套件名稱作為呼叫套件中函式等的前置名稱，你可以在 `import` 時指定別名。例如：
 
-``` prettyprint
+``` go
 package main
 
 import f "fmt"
@@ -146,7 +146,7 @@ func main() {
 
 若指定別名時使用 `.`，就不需要套件名稱作為前置名稱，例如：
 
-``` prettyprint
+``` go
 package main
 
 import . "fmt"

@@ -18,7 +18,7 @@
 
 實際來看個 `for` 迴圈範例，在文字模式下從 1 顯示到 10：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -32,7 +32,7 @@ func main() {
 
 這個程式白話讀來，就是從 `i` 等於 1，只要 `i` 小於等於 10 就執行迴圈本體（顯示 `i`），然後遞增 `i`。在介紹 `for` 迴圈時，許多書籍或文件很喜歡用的範例就是顯示九九乘法表，這邊也用這個例子來示範巢狀迴圈：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -46,7 +46,7 @@ func main() {
 
 `for` 中的各陳述是以分號區隔，若當中想寫兩個陳述則使用逗號區隔，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -60,7 +60,7 @@ func main() {
 
 初始式、後置式都可以省略，不過，分號必須保留，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -94,7 +94,7 @@ func main() {
 
 在沒有初始式、後置式，只有條件式的情況，也就是 `for ; cond;` 的時候，可以只寫 `for cond`，這就是 C/C++、Java 中 `while` 迴圈的作用了：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -110,7 +110,7 @@ func main() {
 
 如果想製造個無窮迴圈，在 C/C++、Java 等語言中常見寫成 `for(;;)`，在 Go 中是也可以寫 `for ;;`，因為條件式不寫預設就是 `true`，不過，可以只寫個 `for` 就可以了，底下是個很無聊的遊戲，看誰可以最久不撞到這個數字 5：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -149,7 +149,7 @@ Go 的 `for` 可以搭配 `range`，對 slice、陣列、`string`、`map` 和 ch
 
 從 Go 1.22 開始，`for` 迴圈中宣告的變數，會在每次迭代建立新的變數實例，這修正了過去常見的閉包捕捉問題。例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -171,7 +171,7 @@ func main() {
 
 Go 1.22 也支援對整數直接使用 `range`，這相當於從 `0` 迭代到 `n-1`：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -185,7 +185,7 @@ func main() {
 
 Go 1.23 更進一步支援對 iterator function 使用 `range`，常見型態之一是 `func(func(T) bool)`：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"

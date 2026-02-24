@@ -18,7 +18,7 @@
 
 例如在〈[Go 套件管理](Package.html)〉中看過的例子，使用 `go get github.com/JustinSDK/goexample`，然後撰寫底下的程式：
 
-``` prettyprint
+``` go
 package main
 
 import "github.com/JustinSDK/goexample"
@@ -33,7 +33,7 @@ func main() {
 
 為了避免這個問題，通常會將下載的檔案庫複製出來，例如放到 deps 中：
 
-``` prettyprint
+``` go
 project
     └─src
         ├─deps
@@ -53,7 +53,7 @@ project
 
 問題是放到 deps 的檔案庫該怎麼用呢？其中一個方式是修改 `import`：
 
-``` prettyprint
+``` go
 package main
 
 import "deps/src/github.com/JustinSDK/goexample"
@@ -70,7 +70,7 @@ Go 在 1.5 時實驗性地加入了 vendor，需要透過 `GO15VENDOREXPERIMENT=
 
 簡單來說，如果你的套件中有個 vendor 資料夾，例如：
 
-``` prettyprint
+``` go
 project
     └─src
         └─main

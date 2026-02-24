@@ -12,7 +12,7 @@
 
 這是 JavaScript 的 wasm_exec.js 以及 Go 的 `syscall/js` 居中之緣故，在 wasm_exec.html 中你也可以看到載入、編譯、實例化 WebAssembly 的過程：
 
-``` prettyprint
+``` go
 if (!WebAssembly.instantiateStreaming) { // polyfill
     WebAssembly.instantiateStreaming = async (resp, importObject) => {
         const source = await (await resp).arrayBuffer();
@@ -53,7 +53,7 @@ Go 有自己的匯入物件，也就是 `go.importObject`，這個物件主要�
 
 例如，顯示加總至某個指定 DOM 物件的函式，可以如下定義：
 
-``` prettyprint
+``` go
 package main
 
 import "syscall/js"
@@ -91,7 +91,7 @@ func sum(numbers []js.Value) int {
 
 至於 JavaScript 的部份，來稍微修改一下 wasm_exec.html：
 
-``` prettyprint
+``` go
 <!doctype html>
 <!--
 Copyright 2018 The Go Authors. All rights reserved.
@@ -153,7 +153,7 @@ license that can be found in the LICENSE file.
 
 如果把一切都帶到 Go 中做，將 Go 中定義的函式，當成是某事件的回呼，會比較單純一些，例如：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -188,7 +188,7 @@ func inputValue(id string) (int, error) {
 
 至於 wasm_exec.html 可以如下調整：
 
-``` prettyprint
+``` go
 <!doctype html>
 <!--
 Copyright 2018 The Go Authors. All rights reserved.

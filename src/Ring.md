@@ -10,7 +10,7 @@
 
 對於環狀資料結構，Go 提供了 `container/ring` 套件，`Ring` 結構有 `Value` 欄位，可以使用 `New` 指定元素數量來建立實例，可用的方法有：
 
-``` prettyprint
+``` go
 func (r *Ring) Do(f func(interface{}))  // 走訪每個元素並傳入 f
 func (r *Ring) Len() int                // 元素數量
 func (r *Ring) Link(s *Ring) *Ring      // 銜接另一個 Ring
@@ -22,7 +22,7 @@ func (r *Ring) Unlink(n int) *Ring      // 解除指定數量的 Ring，傳回�
 
 因為是環狀結構，每個元素都可視為一個鏈的開頭或結尾，因此 `Link` 等操作都傳回 `*Ring`。底下是個建立 `Ring` 並設值的簡單範例：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -47,7 +47,7 @@ func main() {
 
 這邊的話拿來解一下 [約瑟夫問題（Josephus Problem）](https://openhome.cc/Gossip/AlgorithmGossip/) 好了：
 
-``` prettyprint
+``` go
 package main
 
 import (

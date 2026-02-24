@@ -16,7 +16,7 @@ Channel 就像是個佇列，可以對它發送值，也可以從它上頭取得
 
 舉例來說，使用 Channel 來修改之前的龜兔賽跑程式：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -75,7 +75,7 @@ func main() {
 
 上頭的範例建立 Channel 時並沒有指定 Channel 中可以容納多少資料，Channel 中預設只能容納一個資料，你可以在建立 Channel 時指定當中可以容納的資料數量。例如，建立一個生產者、消費者的程式：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -115,7 +115,7 @@ func main() {
 
 舉例來說，你也許想寫個猜數字遊戲，在隨機猜測數字的情況下，你無法事先知道要猜幾次才會猜中，而你想將先前猜測的數字透過 Channel 傳送：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -163,7 +163,7 @@ func main() {
 
 如果有多個 Channel 需要協調，可以使用 `select`，直接來看個多個生產者與一個消費者的例子：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -206,7 +206,7 @@ func main() {
 
 </div>
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -259,7 +259,7 @@ func main() {
 
 在 `select` 中若有相同的 Channel，會隨機選取。例如底下會顯示哪個結果是不一定的：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -283,7 +283,7 @@ func main() {
 
 可以將 Channel 轉為只可發送或只可取值的 Channel，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"

@@ -22,7 +22,7 @@ Go 在 1.11 時內建了實驗性的模組管理功能，並藉由 `GO111MODULE`
 
 例如，現在有個 pkgfoo 釋出了 [v1.0.0](https://github.com/JustinSDK/pkgfoo/tree/v1.0.0) 版，而你打算基於它寫個 go-exercise，go-exercise 資料夾中有個 src/main/main.go：
 
-``` prettyprint
+``` go
 package main
 
 import "github.com/JustinSDK/pkgfoo"
@@ -35,7 +35,7 @@ func main() {
 
 現在進入你的 go-exercise 資料夾底下，執行 `go mod init go-exercise`，這會建立一個 go.mod；`go` 指令寫入的版本號會依實際安裝版本而異。在 Go 1.26 中，`go mod init` 預設會寫入較低的相容版本（例如 1.25.0），而不是直接寫成 1.26：
 
-``` prettyprint
+``` go
 module go-exercise
 
 go 1.25.0
@@ -47,13 +47,13 @@ go 1.25.0
 
 另外，因為 `pkgfoo` 現在最新版本可能已經不是 `v1.0.0`，如果你想重現本頁後面「從 `v1.0.0` 昇級到 `v1.0.1`」的過程，可以先明確指定版本：
 
-``` prettyprint
+``` go
 go get github.com/JustinSDK/pkgfoo@v1.0.0
 ```
 
 例如，先執行 `go mod tidy` 時，會看到類似訊息：
 
-``` prettyprint
+``` go
 go: finding module for package github.com/JustinSDK/pkgfoo
 go: downloading github.com/JustinSDK/pkgfoo v1.0.0
 go: found github.com/JustinSDK/pkgfoo in github.com/JustinSDK/pkgfoo v1.0.0
@@ -61,7 +61,7 @@ go: found github.com/JustinSDK/pkgfoo in github.com/JustinSDK/pkgfoo v1.0.0
 
 而 go.mod 也有了底下內容：
 
-``` prettyprint
+``` go
 module go-exercise
 
 go 1.25.0
@@ -71,14 +71,14 @@ require github.com/JustinSDK/pkgfoo v1.0.0
 
 go.mod 定義了相依的套件與版本，你也可以自行編輯 go.mod 的內容，來取得想要的版本；另外你也會發現多了個 go.sum，其中包含了套件的 hash 等訊息，這用來確認取得的是正確的版本。實務上常以 `go mod tidy` 來同步整理 `go.mod` 與 `go.sum`：
 
-``` prettyprint
+``` go
 github.com/JustinSDK/pkgfoo v1.0.0 h1:XOi67njsT9pcRrsT40Oi3LCA3b1TyIxHd6+9ceGwa0U=
 github.com/JustinSDK/pkgfoo v1.0.0/go.mod h1:5PAHGmqvfj2XbzxxOeiJJjOflE/p6zTVRFfaiEeSn1w=
 ```
 
 接著在執行建構出來的可執行檔時會看到：
 
-``` prettyprint
+``` go
 Hi
 Helo
 ```
@@ -91,7 +91,7 @@ Helo
 
 在這邊因為只是小 bug 更新，就使用 `go get -u=patch all`，這會看到類似底下的訊息：
 
-``` prettyprint
+``` go
 go: finding github.com/JustinSDK/pkgfoo v1.0.1
 go: downloading github.com/JustinSDK/pkgfoo v1.0.1
 go: extracting github.com/JustinSDK/pkgfoo v1.0.1
@@ -99,7 +99,7 @@ go: extracting github.com/JustinSDK/pkgfoo v1.0.1
 
 go.mod 的內容也更新了（go.sum 也會更新）：
 
-``` prettyprint
+``` go
 module go-exercise
 
 go 1.25.0
@@ -109,27 +109,27 @@ require github.com/JustinSDK/pkgfoo v1.0.1
 
 重新執行 `go build`，就會顯示正確的訊息了：
 
-``` prettyprint
+``` go
 Hi
 Hello
 ```
 
 假設現在 pkgfoo 中的訊息都改成中文，並更新為 v2.0.0 了，雖然可以使用 `go get github.com/JustinSDK/pkgfoo@v2.0.0` 來下載最新版本，然而會出現 +incompatible 字樣：
 
-``` prettyprint
+``` go
 go: finding github.com/JustinSDK/pkgfoo v2.0.0
 go: downloading github.com/JustinSDK/pkgfoo v2.0.0+incompatible
 ```
 
 雖然可以順利建構，執行時也會是最新版本的結果，然而，若要昇級至最新的 MAJOR 版本，依賴的套件，必須明確地屬於某個模組，因此，pkgfoo 中必須有個 go.mod，並定義版本資訊：
 
-``` prettyprint
+``` go
 module github.com/JustinSDK/pkgfoo/v2
 ```
 
 go.mod 在加入了 pkgfoo 之後，發佈了 [v2.0.0](https://github.com/JustinSDK/pkgfoo/tree/v2.0.0) ，現在 appfoo 打算使用這 v2.0.0，可以在 `import` 時指定：
 
-``` prettyprint
+``` go
 package main
 
 import "github.com/JustinSDK/pkgfoo/v2"
@@ -142,7 +142,7 @@ func main() {
 
 直接 `go build -o bin/main.exe src/main/main.go`，就會看到類似底下下載 v2.0.0 的訊息：
 
-``` prettyprint
+``` go
 go: finding github.com/JustinSDK/pkgfoo/v2 v2.0.0
 go: downloading github.com/JustinSDK/pkgfoo/v2 v2.0.0
 go: extracting github.com/JustinSDK/pkgfoo/v2 v2.0.0
@@ -150,7 +150,7 @@ go: extracting github.com/JustinSDK/pkgfoo/v2 v2.0.0
 
 而且你可以看到 appfoo 的 go.mod 更新為：
 
-``` prettyprint
+``` go
 module go-exercise
 
 go 1.25.0
@@ -165,7 +165,7 @@ require (
 
 現在它依賴在…兩個版本？是的，事實上，你也可以同時在 appfoo 中使用：
 
-``` prettyprint
+``` go
 package main
 
 import "github.com/JustinSDK/pkgfoo/v2"
@@ -181,7 +181,7 @@ func main() {
 
 不同模組版本的套件，被視為不同的套件，上面的程式執行過時會顯示：
 
-``` prettyprint
+``` go
 嗨
 哈囉
 Hi

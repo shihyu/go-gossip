@@ -16,7 +16,7 @@ Go 1.11 當時以實驗性功能加入了 WebAssembly 支援；在現代版本�
 
 無論如何，來看個簡單的 Go 程式如何編譯為 WebAssembly，首先，來個簡單的 Go 程式：
 
-``` prettyprint
+``` go
 package main
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 
 如果你是使用 Visual Studio Code，安裝了 [vscode-go](https://github.com/Microsoft/vscode-go) 擴充，可以在 settings.json 中設定：
 
-``` prettyprint
+``` go
 {
     "go.toolsEnvVars": {"GOOS":"js", "GOARCH": "wasm"}
 }
@@ -36,21 +36,21 @@ func main() {
 
 如果是要在 Visual Studio Code 開啟的終端機中設定環境變數，因為它是基於 Power Shell，可以如下設定環境變數：
 
-``` prettyprint
+``` go
 $env:GOOS="js"
 $env:GOARCH="wasm"
 ```
 
 如果是在 Windows 的命令提示字元，就是使用 `set` 了：
 
-``` prettyprint
+``` go
 SET GOOS=js
 SET GOARCH=wasm
 ```
 
 接下來，可以執行建構：
 
-``` prettyprint
+``` go
 go build -o test.wasm main.go
 ```
 
@@ -62,7 +62,7 @@ test.wasm 是編譯出來的 WebAssembly 模組位元組碼。體積會依 Go �
 
 如果你有安裝 Node.js，Go 1.26 也可使用 `go_js_wasm_exec`（或參考 `lib/wasm/wasm_exec_node.js`）來運行 test.wasm。舊版文件常見直接搭配 `wasm_exec.js` 的方式，實際可用性會依版本而異：
 
-``` prettyprint
+``` go
 node wasm_exec.js test.wasm
 ```
 

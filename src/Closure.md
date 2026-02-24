@@ -14,7 +14,7 @@
 
 在〈[一級函式](http://openhome.cc/Gossip/Go/FirstClassFunction.html)〉中，我們看過函式可作為值傳遞的一個應用是，可將函式傳入另一函式作為回呼（Callback），除了傳遞具名的函式之外，有時會想要臨時建立一個函式進行傳遞，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -50,7 +50,7 @@ func main() {
 
 在 Go 中，不允許在函式中又宣告函式，例如，以下是不允許的：
 
-``` prettyprint
+``` go
 func funcA() {
     func funcB() {
         ...
@@ -65,7 +65,7 @@ func funcA() {
 
 這會出現 “nested func not allowed” 的錯誤，然而，你可以建立匿名函式，然後將之指定給某個變數：
 
-``` prettyprint
+``` go
 func funcA() {
     funcB := func() {
        ...
@@ -76,7 +76,7 @@ func funcA() {
 
 你也可以在函式中建立匿名函式，並將之傳回：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -105,7 +105,7 @@ func main() {
 
 可以在函式中建立匿名函式，引發了一個有趣的事實，先來看個例子：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -130,7 +130,7 @@ func main() {
 
 乍看之下，似乎有點像是：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -159,7 +159,7 @@ func main() {
 
 重點在於，閉包將**變數本身**關閉在自己的範疇中，而不是變數的值，可以用以下這個範例來做個示範：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -194,7 +194,7 @@ func main() {
 
 由於 Go 語言有指標，我們可以將指標的值顯示出來，這代表著變數的位址值，來看看被閉包關閉的變數，到底是怎麼一回事好了：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -227,7 +227,7 @@ func main() {
 
 這個範例與前一個範例類似，只不過呼叫函式時，都會顯示 `x` 變數的位址值與儲存值，一個執行結果是：
 
-``` prettyprint
+``` go
 the parameter : x (0x104382e0) = 10
 getter invoked: x (0x104382e0) = 10
 10

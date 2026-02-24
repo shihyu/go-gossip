@@ -16,19 +16,19 @@ Go 除了本身自帶的標準套件之外，還有另外一系列官方的擴�
 
 在官方擴充套件中，`golang.org/x/text` 主要包含了文字編碼、轉換、國際化、本地化等文字性任務的套件。若是在模組專案中使用，通常直接 `import` 後執行 `go mod tidy` 即可；若要手動加入依賴，也可以使用：
 
-``` prettyprint
+``` go
 go get golang.org/x/text@latest
 ```
 
 文字編碼的轉換主要由 [`golang.org/x/text/transform`](https://pkg.go.dev/golang.org/x/text/transform) 套件來處理，看看其中的函式或結構方法，都會需要 `Transformer` 介面的實現，例如最基本的 `String`：
 
-``` prettyprint
+``` go
 func String(t Transformer, s string) (result string, n int, err error)
 ```
 
 `Transformer` 定義的主要是 `Transform` 方法，代表著編碼的轉換：
 
-``` prettyprint
+``` go
 type Transformer interface {
     Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error)
     Reset()
@@ -39,7 +39,7 @@ type Transformer interface {
 
 Encode、Decode 的動作，分別由 [`golang.org/x/text/encoding`](https://pkg.go.dev/golang.org/x/text/encoding) 套件的 `Encoder`、`Decoder` 來處理，它們都是 `transform.Transformer` 的實現：
 
-``` prettyprint
+``` go
 type Encoder struct {
     transform.Transformer
     ...
@@ -53,7 +53,7 @@ type Decoder struct {
 
 為了便於使用，`encoding` 定義了 `Encoding` 的行為：
 
-``` prettyprint
+``` go
 type Encoding interface {
     NewDecoder() *Decoder
     NewEncoder() *Encoder
@@ -62,14 +62,14 @@ type Encoding interface {
 
 [`golang.org/x/text/encoding`](https://pkg.go.dev/golang.org/x/text/encoding) 套件之中，定義了不同的編碼轉換套件，例如，想處理 Big5（Code Page 950） 編碼轉換的話，需要 `golang.org/x/text/encoding/traditionalchinese` 套件，它的 `Big5` 就實現了 `Encoding`，因此想要獲得 UTF-8 \<-\> Big5 的 `Encoder`、`Decoder`，可以如下：
 
-``` prettyprint
+``` go
 utf8ToBig5 := traditionalchinese.Big5.NewEncoder()
 big5ToUtf8 := traditionalchinese.Big5.NewDecoder()
 ```
 
 因此，若要讀取一個底層為 Big5 編碼的字串，轉換為 UTF-8 編碼字串，可以如下：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -88,7 +88,7 @@ func main() {
 
 要將一個 UTF-8 編碼字串，轉換為 Big5 編碼的字串，可以如下：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -106,7 +106,7 @@ func main() {
 
 `transform` 也定義了 `Reader`、`Writer`，可以用來將 `Transformer` 與 `io.Reader`、`io.Writer` 包裹在一起：
 
-``` prettyprint
+``` go
 type Reader
     func NewReader(r io.Reader, t Transformer) *Reader
     func (r *Reader) Read(p []byte) (int, error)
@@ -119,7 +119,7 @@ type Writer
 
 例如，想要讀取 Big5 文件的話，底下是個示範：
 
-``` prettyprint
+``` go
 package main
 
 import (

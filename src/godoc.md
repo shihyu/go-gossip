@@ -70,7 +70,7 @@
 
 除了函式、套件之外，最頂層的型態宣告、變數、常數等前緊接著的註解，都可以是文件的來源，不相鄰的註解則會被 `godoc` 忽略，如果有已知的 Bug，可以使用 `BUG()` 標示，例如 [bytes.go](https://go.dev/src/bytes/bytes.go) 中有個：
 
-``` prettyprint
+``` go
 // BUG(rsc): The rule Title uses for word boundaries does not handle Unicode punctuation properly.
 func Title(s []byte) []byte {
     ....
@@ -90,7 +90,7 @@ Go 1.2rc1 之後，曾經從 `go doc` 改用 `godoc` 指令了，不過，從 [G
 
 如果在一個網路受限的環境，又想要在網頁上查詢文件，還是可以安裝 `godoc`（來自 `x/tools`）：
 
-``` prettyprint
+``` go
 go install golang.org/x/tools/cmd/godoc@latest
 ```
 

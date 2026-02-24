@@ -10,7 +10,7 @@
 
 有時，可能會想要基於某個已定義的介面，並新增自己的行為，在 Go 中，這類似於結構中方法的查找，只要在定義介面時，內嵌想要的介面名稱就可以了。例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -45,7 +45,7 @@ func main() {
 
 在上面，`Subject` 必須實作 `ParentTester` 與 `ChildTest` 中定義的全部行為，其實例才可以被指定 `ChildTest`。你也可以介面中包含多個介面：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -92,7 +92,7 @@ func main() {
 
 雖然說這像是介面有了繼承方面的語法，然而更精確地說，應該是行為的內嵌，因此，只要是有實現相關行為，就算沒有被包含在某個介面中，也可以做介面轉換：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -152,7 +152,7 @@ func main() {
 
 例如，可以先定義數值族群，再組合成更大的條件：
 
-``` prettyprint
+``` go
 type Integer interface {
     ~int | ~int8 | ~int16 | ~int32 | ~int64
 }
@@ -172,13 +172,13 @@ type Number interface {
 
 Go 1.24 起，generic type aliases 完整支援，因此可以更自然地把這類條件用在 alias 上，例如：
 
-``` prettyprint
+``` go
 type Set[T comparable] = map[T]struct{}
 ```
 
 Go 1.26 也放寬了限制：泛型型別可以在自己的型別參數列表中參照自己，像是：
 
-``` prettyprint
+``` go
 type Adder[A Adder[A]] interface {
     Add(A) A
 }

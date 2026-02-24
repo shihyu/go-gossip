@@ -14,7 +14,7 @@ Go 本身附帶了 `testing` 套件，搭配 `go test` 指令，可以自動對�
 
 想要使用 Go 的 `testing` 套件撰寫測試程式碼，必須 `import "testing"`，在 \_test.go 中撰寫形式 `func TestXxx(t *testing.T)` 的函式，Xxx 可以是任意名稱，例如，在 src/mymath 目錄中，寫個 basic_test.go：
 
-``` prettyprint
+``` go
 package mymath
 
 import "testing"
@@ -42,7 +42,7 @@ func TestSomething(t *testing.T) {
 
 如果函式中使用了 `testing` 的 `Error`、`Fail` 等與失敗相關的方法，那麼測試就會失敗，例如：
 
-``` prettyprint
+``` go
 package mymath
 
 import "testing"
@@ -68,7 +68,7 @@ func TestSomething(t *testing.T) {
 
 如果想要在測試失敗時，留下一些訊息，可以使用 `Error` 方法，例如：
 
-``` prettyprint
+``` go
 package mymath
 
 import "testing"
@@ -90,7 +90,7 @@ func TestSomething(t *testing.T) {
 
 來實際寫個測試，例如，測試一個 `Add` 函式：
 
-``` prettyprint
+``` go
 package mymath
 
 import "testing"
@@ -106,7 +106,7 @@ func TestAdd(t *testing.T) {
 
 由於目前還沒有撰寫 `Add` 函式，因此若執行 `go test mymath` 的話，會以 \[build failed\] 收場，如果在 basic.go 撰寫了正確的 `Add` 函式：
 
-``` prettyprint
+``` go
 package mymath
 
 func Add(a, b int) int {
@@ -130,7 +130,7 @@ func Add(a, b int) int {
 
 如果想要略過測試，那麼可以使用 `Skip` 函式，例如：
 
-``` prettyprint
+``` go
 package mymath
 
 import "testing"
@@ -180,7 +180,7 @@ func TestAdd(t *testing.T) {
 
 如果想進行效能評測（Benchmark），那麼 \_test.go 中，評測函式必須是 `func BenchmarkXxx(b *testing.B)` 形式，例如：
 
-``` prettyprint
+``` go
 package mymath
 
 import "testing"

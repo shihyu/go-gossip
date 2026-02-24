@@ -14,7 +14,7 @@
 
 想要建立例一個 `map` 實例，但尚無任何鍵值對，可以使用 `make` 函式，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -45,7 +45,7 @@ func main() {
 
 如果已知 map 中會有的鍵值對，則可以如下建立 map：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -65,7 +65,7 @@ func main() {
 
 如果 `passwords` 建立時，最後一個鍵值項目後不換行，那麼最後一個逗號就不需要，例如：
 
-``` prettyprint
+``` go
 passwords := map[string]int {"caterpillar" : 123456, "monica" : 54321}
 ```
 
@@ -77,7 +77,7 @@ passwords := map[string]int {"caterpillar" : 123456, "monica" : 54321}
 
 也就是說，`var passwords map[string]int` 宣告了一個參考型態，兩個 `map` 型態的名稱，可以指向同一個 `map` 實例，透過其中一個名稱來改變 `map` 內容，從另一個名稱就可以獲得對應的修改：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -103,7 +103,7 @@ func main() {
 
 不過，更精確地說，使用 `mapName[key]` 時，會傳回兩個值（Go 中允許同時傳回多值），第一個是鍵對應的值，若沒有該鍵就傳回值型態的零值，第二個是布林值，指出鍵是否存在。例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -122,7 +122,7 @@ func main() {
 
 因此，若只是單純想測試鍵是否存在，只要用底線 `_` 忽略傳回的值就可以了，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -145,7 +145,7 @@ func main() {
 
 `exists` 的指定與 `if` 的判斷也可以寫在同一行：
 
-``` prettyprint
+``` go
 if _, exists := passwds[name]; exists {
     fmt.Printf("%s's password is %d\n", name, passwds[name])
 } else {
@@ -159,7 +159,7 @@ if _, exists := passwds[name]; exists {
 
 如果要迭代 `map` 的鍵值，可以使用 `for range`，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -178,7 +178,7 @@ func main() {
 
 如果只是想迭代 `map` 的鍵，可以如下：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -197,7 +197,7 @@ func main() {
 
 如果只想迭代 `map` 的值，可以如下：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -216,7 +216,7 @@ func main() {
 
 如果想取得 `map` 中的鍵清單或者是值清單，方式之一是使用 slice 進行收集，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -250,7 +250,7 @@ func main() {
 
 Go 的 `map` 在迭代時沒有一定的順序，如果想要有排序結果，必須自行處理，例如，針對鍵排序來進行迭代：
 
-``` prettyprint
+``` go
 package main
 
 import "sort"

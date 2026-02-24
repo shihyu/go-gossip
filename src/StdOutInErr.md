@@ -10,7 +10,7 @@
 
 若要輸出訊息至主控台，可以透過 `fmt` 的 `Print`、`Println`、`Printf` 等函式，如果要從主控台讀取使用者輸入，可以透過 `fmt` 的 `Scanf`、`Scanln` 等函式。例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -28,14 +28,14 @@ func main() {
 
 `Scanf` 就類似 C 語言中的 `scanf`，可以格式化地取得輸入，底下是個範例：
 
-``` prettyprint
+``` go
 輸入名稱 年齡：Justin 45
 嗨！Justin！今年 45 歲了啊？
 ```
 
 在按下 Enter 鍵後，實際上還有個 CR（carriage return）字元還未掃描，如果只是要取得空白分隔的輸入，並以換行作為結束，可以使用 `Scanln`：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -53,7 +53,7 @@ func main() {
 
 `Println`、`Printf` 會使用標準輸出（Standout），如果想使用標準錯誤（Standard err）呢？可以透過 `Fprint`、`Fprintln`、`Fprintf` 等函式，第一個引數指定 `os.Stderr`。例如：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -68,7 +68,7 @@ func main() {
 
 `os` 套件的 `Stderr` 代表標準錯誤，而 `Stdin`、`Stdout` 代表標準輸入與輸出，它們的型態是 `*os.File`，若願意的話，也可以直接操作它們，例如 `File` 定義了 `Read` 與 `Write` 方法，可以指定一個型態為 `byte[]` 的 slice，`Read` 會讀入同樣長度的資料至 slice，後者可以將同等長度的資料輸出。例如：
 
-``` prettyprint
+``` go
 package main
 
 import "os"
@@ -83,7 +83,7 @@ func main() {
 
 實際上，[`os.File`](https://pkg.go.dev/os/#File) 可用的方法不只有 `Read`、`Write`，先留意這兩個方法的目的在於，這兩個方法分別符合 `io.Reader`、`io.Writer` 定義的行為：
 
-``` prettyprint
+``` go
 type Reader interface {
     Read(p []byte) (n int, err error)
 }
@@ -95,7 +95,7 @@ type Writer interface {
 
 如果察看 `fmt` 的 `Fprint`、`Fprintln`、`Fprintf` 等函式，可以發現它們第一個參數宣告的型態並不是 `*os.File`，而是 `io.Writer`：
 
-``` prettyprint
+``` go
 func Fprint(w io.Writer, a ...interface{}) (n int, err error)
 func Fprintln(w io.Writer, a ...interface{}) (n int, err error)
 func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error)
@@ -103,7 +103,7 @@ func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error)
 
 類似地，Fscan 字樣開頭的幾個函式，第一個參數接受的是 `io.Reader`：
 
-``` prettyprint
+``` go
 func Fscan(r io.Reader, a ...interface{}) (n int, err error)
 func Fscanf(r io.Reader, format string, a ...interface{}) (n int, err error)
 func Fscanln(r io.Reader, a ...interface{}) (n int, err error)
@@ -111,7 +111,7 @@ func Fscanln(r io.Reader, a ...interface{}) (n int, err error)
 
 這表示，`fmt` 套件中這些函式，並不只能用於標準輸入、輸出或錯誤，例如，`strings.NewReader` 函式，可以指定字串，傳回 `*Reader`，這表示 `fmt` 的 `Fscanf` 等函式，可以從字串讀取輸入。例如：
 
-``` prettyprint
+``` go
 package main
 
 import (
@@ -140,7 +140,7 @@ func main() {
 
 `os.File` 不過是具有 `io.Reader`、`io.Writer` 的行為罷了，`os.File` 代表檔案，也就是說 `Fprint`、`Fprintln`、`Fprintf`、`Fscan`、`Fscanln`、`Fscanf` 等函式，也可以用在檔案讀寫，其實標準輸入、輸出、錯誤等，也是被視為檔案的，這在 `os` 的 [file.go](https://go.dev/src/os/file.go) 可以看到：
 
-``` prettyprint
+``` go
 var (
     Stdin  = NewFile(uintptr(syscall.Stdin), "/dev/stdin")
     Stdout = NewFile(uintptr(syscall.Stdout), "/dev/stdout")

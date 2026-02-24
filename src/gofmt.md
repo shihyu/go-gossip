@@ -56,7 +56,7 @@
 
 `-r` 接受的規則是 `pattern -> replacement`，其中 `pattern` 與 `replacement` 必須是合法的 Go 語法，而單一、小寫的字元會被作為萬用字元（Wildcard），因此，如果有個原始碼內容是：
 
-``` prettyprint
+``` go
 package goexample
 
 func Hello(who string) {
@@ -66,7 +66,7 @@ func Hello(who string) {
 
 執行過後，會產生以下的結果：
 
-``` prettyprint
+``` go
 package goexample
 
 func Hello(who string) {
@@ -76,7 +76,7 @@ func Hello(who string) {
 
 再來看個無聊的例子，如果你的程式碼是：
 
-``` prettyprint
+``` go
 package goexample
 
 func Hello(who string) {
@@ -86,7 +86,7 @@ func Hello(who string) {
 
 若你想要 `gofmt` 幫你改成：
 
-``` prettyprint
+``` go
 package goexample
 
 func Hello(who string) {
@@ -100,7 +100,7 @@ func Hello(who string) {
 
 至於方才提及的 `goimports`，在 Go 1.18+ / 1.26 的常見做法是使用 `go install` 搭配版本號來安裝，例如：
 
-``` prettyprint
+``` go
 go install golang.org/x/tools/cmd/goimports@latest
 ```
 

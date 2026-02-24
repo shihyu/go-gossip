@@ -12,7 +12,7 @@
 
 `heap` 套件提供的是最小堆積樹演算，底層的資料結構必須實現 `heap.Interface`：
 
-``` prettyprint
+``` go
 type Interface interface {
     sort.Interface
     Push(x interface{}) 
@@ -22,7 +22,7 @@ type Interface interface {
 
 也就是說，除了實現 `sort.Interface` 的 `Len`、`Less`、`Swap` 方法之外，還要實現 `Push` 與 `Pop` 的行為，在 [`heap` 的 Go 官方文件說明](https://pkg.go.dev/container/heap/) 有個簡單範例：
 
-``` prettyprint
+``` go
 type IntHeap []int
 
 func (h IntHeap) Len() int           { return len(h) }
@@ -44,7 +44,7 @@ func (h *IntHeap) Pop() interface{} {
 
 實現了 `heap.Interface` 的資料結構，就可以透過 `heap` 套件中的 `Init`、`Push`、`Pop` 等函式來進行操作：
 
-``` prettyprint
+``` go
 h := &IntHeap{2, 1, 5}
 heap.Init(h)
 heap.Push(h, 3)
@@ -58,7 +58,7 @@ for h.Len() > 0 {
 
 官方文件提供的範例是可以簡單示範 `heap` 套件的使用，不過，一下子使用 `heap.Xxx`，一下子又是使用 `h.Xxx` 的混合風格，看來蠻怪的，可以來改變一下：
 
-``` prettyprint
+``` go
 package main
 
 import (

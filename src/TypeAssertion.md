@@ -10,7 +10,7 @@
 
 宣告介面時使用的名稱，只是一個方便取用及閱讀的標示，最重要的是介面中定義的行為，以及實際的接收者型態。因此，若你打算從一個介面轉換至另一個介面，只要行為符合就可以了。例如以下是可行的：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -41,7 +41,7 @@ func main() {
 
 在第二個指定時，編譯器會檢查 `testerA` 的型態定義，也就是介面中，是否定義了 `test()` 行為，若是則可通過編譯，若否就編譯錯誤。例如以下的情況：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -84,7 +84,7 @@ func main() {
 
 如果真的要通過編譯，可以使用[型態斷言（Type assertion）](https://go.dev/ref/spec#Type_assertions)：
 
-``` prettyprint
+``` go
 ...同前…略
 
 func main() {
@@ -105,7 +105,7 @@ func main() {
 
 斷言是執行時期進行的，在底下的範例中，執行時期會斷言 `value` 底層儲存的值，其型態為 `Duck`：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -133,7 +133,7 @@ func main() {
 
 如果 `value` 底層儲存的值，其型態為實際上不是 `Duck` 型態，那麼操作 `duck` 時會發生執行時期錯誤，為了避免這類錯誤發生，可以進行 Comma-ok 型態斷言，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -162,7 +162,7 @@ func main() {
 
 在〈[介面入門](Interface.html)〉中談過，底下的範例會是 `false`：
 
-``` prettyprint
+``` go
 var acct *Account = nil
 var savings Savings = acct
 fmt.Println(savings == nil) // false
@@ -174,7 +174,7 @@ fmt.Println(savings == nil) // false
 
 實際上 `savings` 底層儲存的值確實是 `nil`，透過型態斷言的話可以取出。例如：
 
-``` prettyprint
+``` go
 var acct *Account = nil
 var savings Savings = acct
 fmt.Println(savings.(*Account) == nil) // true
@@ -184,7 +184,7 @@ fmt.Println(savings.(*Account) == nil) // true
 
 依照上面的說明，如果想測試多個型態，可以用多個 `if...else if`，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -220,7 +220,7 @@ func main() {
 
 不過，針對這個情況，使用型態 `switch` 測試會更為適合：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -259,7 +259,7 @@ func main() {
 
 來看個實際的應用，在 Go 的 `fmt` 中，有個 print.go 的原始碼，其中有一段是針對傳入的引數，是實作了 `Error` 介面或 `Stringer` 介面，若實作了 `Error` 介面，則呼叫其 `Error()` 方法，若實作了 `Stringer` 介面，就呼叫其 `String()` 方法：
 
-``` prettyprint
+``` go
 720             switch v := p.arg.(type) {
 721             case error:
 722                 handled = true

@@ -16,7 +16,7 @@
 
 `break` 使用於 `for` 迴圈時，會結束迴圈，例如：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -35,7 +35,7 @@ func main() {
 
 `break` 可以配合標籤使用，例如本來 `break` 只會離開一層 `for` 迴圈，若設定標籤，並於 `break` 時指定標籤，就可以直接離開多層 `for` 迴圈：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -61,7 +61,7 @@ BACK:
 
 `continue` 只用於 `for` 迴圈，略過之後陳述句，並回到迴圈開頭進行下一次迴圈，例如將先前第一個範例程式的 `break` 改成 `continue`：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -80,7 +80,7 @@ func main() {
 
 `continue` 也有搭配標籤的用法：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -105,7 +105,7 @@ BACK:
 
 相對於 `break` 與 `continue` 跳躍時，只能前往 `for` 迴圈開頭處設定的標籤，`goto` 可以在函式中，從某區塊內跳躍至區塊外任何位置，一個簡單的例子如下：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"
@@ -129,7 +129,7 @@ RETRY:
 
 注意，`goto` 可以在函式中，從某區塊內跳躍至區塊外任何位置，但不能從某區塊跳入另一區塊內，例如，以下是錯誤的，會發生 goto TEST jumps into block 的錯誤：
 
-``` prettyprint
+``` go
 package main
 
 import "fmt"

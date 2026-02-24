@@ -10,7 +10,7 @@
 
 如果函式或方法傳回錯誤，要比對的不單只是 `nil` 與否，例如，讀取檔案時，會需要判斷傳回的錯誤是否為 `io.EOF`，那麼 `io.EOF` 這些錯誤是什麼呢？在 `io` 套件的 [io.go](https://go.dev/src/io/io.go) 原始碼中可以看到，它們就是個 `errors.New` 建出的值罷了：
 
-``` prettyprint
+``` go
 var ErrShortWrite = errors.New("short write")
 var ErrShortBuffer = errors.New("short buffer")
 var EOF = errors.New("EOF")
@@ -20,7 +20,7 @@ var ErrNoProgress = errors.New("multiple Read calls return no data or error")
 
 在 `errors` 套件的 [errors.go](https://go.dev/src/errors/errors.go) 可以看到，`errors.New` 建立的是個結構值，只有一個 `string` 欄位，並且實作了 `Error` 方法：
 
-``` prettyprint
+``` go
 func New(text string) error {
     return &errorString{text}
 }
@@ -41,7 +41,7 @@ func (e *errorString) Error() string {
 
 在方法宣告傳回錯誤時的 `error` 其實是個內建的介面，定義的正是 `Error` 方法：
 
-``` prettyprint
+``` go
 type error interface {
     Error() string
 }
@@ -49,7 +49,7 @@ type error interface {
 
 也就是說，只要有實作 `Error` 方法，都可以作為 `error` 實例傳回，例如，`os.PathError` 在 `os` 套件的 [error.go](https://go.dev/src/os/error.go) 是這麼定義的：
 
-``` prettyprint
+``` go
 type PathError struct {
     Op   string
     Path string
@@ -68,7 +68,7 @@ func (e *PathError) Timeout() bool {
 
 也就是說，若錯誤是 `PathError` 實例，可以有透過欄位或者是方法來取得更多資訊，例如：
 
-``` prettyprint
+``` go
 if e, ok := err.(*PathError); ok {
     // 透過 e 取得欄位或呼叫方法
 }
@@ -76,7 +76,7 @@ if e, ok := err.(*PathError); ok {
 
 若要多種類型要判斷，可以使用型態 `switch` 語法，例如 `os` 套件的 [error.go](https://go.dev/src/os/error.go) 內部實作就有個例子：
 
-``` prettyprint
+``` go
 func underlyingError(err error) error {
     switch err := err.(type) {
     case *PathError:
