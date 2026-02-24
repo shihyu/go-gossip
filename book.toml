@@ -1,0 +1,5 @@
+[book]
+src = "src"
+
+[build]
+build-dir = "book"
