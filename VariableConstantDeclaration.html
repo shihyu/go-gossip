@@ -182,7 +182,7 @@
 <p>變數（Variable）是儲存值的位置，變數宣告可以給予識別名稱（Identifier）、型態與初始值，在 Go 中寫下的 <code>10</code>、<code>3.14</code>、<code>true</code>、<code>"Justin"</code> 等稱之為常數（Constant），常數宣告可給予這些常數識別名稱。</p>
 <h1 id="基本變數宣告"><a class="header" href="#基本變數宣告">基本變數宣告</a></h1>
 <p>要在 Go 中進行變數宣告有多種形式，使用 <code>var</code> 是最基本的方式。例如，宣告一個 <code>x</code> 變數，型態為 <code>int</code>，初始值為 <code>10</code>：</p>
-<pre><code class="language-prettyprint">var x int = 10
+<pre><code class="language-go">var x int = 10
 </code></pre>
 <p>這麼一來，從 <code>x</code> 這個位置開始，儲存了 <code>int</code> 長度的值 10，在宣告變數時，型態是寫在名稱之後。你也可以同時建立多個變數並指定初值：</p>
 <pre><code class="language-prettyprint">var x, y, z int = 10, 20, 30
