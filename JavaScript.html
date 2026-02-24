@@ -179,7 +179,7 @@
 <div class="header">
 <h1 id="go-呼叫-javascript"><a class="header" href="#go-呼叫-javascript">Go 呼叫 JavaScript</a></h1>
 </div>
-<p>Go 社群中有不少人直言，Go 支援 WebAssembly 就是要取代 Javascript，雖然我個人覺得，這就姑且當成是個崇高的理想就好，不過這也表示，在編譯為 WebAssembly 之後，可以呼叫 JavaScript 或操作 DOM，自然也是 Go 應該照料之事，為此，Go 1.11 提供了個實驗性的 <code>syscall/js</code> 套件來負責這項任務。</p>
+<p>Go 社群中有不少人直言，Go 支援 WebAssembly 就是要取代 Javascript，雖然我個人覺得，這就姑且當成是個崇高的理想就好，不過這也表示，在編譯為 WebAssembly 之後，可以呼叫 JavaScript 或操作 DOM，自然也是 Go 應該照料之事。<code>syscall/js</code> 在 Go 1.11 時期以實驗性姿態登場，而在現代版本（例如 Go 1.26）的 <code>js/wasm</code> 開發中，仍是重要的橋接套件。</p>
 <p>Go 與 JavaScript 畢竟是兩個不同的語言，各擁有不同的資料型態與結構，因而必須先知道，兩個語言間的型態如何對應，這主要定義在 <code>syscall/js</code> 套件的 js.go 中。</p>
 <p>例如，<code>js.Value</code> 結構代表 JavaScript 中的值，定義有 <code>Get</code> 與 <code>Set</code> 方法，可以對物件上的特性存取；若想存取的對象實際上是陣列，可以使用 <code>Index</code>、<code>SetIndex</code> 並指定索引；若對象是個函式，可以使用 <code>Invoke</code> 指定引數來呼叫，若想呼叫的是物件上的方法，可以使用 <code>Call</code> 指定方法名稱與呼叫時的引數等。</p>
 <p>在 js.go 中預先定義了一些 <code>js.Value</code> 的實例，可以透過公開的 <code>js.Undefined</code>、<code>js.Null</code>、<code>js.Global</code> 等函式呼叫取得。</p>

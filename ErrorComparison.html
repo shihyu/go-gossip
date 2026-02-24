@@ -179,14 +179,14 @@
 <div class="header">
 <h1 id="錯誤的比對"><a class="header" href="#錯誤的比對">錯誤的比對</a></h1>
 </div>
-<p>如果函式或方法傳回錯誤，要比對的不單只是 <code>nil</code> 與否，例如，讀取檔案時，會需要判斷傳回的錯誤是否為 <code>io.EOF</code>，那麼 <code>io.EOF</code> 這些錯誤是什麼呢？在 <code>io</code> 套件的 <a href="https://golang.org/src/io/io.go">io.go</a> 原始碼中可以看到，它們就是個 <code>errors.New</code> 建出的值罷了：</p>
+<p>如果函式或方法傳回錯誤，要比對的不單只是 <code>nil</code> 與否，例如，讀取檔案時，會需要判斷傳回的錯誤是否為 <code>io.EOF</code>，那麼 <code>io.EOF</code> 這些錯誤是什麼呢？在 <code>io</code> 套件的 <a href="https://go.dev/src/io/io.go">io.go</a> 原始碼中可以看到，它們就是個 <code>errors.New</code> 建出的值罷了：</p>
 <pre><code class="language-prettyprint">var ErrShortWrite = errors.New("short write")
 var ErrShortBuffer = errors.New("short buffer")
 var EOF = errors.New("EOF")
 var ErrUnexpectedEOF = errors.New("unexpected EOF")
 var ErrNoProgress = errors.New("multiple Read calls return no data or error")
 </code></pre>
-<p>在 <code>errors</code> 套件的 <a href="https://golang.org/src/errors/errors.go">errors.go</a> 可以看到，<code>errors.New</code> 建立的是個結構值，只有一個 <code>string</code> 欄位，並且實作了 <code>Error</code> 方法：</p>
+<p>在 <code>errors</code> 套件的 <a href="https://go.dev/src/errors/errors.go">errors.go</a> 可以看到，<code>errors.New</code> 建立的是個結構值，只有一個 <code>string</code> 欄位，並且實作了 <code>Error</code> 方法：</p>
 <pre><code class="language-prettyprint">func New(text string) error {
     return &amp;errorString{text}
 }
@@ -207,7 +207,7 @@ func (e *errorString) Error() string {
     Error() string
 }
 </code></pre>
-<p>也就是說，只要有實作 <code>Error</code> 方法，都可以作為 <code>error</code> 實例傳回，例如，<code>os.PathError</code> 在 <code>os</code> 套件的 <a href="https://golang.org/src/os/error.go">error.go</a> 是這麼定義的：</p>
+<p>也就是說，只要有實作 <code>Error</code> 方法，都可以作為 <code>error</code> 實例傳回，例如，<code>os.PathError</code> 在 <code>os</code> 套件的 <a href="https://go.dev/src/os/error.go">error.go</a> 是這麼定義的：</p>
 <pre><code class="language-prettyprint">type PathError struct {
     Op   string
     Path string
@@ -228,7 +228,7 @@ func (e *PathError) Timeout() bool {
     // 透過 e 取得欄位或呼叫方法
 }
 </code></pre>
-<p>若要多種類型要判斷，可以使用型態 <code>switch</code> 語法，例如 <code>os</code> 套件的 <a href="https://golang.org/src/os/error.go">error.go</a> 內部實作就有個例子：</p>
+<p>若要多種類型要判斷，可以使用型態 <code>switch</code> 語法，例如 <code>os</code> 套件的 <a href="https://go.dev/src/os/error.go">error.go</a> 內部實作就有個例子：</p>
 <pre><code class="language-prettyprint">func underlyingError(err error) error {
     switch err := err.(type) {
     case *PathError:

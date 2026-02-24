@@ -201,7 +201,7 @@
 </div>
 </div>
 <h1 id="gofmt-簡單重構"><a class="header" href="#gofmt-簡單重構">gofmt 簡單重構</a></h1>
-<p><code>gofmt</code> 也可以使用 <code>-r</code> 指定規則來實現簡單的重構，例如在〈<a href="https://golang.org/cmd/gofmt/">Command gofmt</a>〉文件說明中，有個 <code>gofmt -r '(a) -&gt; a' -l *.go</code> 可以列出 .go 檔案中有多餘括號的檔案名稱（透過 <code>-l</code> 引數來列出名稱），要直接移除 .go 檔案中多餘的括號並重寫原有的 .go 檔案，可以使用 <code>gofmt -r '(a) -&gt; a' -w *.go</code>。</p>
+<p><code>gofmt</code> 也可以使用 <code>-r</code> 指定規則來實現簡單的重構，例如在〈<a href="https://pkg.go.dev/cmd/gofmt/">Command gofmt</a>〉文件說明中，有個 <code>gofmt -r '(a) -&gt; a' -l *.go</code> 可以列出 .go 檔案中有多餘括號的檔案名稱（透過 <code>-l</code> 引數來列出名稱），要直接移除 .go 檔案中多餘的括號並重寫原有的 .go 檔案，可以使用 <code>gofmt -r '(a) -&gt; a' -w *.go</code>。</p>
 <p><code>-r</code> 接受的規則是 <code>pattern -&gt; replacement</code>，其中 <code>pattern</code> 與 <code>replacement</code> 必須是合法的 Go 語法，而單一、小寫的字元會被作為萬用字元（Wildcard），因此，如果有個原始碼內容是：</p>
 <pre><code class="language-prettyprint">package goexample
 
@@ -231,8 +231,10 @@ func Hello(who string) {
 }
 </code></pre>
 <p>你可以執行 <code>gofmt -r 'a + "Hello, " -&gt; "Hello, " + a' -w *.go</code>，甚至 <code>gofmt -r 'a + b -&gt; b + a' -w</code> 來達到這個目的。</p>
-<p><code>gofmt</code> 還有個 <code>-s</code> 引數，可以嘗試為你簡化原始碼，你可以看看〈<a href="https://golang.org/cmd/gofmt/">Command gofmt</a>〉文件中的說明，瞭解它會做哪些簡化，文件中也談到，簡化後的 Go 原始碼，可能會與舊版的 Go 不相容。</p>
-<p>至於方才提及的 <code>goimports</code>，也可以透過 <code>go get golang.org/x/tools/cmd/goimports</code> 來安裝，例如：</p>
+<p><code>gofmt</code> 還有個 <code>-s</code> 引數，可以嘗試為你簡化原始碼，你可以看看〈<a href="https://pkg.go.dev/cmd/gofmt/">Command gofmt</a>〉文件中的說明，瞭解它會做哪些簡化，文件中也談到，簡化後的 Go 原始碼，可能會與舊版的 Go 不相容。</p>
+<p>至於方才提及的 <code>goimports</code>，在 Go 1.18+ / 1.26 的常見做法是使用 <code>go install</code> 搭配版本號來安裝，例如：</p>
+<pre><code class="language-prettyprint">go install golang.org/x/tools/cmd/goimports@latest
+</code></pre>
 <h1 id="go-fmt"><a class="header" href="#go-fmt">go fmt</a></h1>
 <p><code>go</code> 本身也可以附帶 <code>fmt</code>，也就是使用 <code>go fmt</code> 的方式來進行程式碼的格式化，<code>go fmt</code> 內部使用 <code>gofmt</code>，可以使用 <code>-n</code> 來顯示要被使用或已被使用的指令：</p>
 <div class="pure-g">

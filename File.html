@@ -212,14 +212,14 @@
     Stderr = NewFile(uintptr(syscall.Stderr), "/dev/stderr")
 )
 </code></pre>
-<p><code>syscall.Stdin</code>、<code>syscall.Stdout</code>、<code>syscall.Stderr</code> 分別是標準輸入、輸出、錯誤的檔案描述，這在 <a href="https://golang.org/pkg/syscall/#pkg-variables"><code>syscall</code> 的文件</a>可以看到：</p>
+<p><code>syscall.Stdin</code>、<code>syscall.Stdout</code>、<code>syscall.Stderr</code> 分別是標準輸入、輸出、錯誤的檔案描述，這在 <a href="https://pkg.go.dev/syscall/#pkg-variables"><code>syscall</code> 的文件</a>可以看到：</p>
 <pre><code class="language-prettyprint">var (
     Stdin  = 0
     Stdout = 1
     Stderr = 2
 )
 </code></pre>
-<p><code>os.File</code> 實作了 <code>io.Reader</code>、<code>io.Writer</code> 等行為，因此只要知道〈<a href="ReaderWriter.html">io.Reader、io.Writer</a>〉，剩下的就是查詢文件，看看有哪些方法可以使用，沒什麼特別需要示範的了，倒是若需要簡單的檔案讀寫，可以看看 <a href="https://golang.org/pkg/io/ioutil/"><code>ioutil</code> 套件</a>，其中有些簡便的函式：</p>
+<p><code>os.File</code> 實作了 <code>io.Reader</code>、<code>io.Writer</code> 等行為，因此只要知道〈<a href="ReaderWriter.html">io.Reader、io.Writer</a>〉，剩下的就是查詢文件，看看有哪些方法可以使用，沒什麼特別需要示範的了，倒是若需要簡單的檔案讀寫，可以看看 <a href="https://pkg.go.dev/io/ioutil/"><code>ioutil</code> 套件</a>（歷史 API），其中有些簡便的函式：</p>
 <pre><code class="language-prettyprint">func NopCloser(r io.Reader) io.ReadCloser
 func ReadAll(r io.Reader) ([]byte, error)
 func ReadDir(dirname string) ([]os.FileInfo, error)
@@ -228,7 +228,14 @@ func TempDir(dir, prefix string) (name string, err error)
 func TempFile(dir, pattern string) (f *os.File, err error)
 func WriteFile(filename string, data []byte, perm os.FileMode) error
 </code></pre>
-<p><code>ReadFile</code>、<code>WriteFile</code> 只要指定檔案名稱等，程式碼上不需要自行建立檔案、緩衝區之類的，這些函式在 <a href="https://golang.org/pkg/io/ioutil/"><code>ioutil</code> 套件</a> 的文件中，都有範例可以參考。</p>
+<p><code>ReadFile</code>、<code>WriteFile</code> 只要指定檔案名稱等，程式碼上不需要自行建立檔案、緩衝區之類的，這些函式在 <a href="https://pkg.go.dev/io/ioutil/"><code>ioutil</code> 套件</a> 的文件中，都有範例可以參考。</p>
+<p>補充（Go 1.16+）：<code>ioutil</code> 已棄用（deprecated），功能多已移到 <code>io</code> 與 <code>os</code>：</p>
+<pre><code class="language-prettyprint">ioutil.ReadAll   -&gt; io.ReadAll
+ioutil.ReadFile  -&gt; os.ReadFile
+ioutil.WriteFile -&gt; os.WriteFile
+ioutil.TempDir   -&gt; os.MkdirTemp
+ioutil.TempFile  -&gt; os.CreateTemp
+</code></pre>
 <div class="ad336-280" style="text-align: center;">
 </div>
 <div class="recommend" style="text-align: center;">

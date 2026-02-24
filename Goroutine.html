@@ -262,6 +262,11 @@ func main() {
 <h1 id="使用-syncwaitgroup"><a class="header" href="#使用-syncwaitgroup">使用 sync.WaitGroup</a></h1>
 <p>有沒有辦法知道 Goroutine 執行結束呢？實際上沒有任何方法可以得知，除非你主動設計一種機制，可以在 Goroutine 結束時執行通知，使用 Channel 是一種方式，這在之後的文件再說明，這邊先說明另一種方式，也就是使用 <code>sync.WaitGroup</code>。</p>
 <p><code>sync.WaitGroup</code> 可以用來等待一組 Goroutine 的完成，主流程中建立 <code>sync.WaitGroup</code>，並透過 <code>Add</code> 告知要等待的 Goroutine 數量，並使用 <code>Wait</code> 等待 Goroutine 結束，而每個 Goroutine 結束前，必須執行 <code>sync.WaitGroup</code> 的 <code>Done</code> 方法。</p>
+<p>重點是，<code>Add</code> 的數字代表「之後會呼叫 <code>Done()</code> 的 Goroutine 數量」，不是程式總共會跑幾步或迴圈會執行幾次。</p>
+<ul>
+<li><code>Add</code> 設太小：可能提早結束，甚至在多呼叫 <code>Done()</code> 時發生 <code>panic: sync: negative WaitGroup counter</code></li>
+<li><code>Add</code> 設太大：<code>wg.Wait()</code> 會一直卡住不返回</li>
+</ul>
 <p>因此，我們可以使用 <code>sync.WaitGroup</code> 來改寫以上的範例：</p>
 <pre><code class="language-prettyprint">package main
 

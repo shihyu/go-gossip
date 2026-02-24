@@ -305,6 +305,33 @@ func main() {
 </code></pre>
 <p>有些文件會說，在介面有組合關係時，子介面的實例可以指定給父介面，反之就不行，這種說法不能說是錯，畢竟就上例來說，<code>ChildTester</code> 介面的實例，被指定給 <code>ParentTester</code> 介面時，從編譯器的角度來看，<code>ChildTester</code> 介面確實是有 <code>ParentTester</code> 介面的行為；反過來的話，<code>ParentTester</code> 介面被指定給 <code>ChildTester</code> 介面時，編譯器是看不到 <code>ParentTester</code> 介面上，會有 <code>ChildTester</code> 介面行為的，當然會發生錯誤。</p>
 <p>更精確來說，Go 本身並非基於類別，沒有提供繼承語法，也就沒有父介面、子介面的概念，以上僅僅只是以行為的內嵌實現了繼承的概念，因而是就看不看得到相關的行為，來判斷是否可通過編譯。</p>
+<h1 id="go-118型別條件中的介面組合"><a class="header" href="#go-118型別條件中的介面組合">Go 1.18+：型別條件中的介面組合</a></h1>
+<p>從 Go 1.18 開始，介面除了行為組合，也能在泛型中用來組合型別條件。這類介面通常不是拿來建立執行期介面值，而是用在型別參數限制上。</p>
+<p>例如，可以先定義數值族群，再組合成更大的條件：</p>
+<pre><code class="language-prettyprint">type Integer interface {
+    ~int | ~int8 | ~int16 | ~int32 | ~int64
+}
+
+type Unsigned interface {
+    ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
+}
+
+type Number interface {
+    Integer
+    Unsigned
+    ~float32 | ~float64
+}
+</code></pre>
+<p>這裡的 <code>Number</code> 是透過介面內嵌（組合）與 union type element（<code>|</code>）建立出來的型別條件。</p>
+<p>Go 1.24 起，generic type aliases 完整支援，因此可以更自然地把這類條件用在 alias 上，例如：</p>
+<pre><code class="language-prettyprint">type Set[T comparable] = map[T]struct{}
+</code></pre>
+<p>Go 1.26 也放寬了限制：泛型型別可以在自己的型別參數列表中參照自己，像是：</p>
+<pre><code class="language-prettyprint">type Adder[A Adder[A]] interface {
+    Add(A) A
+}
+</code></pre>
+<p>這對某些需要「與自身同型態運算」的泛型介面或資料結構定義會比較直接。</p>
 <div class="ad336-280" style="text-align: center;">
 </div>
 <div class="recommend" style="text-align: center;">

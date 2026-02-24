@@ -180,12 +180,12 @@
 <h1 id="編碼轉換"><a class="header" href="#編碼轉換">編碼轉換</a></h1>
 </div>
 <p>不論從哪個面向，都可以看出 Go 獨厚 UTF-8，這可能是因為 Go 的設計者之一 Ken Thompson，也曾經參與了 UTF-8 的設計。</p>
-<p>如果文字資料的來源並非 UTF-8 呢？例如，儲存時並非使用 UTF-8 的檔案？解決的方法之一，是將檔案另行儲存為 UTF-8，再使用 Go 來讀取，當然，並非所有的的場合都可以這麼做，另一個方式是，使用 <a href="https://godoc.org/golang.org/x/text"><code>golang.org/x/text</code></a> 套件。</p>
-<p>Go 除了本身自帶的標準套件之外，還有另外一系列官方的擴充套件，這些擴充套件組織在 <a href="https://godoc.org/-/subrepo"><code>golang/x</code></a> 底下，依文件上的說明，這些套件也是 Go 專案的一部份，只不過在相容性的維護上比較沒那麼嚴格。</p>
-<p>在官方擴充套件中，<code>golang.org/x/text</code> 主要包含了文字編碼、轉換、國際化、本地化等文字性任務的套件，可以透過 <code>go get</code> 來取得、安裝：</p>
-<pre><code class="language-prettyprint">go get golang.org/x/text
+<p>如果文字資料的來源並非 UTF-8 呢？例如，儲存時並非使用 UTF-8 的檔案？解決的方法之一，是將檔案另行儲存為 UTF-8，再使用 Go 來讀取，當然，並非所有的的場合都可以這麼做，另一個方式是，使用 <a href="https://pkg.go.dev/golang.org/x/text"><code>golang.org/x/text</code></a> 套件。</p>
+<p>Go 除了本身自帶的標準套件之外，還有另外一系列官方的擴充套件（常稱 x/ repos），這些套件也是 Go 專案的一部份，只不過在相容性的維護上比較沒那麼嚴格。</p>
+<p>在官方擴充套件中，<code>golang.org/x/text</code> 主要包含了文字編碼、轉換、國際化、本地化等文字性任務的套件。若是在模組專案中使用，通常直接 <code>import</code> 後執行 <code>go mod tidy</code> 即可；若要手動加入依賴，也可以使用：</p>
+<pre><code class="language-prettyprint">go get golang.org/x/text@latest
 </code></pre>
-<p>文字編碼的轉換主要由 <a href="https://godoc.org/golang.org/x/text/transform"><code>golang.org/x/text/transform</code></a> 套件來處理，看看其中的函式或結構方法，都會需要 <code>Transformer</code> 介面的實現，例如最基本的 <code>String</code>：</p>
+<p>文字編碼的轉換主要由 <a href="https://pkg.go.dev/golang.org/x/text/transform"><code>golang.org/x/text/transform</code></a> 套件來處理，看看其中的函式或結構方法，都會需要 <code>Transformer</code> 介面的實現，例如最基本的 <code>String</code>：</p>
 <pre><code class="language-prettyprint">func String(t Transformer, s string) (result string, n int, err error)
 </code></pre>
 <p><code>Transformer</code> 定義的主要是 <code>Transform</code> 方法，代表著編碼的轉換：</p>
@@ -195,7 +195,7 @@
 }
 </code></pre>
 <p><code>dst</code>、<code>src</code> 代表著同一文字兩個不同編碼的位元組，由於 Go 使用 UTF-8，從 UTF-8 轉換為其他編碼，這個動作稱為 <code>Encode</code>，從其他編碼轉換為 UTF-8，這個動作稱為 Decode。</p>
-<p>Encode、Decode 的動作，分別由 <a href="https://godoc.org/golang.org/x/text/encoding"><code>golang.org/x/text/encoding</code></a> 套件的 <code>Encoder</code>、<code>Decoder</code> 來處理，它們都是 <code>transform.Transformer</code> 的實現：</p>
+<p>Encode、Decode 的動作，分別由 <a href="https://pkg.go.dev/golang.org/x/text/encoding"><code>golang.org/x/text/encoding</code></a> 套件的 <code>Encoder</code>、<code>Decoder</code> 來處理，它們都是 <code>transform.Transformer</code> 的實現：</p>
 <pre><code class="language-prettyprint">type Encoder struct {
     transform.Transformer
     ...
@@ -212,7 +212,7 @@ type Decoder struct {
     NewEncoder() *Encoder
 }
 </code></pre>
-<p><a href="https://godoc.org/golang.org/x/text/encoding"><code>golang.org/x/text/encoding</code></a> 套件之中，定義了不同的編碼轉換套件，例如，想處理 Big5（Code Page 950） 編碼轉換的話，需要 <code>golang.org/x/text/encoding/traditionalchinese</code> 套件，它的 <code>Big5</code> 就實現了 <code>Encoding</code>，因此想要獲得 UTF-8 &lt;-&gt; Big5 的 <code>Encoder</code>、<code>Decoder</code>，可以如下：</p>
+<p><a href="https://pkg.go.dev/golang.org/x/text/encoding"><code>golang.org/x/text/encoding</code></a> 套件之中，定義了不同的編碼轉換套件，例如，想處理 Big5（Code Page 950） 編碼轉換的話，需要 <code>golang.org/x/text/encoding/traditionalchinese</code> 套件，它的 <code>Big5</code> 就實現了 <code>Encoding</code>，因此想要獲得 UTF-8 &lt;-&gt; Big5 的 <code>Encoder</code>、<code>Decoder</code>，可以如下：</p>
 <pre><code class="language-prettyprint">utf8ToBig5 := traditionalchinese.Big5.NewEncoder()
 big5ToUtf8 := traditionalchinese.Big5.NewDecoder()
 </code></pre>
@@ -266,13 +266,12 @@ import (
     "fmt"
     "io"
     "os"
-    "io/ioutil"
 )
 
 func printBig5(r io.Reader) error {
     var big5R = transform.NewReader(r, traditionalchinese.Big5.NewDecoder())
 
-    b, err := ioutil.ReadAll(big5R)
+    b, err := io.ReadAll(big5R)
     fmt.Println(string(b))
 
     return err

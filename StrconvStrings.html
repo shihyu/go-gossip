@@ -179,7 +179,7 @@
 <div class="header">
 <h1 id="strconvstrings-套件"><a class="header" href="#strconvstrings-套件">strconv、strings 套件</a></h1>
 </div>
-<p>Go 的字串基本上是個 <code>[]byte</code>，在程式語言強弱型別的光譜中，Go 位於強型別的一端，對於字串與其他型態之間的轉換，往往得自行處理，在這方面，<a href="https://golang.org/pkg/strconv/"><code>strconv</code> 套件</a>就提供了不少的函式。</p>
+<p>Go 的字串基本上是個 <code>[]byte</code>，在程式語言強弱型別的光譜中，Go 位於強型別的一端，對於字串與其他型態之間的轉換，往往得自行處理，在這方面，<a href="https://pkg.go.dev/strconv/"><code>strconv</code> 套件</a>就提供了不少的函式。</p>
 <p>例如，最常用的是將字串剖析為某個型態：</p>
 <pre><code class="language-prettyprint">func ParseBool(str string) (bool, error)
 func ParseFloat(s string, bitSize int) (float64, error)
@@ -210,7 +210,7 @@ func AppendUint(dst []byte, i uint64, base int) []byte
 b = strconv.AppendBool(b, true)
 fmt.Println(string(b))
 </code></pre>
-<p>對於大量的字串附加處理，可以使用 <a href="https://golang.org/pkg/strings/"><code>strings</code> 套件</a>的 <code>Builder</code>，一來操作上比較方便，二來可看看是否可取得較好的效能表現：</p>
+<p>對於大量的字串附加處理，可以使用 <a href="https://pkg.go.dev/strings/"><code>strings</code> 套件</a>的 <code>Builder</code>，一來操作上比較方便，二來可看看是否可取得較好的效能表現：</p>
 <pre><code class="language-prettyprint">type Builder
     func (b *Builder) Cap() int
     func (b *Builder) Grow(n int)
@@ -302,7 +302,7 @@ func main() {
     fmt.Println(r.Replace("This is &lt;b&gt;HTML&lt;/b&gt;!"))
 }
 </code></pre>
-<p>其他對於字串的比較、分割、大小寫轉換等處理，<code>strings</code> 中提供了一系列的函式，<a href="https://golang.org/pkg/strings/"><code>strings</code> 套件</a>的文件中都有程式碼示範。</p>
+<p>其他對於字串的比較、分割、大小寫轉換等處理，<code>strings</code> 中提供了一系列的函式，<a href="https://pkg.go.dev/strings/"><code>strings</code> 套件</a>的文件中都有程式碼示範。</p>
 <div class="ad336-280" style="text-align: center;">
 </div>
 <div class="recommend" style="text-align: center;">

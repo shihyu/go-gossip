@@ -218,7 +218,7 @@
 <p><code>x</code>、<code>y</code>、<code>z</code> 的型態分別會是 <code>int</code>、<code>float64</code> 與 <code>string</code>，批量宣告時也可以自動推斷型態，例如：</p>
 <pre><code class="language-prettyprint">var (
     x = 10        // int 型態
-    y = 3.14      // float32 型態
+    y = 3.14      // float64 型態
     z = "Justin"  // string 型態
 )
 </code></pre>
@@ -310,7 +310,7 @@ func main() {
 </code></pre>
 <h1 id="常數運算式"><a class="header" href="#常數運算式">常數運算式</a></h1>
 <p>由於常數可以是未定型態，因此一個有趣的地方就是，像 <code>2 + 3.0</code>、<code>15 / 4</code>、<code>15 / 4.0</code> 這樣的常數運算式，該怎麼在編譯時期決定它們的值？答案是根據運算式中的常數運算元是整數、<code>rune</code>（單引號括住的常數）、浮點數或複數來決定，如果運算式中包括了越後面的常數，就會用它來決定。</p>
-<p>因此，<code>2 + 3.0</code> 會是未定型態的浮點數 <code>5.0</code>，<code>15 / 4</code> 會是未定型態的整數 <code>3</code>，然而，<code>15 / 4.0</code>，會是浮點數型態的 <code>3.75</code>，在規格書的〈<a href="https://golang.org/ref/spec#Constant_expressions">Constant expressions</a>〉中，列出了說明以及一些範例，例如：</p>
+<p>因此，<code>2 + 3.0</code> 會是未定型態的浮點數 <code>5.0</code>，<code>15 / 4</code> 會是未定型態的整數 <code>3</code>，然而，<code>15 / 4.0</code>，會是浮點數型態的 <code>3.75</code>，在規格書的〈<a href="https://go.dev/ref/spec#Constant_expressions">Constant expressions</a>〉中，列出了說明以及一些範例，例如：</p>
 <pre><code class="language-prettyprint">const a = 2 + 3.0          // a == 5.0   (untyped floating-point constant)
 const b = 15 / 4           // b == 3     (untyped integer constant)
 const c = 15 / 4.0         // c == 3.75  (untyped floating-point constant)
@@ -330,7 +330,7 @@ const Δ = Σ + 2.0e-4       //            (untyped complex constant)
 const Φ = iota*1i - 1/1i   //            (untyped complex constant)
 </code></pre>
 <p>現在，應該能明白，〈<a href="http://openhome.cc/Gossip/Go/PreDeclaredType.html">認識預定義型態</a>〉中 <code>math.MaxInt64</code> 若不加上 <code>int64</code>，何以會 overflow 的錯誤了。</p>
-<p>附帶一提的是，在 Go 中，模組中定義的名稱若要能在模組外可見，必須是首字大寫，而對於像 <code>math.MaxInt64</code> 這類的公用常數，可以定義在一個 .go 檔案之中，例如 <code>math.MaxInt64</code>，就是定義在一個 <a href="https://golang.org/src/math/const.go">const.go</a> 之中。</p>
+<p>附帶一提的是，在 Go 中，模組中定義的名稱若要能在模組外可見，必須是首字大寫，而對於像 <code>math.MaxInt64</code> 這類的公用常數，可以定義在一個 .go 檔案之中，例如 <code>math.MaxInt64</code>，就是定義在一個 <a href="https://go.dev/src/math/const.go">const.go</a> 之中。</p>
 <h1 id="使用-iota-列舉"><a class="header" href="#使用-iota-列舉">使用 iota 列舉</a></h1>
 <p>如果要需要列舉一些常數時，可以使用 <code>iota</code>，它每遇到一次 <code>const</code>，就會重置為 <code>0</code>，若它在批量常數宣告中使用時，第一次出現時的預設值是 <code>0</code>，每出現一次就遞增 <code>1</code>，例如：</p>
 <pre><code class="language-prettyprint">const (
@@ -355,6 +355,52 @@ const Φ = iota*1i - 1/1i   //            (untyped complex constant)
 </code></pre>
 <p>其實也可以這麼寫來列舉常數，只是比較麻煩：</p>
 <pre><code class="language-prettyprint">const x, y, z = iota, iota, iota
+</code></pre>
+<h1 id="go-120--121--126-補充"><a class="header" href="#go-120--121--126-補充">Go 1.20+ / 1.21+ / 1.26 補充</a></h1>
+<p>本章談變數、常數與型別轉換，這裡補充幾個較新的語法與內建函式。</p>
+<p>Go 1.17 起可將 slice 轉成陣列指標，Go 1.20 起也可直接轉成陣列（長度不足時會 panic）：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    s := []int{10, 20, 30}
+    ap := (*[3]int)(s) // Go 1.17+
+    a := [3]int(s)     // Go 1.20+
+
+    ap[0] = 99
+    fmt.Println(s) // [99 20 30]
+    fmt.Println(a) // [10 20 30]（a 是轉換當下的值複製）
+}
+</code></pre>
+<p>Go 1.21 新增 <code>min</code>、<code>max</code>、<code>clear</code> 三個內建函式：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    nums := []int{3, 1, 2}
+    m := map[string]int{"a": 1, "b": 2}
+
+    fmt.Println(min(3, 1, 2)) // 1
+    fmt.Println(max(3, 1, 2)) // 3
+
+    clear(nums)
+    clear(m)
+    fmt.Println(nums) // [0 0 0]
+    fmt.Println(m)    // map[]
+}
+</code></pre>
+<p>Go 1.26 起，<code>new</code> 的運算元可以是運算式，能直接建立並初始化指標值：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    p := new(42)
+    q := new(int64(300))
+    fmt.Println(*p, *q) // 42 300
+}
 </code></pre>
 <div class="ad336-280" style="text-align: center;">
 </div>

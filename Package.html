@@ -179,7 +179,8 @@
 <div class="header">
 <h1 id="go-套件管理"><a class="header" href="#go-套件管理">Go 套件管理</a></h1>
 </div>
-<p>在〈<a href="http://openhome.cc/Gossip/Go/HelloWorld.html">來個 Hello, World</a>〉中，你已經看到 Go 開發中，一個 workspace 的基本樣貌，你可以看到，裏頭會有 src、pkg、bin 目錄，你會設置 <code>GOPATH</code> 環境變數指向這個目錄，這些都是規範好的，也是強制的，正如〈<a href="https://golang.org/doc/code.html">How to Write Go Code</a>〉中說到的：</p>
+<p>本章主要是早期 <code>GOPATH</code> 時代的套件管理方式（歷史脈絡）。在 Go 1.26 的新專案中，通常會優先使用 Go 模組（<code>go mod init</code>、<code>go mod tidy</code>），可搭配〈<a href="Module.html">模組入門</a>〉閱讀。</p>
+<p>在〈<a href="http://openhome.cc/Gossip/Go/HelloWorld.html">來個 Hello, World</a>〉中，你已經看到 Go 開發中，一個 workspace 的基本樣貌，你可以看到，裏頭會有 src、pkg、bin 目錄，你會設置 <code>GOPATH</code> 環境變數指向這個目錄，這些都是當時的規範，正如〈<a href="https://go.dev/doc/code.html">How to Write Go Code</a>〉中說到的：</p>
 <blockquote>
 <p><em>The go tool is designed to work with open source code maintained in public repositories. Although you don't need to publish your code, the model for how the environment is set up works the same whether you do or not.</em></p>
 </blockquote>
@@ -234,10 +235,11 @@ func main() {
     goexample.Hello()
 }
 </code></pre>
-<p>也就是說，你可以直接將 /src/github.com/JustinSDK/goexample 當作檔案庫（repository）發佈到 Github，那麼，其他人需要你的原始碼時，有個很方便的 <code>go get</code> 指令可以用，我將這個範例發佈在 Github 的 <a href="https://github.com/JustinSDK/goexample">JustinSDK/goexample</a> 了，因此，你可以執行以下指令：</p>
+<p>也就是說，你可以直接將 /src/github.com/JustinSDK/goexample 當作檔案庫（repository）發佈到 Github，那麼，其他人需要你的原始碼時，在當時常會使用 <code>go get</code> 指令。我將這個範例發佈在 Github 的 <a href="https://github.com/JustinSDK/goexample">JustinSDK/goexample</a> 了，因此，你可以執行以下指令：</p>
 <pre><code class="language-prettyprint">go get github.com/JustinSDK/goexample
 </code></pre>
 <p><code>go get</code> 會自行判斷該使用的協定，以這邊的例子來說，就會使用 <code>git</code> 來複製檔案庫至 src 目錄底下，結果就是 src/github.com/JustinSDK 底下，會有個 goexample 目錄，其中就是原始碼，<code>go get</code> 在下載原始碼之後，就會開始進行編譯，因此，你也會在 pkg 目錄中的 $GOOS_$GOARCH 目錄底下，github.com/JustinSDK 中找到編譯好的 .a 檔案。</p>
+<p>補充（Go 1.26 現況）：在模組模式下，<code>go get</code> 主要用於調整目前模組的依賴版本；若是安裝命令列工具，請改用 <code>go install module/path/cmd@version</code>（例如 <code>@latest</code>）。</p>
 <p>接著，你就可以如上頭的程式撰寫 <code>import "github.com/JustinSDK/goexample"</code> 來使用這個套件。</p>
 <p>當然，執行 <code>go install main</code> 的話，你的 pkg 目錄中的 <code>$GOOS_$GOARCH</code> 目錄，會有個 github.com/JustinSDK 目錄，裏頭放置著 goexample.a 檔案，而編譯出來的可執行檔，則會放置在 bin 目錄之中，此時，你的目錄應該會像是：</p>
 <pre><code class="language-prettyprint">go-exercise

@@ -358,6 +358,45 @@ func main() {
 }
 </code></pre>
 <p>這次使用了 <code>&amp;number</code> 取得 <code>number</code> 的位址值再傳遞給 <code>n</code>，也就是傳遞了<strong>變數位址值</strong>給 <code>n</code>，函式中使用 <code>*n</code> 取得位址處的值，加上 1 後再將值存回原位址處，因此，透過 <code>main</code> 函式中的 <code>number</code> 取得的值，也會是加 1 後的值。</p>
+<h1 id="go-118泛型函式補充"><a class="header" href="#go-118泛型函式補充">Go 1.18+：泛型函式補充</a></h1>
+<p>從 Go 1.18 開始，函式宣告可以帶有型別參數（type parameters），可讓同一個函式套用在多種型態上。例如，底下示範搜尋 slice 中第一個相等元素的位置：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func IndexOf[T comparable](elems []T, target T) int {
+    for i, elem := range elems {
+        if elem == target {
+            return i
+        }
+    }
+    return -1
+}
+
+func main() {
+    fmt.Println(IndexOf([]int{10, 20, 30}, 20))          // 1
+    fmt.Println(IndexOf([]string{"Go", "Rust"}, "Rust")) // 1
+}
+</code></pre>
+<p><code>[T comparable]</code> 表示 <code>T</code> 是型別參數，而 <code>comparable</code> 是型別條件（constraint）；因為函式中用了 <code>==</code>，所以要求 <code>T</code> 必須可比較。</p>
+<p>多數情況下，編譯器可以根據引數自動推斷型別參數，因此通常不用寫成 <code>IndexOf[int](...)</code> 這麼完整。</p>
+<p>如果你剛接觸泛型，建議搭配〈<a href="Generics.html">泛型入門（Go 1.18+）</a>〉一起閱讀；該章也會補充 <code>any</code>、<code>comparable</code>、型別集合與 Go 1.24/1.26 的相關更新。</p>
+<h1 id="go-121新的內建函式"><a class="header" href="#go-121新的內建函式">Go 1.21+：新的內建函式</a></h1>
+<p>雖然 <code>min</code>、<code>max</code>、<code>clear</code> 是內建函式（built-ins），不是一般套件函式，不過常會跟函式主題一起學習。從 Go 1.21 開始，可以直接使用：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    scores := []int{10, 20, 30}
+    fmt.Println(min(10, 3, 22)) // 3
+    fmt.Println(max(10, 3, 22)) // 22
+
+    clear(scores)
+    fmt.Println(scores) // [0 0 0]
+}
+</code></pre>
+<p><code>clear</code> 對 slice 的效果是「清為零值」，長度不變；對 map 的效果則是刪除全部鍵值對。</p>
 <div class="ad336-280" style="text-align: center;">
 </div>
 <div class="recommend" style="text-align: center;">
@@ -373,7 +412,7 @@ func main() {
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="FirstClassFunction.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="Generics.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -387,7 +426,7 @@ func main() {
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="FirstClassFunction.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="Generics.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

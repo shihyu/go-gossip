@@ -180,7 +180,7 @@
 <h1 id="ioreaderiowriter"><a class="header" href="#ioreaderiowriter">io.Reader、io.Writer</a></h1>
 </div>
 <p>在〈<a href="StdOutInErr.html">從標準輸入、輸出認識 io</a>〉中談到了 <code>io.Reader</code>、<code>io.Writer</code>，在 Go 中，這兩個介面抽象化了輸入、輸出，認識這兩個介面分別定義的 <code>Read</code>、<code>Write</code> 行為，是掌握 Go 中輸入、輸出的基礎。</p>
-<p><code>io.Reader</code> 定義的 <code>Read</code> 行為，可以在 <a href="https://golang.org/pkg/io/#Reader"><code>type Reader</code></a> 查看：</p>
+<p><code>io.Reader</code> 定義的 <code>Read</code> 行為，可以在 <a href="https://pkg.go.dev/io/#Reader"><code>type Reader</code></a> 查看：</p>
 <pre><code class="language-prettyprint">type Reader interface {
     Read(p []byte) (n int, err error)
 }
@@ -225,7 +225,7 @@ func main() {
     printUTF8TC(f)
 }
 </code></pre>
-<p><code>io.Writer</code> 定義的 <code>Write</code> 行為，可以在 <a href="https://golang.org/pkg/io/#Writer"><code>type Writer</code></a> 查看：</p>
+<p><code>io.Writer</code> 定義的 <code>Write</code> 行為，可以在 <a href="https://pkg.go.dev/io/#Writer"><code>type Writer</code></a> 查看：</p>
 <pre><code class="language-prettyprint">type Writer interface {
     Write(p []byte) (n int, err error)
 }

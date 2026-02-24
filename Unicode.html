@@ -180,8 +180,8 @@
 <h1 id="unicode-套件"><a class="header" href="#unicode-套件">unicode 套件</a></h1>
 </div>
 <p><code>unicode</code>、<code>unicode/utf8</code>、<code>unicode/utf16</code> 是用來判斷、處理 Unicode 以及 UTF-8、UTF-16 編碼的套件，在使用這些套件之前，要先知道的是，Go 認為「字元」的定義過於模糊，在 Go 中使用 <code>rune</code> 儲存 Unicode 碼點（Code point），而 Go 中字串是 UTF-8 編碼的位元組組成。</p>
-<p><a href="https://golang.org/pkg/unicode/"><code>unicode</code></a> 套件主要用來判斷 Unicode 碼點的特性（properties），在 Unicode 規範中，每個碼點會被指定某些特性，具有相同特性的一組碼點構成一個集合，以便於理解、判斷這組碼點。</p>
-<p>例如，<a href="https://en.wikipedia.org/wiki/Template:General_Category_(Unicode)">General Category</a> 特性有 Letter/L 代表字母、Number/N 代表數字等，在 Go 的 <a href="https://golang.org/pkg/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 一開頭，列出的就是這類特性的變數：</p>
+<p><a href="https://pkg.go.dev/unicode/"><code>unicode</code></a> 套件主要用來判斷 Unicode 碼點的特性（properties），在 Unicode 規範中，每個碼點會被指定某些特性，具有相同特性的一組碼點構成一個集合，以便於理解、判斷這組碼點。</p>
+<p>例如，<a href="https://en.wikipedia.org/wiki/Template:General_Category_(Unicode)">General Category</a> 特性有 Letter/L 代表字母、Number/N 代表數字等，在 Go 的 <a href="https://pkg.go.dev/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 一開頭，列出的就是這類特性的變數：</p>
 <pre><code class="language-prettyprint">var (
     ...
     Digit  = _Nd // 十進位數字的集合
@@ -203,7 +203,7 @@
 </code></pre>
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
-<p>碼點範圍表可以在 <a href="https://golang.org/src/unicode/tables.go">tables.go</a> 找到。舉例來說，字母集合的碼點範圍：</p>
+<p>碼點範圍表可以在 <a href="https://go.dev/src/unicode/tables.go">tables.go</a> 找到。舉例來說，字母集合的碼點範圍：</p>
 <pre><code class="language-prettyprint">var _L = &amp;RangeTable{
     R16: []Range16{
         {0x0041, 0x005a, 1},
@@ -233,8 +233,8 @@ func main() {
     fmt.Println(allNumbers("²³¹¼½¾𝟏𝟐𝟑𝟜𝟝𝟞𝟩𝟪𝟫𝟬𝟭𝟮𝟯𝟺𝟻𝟼㉛㉜㉝ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫⅬⅭⅮⅯⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹⅺⅻⅼⅽⅾⅿ"))
 }
 </code></pre>
-<p>Unicode 將希臘文、漢字等以<a href="https://en.wikipedia.org/wiki/Script_(Unicode)">文字（Script）</a>特性標示，在 Go 的 <a href="https://golang.org/pkg/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 第二組列出的變數清單，就是對應的 <code>RangeTable</code>，例如 <code>unicode.Han</code> 是正體中文、簡體中文，以及日、韓、越南文的全部漢字範圍。</p>
-<p>另外還有一些其他特性，列在 Go 的 <a href="https://golang.org/pkg/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 第三組變數清單，例如 <code>unicode.White_Space</code> 代表被標示為空白特性的碼點，這包括了半形、全形、Tab 等。</p>
+<p>Unicode 將希臘文、漢字等以<a href="https://en.wikipedia.org/wiki/Script_(Unicode)">文字（Script）</a>特性標示，在 Go 的 <a href="https://pkg.go.dev/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 第二組列出的變數清單，就是對應的 <code>RangeTable</code>，例如 <code>unicode.Han</code> 是正體中文、簡體中文，以及日、韓、越南文的全部漢字範圍。</p>
+<p>另外還有一些其他特性，列在 Go 的 <a href="https://pkg.go.dev/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 第三組變數清單，例如 <code>unicode.White_Space</code> 代表被標示為空白特性的碼點，這包括了半形、全形、Tab 等。</p>
 <p>如果想要使用多個 RangeTable，<code>可以透過 IsOneOf</code>：</p>
 <pre><code class="language-prettyprint">func IsOneOf(ranges []*RangeTable, r rune) bool
 </code></pre>

@@ -192,7 +192,7 @@ func main() {
     fmt.Printf("嗨！%s！今年 %d 歲了啊？", name, age)
 }
 </code></pre>
-<p><code>%s</code>、<code>%d</code> 是格式符號，在 Go 中稱為 verb，Go 可用的 verb 可以在 <a href="https://golang.org/pkg/fmt/"><code>fmt</code></a> 套件的文件中找到。</p>
+<p><code>%s</code>、<code>%d</code> 是格式符號，在 Go 中稱為 verb，Go 可用的 verb 可以在 <a href="https://pkg.go.dev/fmt/"><code>fmt</code></a> 套件的文件中找到。</p>
 <p><code>Scanf</code> 就類似 C 語言中的 <code>scanf</code>，可以格式化地取得輸入，底下是個範例：</p>
 <pre><code class="language-prettyprint">輸入名稱 年齡：Justin 45
 嗨！Justin！今年 45 歲了啊？
@@ -235,7 +235,7 @@ func main() {
     os.Stdout.Write(buf)
 }   
 </code></pre>
-<p>實際上，<a href="https://golang.org/pkg/os/#File"><code>os.File</code></a> 可用的方法不只有 <code>Read</code>、<code>Write</code>，先留意這兩個方法的目的在於，這兩個方法分別符合 <code>io.Reader</code>、<code>io.Writer</code> 定義的行為：</p>
+<p>實際上，<a href="https://pkg.go.dev/os/#File"><code>os.File</code></a> 可用的方法不只有 <code>Read</code>、<code>Write</code>，先留意這兩個方法的目的在於，這兩個方法分別符合 <code>io.Reader</code>、<code>io.Writer</code> 定義的行為：</p>
 <pre><code class="language-prettyprint">type Reader interface {
     Read(p []byte) (n int, err error)
 }
@@ -279,7 +279,7 @@ func main() {
 }  
 </code></pre>
 <p><code>Fscanln</code> 會傳回掃描的筆數，如果筆數少於指定的掃描數量，<code>err</code> 會指出原因，在檔案讀取結束（End of file）時，<code>err</code> 會是 <code>io.EOF</code>，在上例中，資料來源是個格式確定的字串，因此僅簡單地判斷 <code>err</code> 是否為 <code>io.EOF</code> 來結束掃描。</p>
-<p><code>os.File</code> 不過是具有 <code>io.Reader</code>、<code>io.Writer</code> 的行為罷了，<code>os.File</code> 代表檔案，也就是說 <code>Fprint</code>、<code>Fprintln</code>、<code>Fprintf</code>、<code>Fscan</code>、<code>Fscanln</code>、<code>Fscanf</code> 等函式，也可以用在檔案讀寫，其實標準輸入、輸出、錯誤等，也是被視為檔案的，這在 <code>os</code> 的 <a href="https://golang.org/src/os/file.go">file.go</a> 可以看到：</p>
+<p><code>os.File</code> 不過是具有 <code>io.Reader</code>、<code>io.Writer</code> 的行為罷了，<code>os.File</code> 代表檔案，也就是說 <code>Fprint</code>、<code>Fprintln</code>、<code>Fprintf</code>、<code>Fscan</code>、<code>Fscanln</code>、<code>Fscanf</code> 等函式，也可以用在檔案讀寫，其實標準輸入、輸出、錯誤等，也是被視為檔案的，這在 <code>os</code> 的 <a href="https://go.dev/src/os/file.go">file.go</a> 可以看到：</p>
 <pre><code class="language-prettyprint">var (
     Stdin  = NewFile(uintptr(syscall.Stdin), "/dev/stdin")
     Stdout = NewFile(uintptr(syscall.Stdout), "/dev/stdout")

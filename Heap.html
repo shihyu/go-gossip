@@ -187,7 +187,7 @@
     Pop() interface{} 
 }
 </code></pre>
-<p>也就是說，除了實現 <code>sort.Interface</code> 的 <code>Len</code>、<code>Less</code>、<code>Swap</code> 方法之外，還要實現 <code>Push</code> 與 <code>Pop</code> 的行為，在 <a href="https://golang.org/pkg/container/heap/"><code>heap</code> 的 Go 官方文件說明</a> 有個簡單範例：</p>
+<p>也就是說，除了實現 <code>sort.Interface</code> 的 <code>Len</code>、<code>Less</code>、<code>Swap</code> 方法之外，還要實現 <code>Push</code> 與 <code>Pop</code> 的行為，在 <a href="https://pkg.go.dev/container/heap/"><code>heap</code> 的 Go 官方文件說明</a> 有個簡單範例：</p>
 <pre><code class="language-prettyprint">type IntHeap []int
 
 func (h IntHeap) Len() int           { return len(h) }

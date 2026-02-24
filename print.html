@@ -187,7 +187,7 @@
 <div class="header">
 <h1 id="語言技術go-語言"><a class="header" href="#語言技術go-語言">語言技術：Go 語言</a></h1>
 </div>
-<p>使用 Go 1.13 … XD</p>
+<p>原文多以 Go 1.13 為例；目前已補充 Go 1.26 的差異說明（尤其是模組與 <code>go</code> 指令行為）。</p>
 <div class="ad-2" style="text-align: center;">
 <div id="aswift_2_host" style="border: none; height: 280px; width: 800px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block; overflow: visible;">
 <div class="iframe">
@@ -256,6 +256,7 @@
 <li>
 <ul>
 <li><a href="Function.html">函式入門</a></li>
+<li><a href="Generics.html">泛型入門（Go 1.18+）</a></li>
 <li><a href="FirstClassFunction.html">一級函式</a></li>
 <li><a href="Closure.html">匿名函式與閉包</a></li>
 <li><a href="DeferPanicRecover.html">defer、panic、recover</a></li>
@@ -409,9 +410,9 @@
 <p>附錄</p>
 <ul>
 <li><a href="http://c-faq.com/">Go 官方套件說明文件</a></li>
-<li><a href="https://golang.org/doc/code.html">How to Write Go Code</a></li>
-<li><a href="https://golang.org/cmd/">Go Commands</a></li>
-<li><a href="https://golang.org/doc/effective_go.html">Effective Go</a></li>
+<li><a href="https://go.dev/doc/code.html">How to Write Go Code</a></li>
+<li><a href="https://pkg.go.dev/cmd/">Go Commands</a></li>
+<li><a href="https://go.dev/doc/effective_go.html">Effective Go</a></li>
 <li>...</li>
 </ul>
 <div class="ad336-280" style="text-align: center;">
@@ -446,9 +447,10 @@
 <div class="header">
 <h1 id="來個-hello-world"><a class="header" href="#來個-hello-world">來個 Hello, World</a></h1>
 </div>
-<p>我在這邊使用的是 Windows 中的 Go 1.13 版本，你可以至 <a href="https://golang.org/">Go 的官方網站</a> 下載安裝 Go。</p>
+<p>我在這邊原本使用的是 Windows 中的 Go 1.13 版本；若你使用目前的 Go 1.26，可至 <a href="https://go.dev/dl/">Go 的官方網站</a> 下載安裝。</p>
 <p>如果想來點不同的安裝方式，可以參考〈<a href="http://openhome.cc/Gossip/CodeData/DockerLayman/DockerLayman4.html">門外漢的 Go 輕量開發環境</a>〉，在 Raspberry Pi 上的 Docker 容器中建立相關環境，就目前為止。</p>
-<p>你至少得設定 <code>GOROOT</code> 環境變數，這會是你的 Go 安裝目錄。</p>
+<p>本文後半段會示範傳統 <code>GOPATH</code> 工作方式，這在 Go 1.26 仍有助於理解套件與建構流程，不過新專案通常會優先使用 Go 模組（<code>go mod init</code>，可搭配〈<a href="Module.html">模組入門</a>〉）。</p>
+<p>使用官方安裝程式時，通常不需要手動設定 <code>GOROOT</code>（安裝程式會處理）；實務上常見只要讓 Go 的 <code>bin</code> 目錄在 <code>PATH</code> 中即可。</p>
 <h1 id="go-run"><a class="header" href="#go-run">go run</a></h1>
 <p>要撰寫第一個 Hello, World 程式，你可以建立一個 main.go，在當中撰寫以下的內容：</p>
 <pre><code class="language-prettyprint">package main
@@ -470,6 +472,7 @@ Hello, World
 哈囉！世界！
 </code></pre>
 <h1 id="package-與-gopath"><a class="header" href="#package-與-gopath">package 與 GOPATH</a></h1>
+<p>以下示範的是傳統 <code>GOPATH</code> 目錄配置（<code>src/</code>、<code>pkg/</code>、<code>bin/</code>）。在 Go 1.26 的新專案中，通常不需要手動建立這種結構，也不需要把專案放在 <code>GOPATH</code> 內，改用模組即可。</p>
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>那麼，一開始的 <code>package</code> 是怎麼回事？試著先來建立一個 hello.go：</p>
@@ -528,6 +531,7 @@ func main() {
                     main.go
 </code></pre>
 <p><code>go install packageName</code> 表示要安裝指定名稱的套件，如果是 <code>main</code> 套件，那麼會在 bin 中產生可執行檔，如果是公用套件，那麼會在 pkg 目錄的 <code>$GOOS</code>_<code>$GOARCH</code> 目錄中產生 .a 檔案，你可以使用 <code>go env</code> 來查看 Go 使用到的環境變數，例如：</p>
+<p>（補充：上面這段是以傳統 <code>GOPATH</code> 工作模式來理解；在現代模組模式下，編譯快取主要在 <code>GOCACHE</code>，模組原始碼快取在 <code>GOMODCACHE</code>，不一定會看到同樣的 <code>pkg/$GOOS_$GOARCH/*.a</code> 使用方式。）</p>
 <pre><code class="language-prettyprint">set GO111MODULE=
 set GOARCH=amd64
 set GOBIN=
@@ -580,7 +584,7 @@ Command: ./bin/main
 Hello, Justin
 </code></pre>
 <h1 id="go-doc"><a class="header" href="#go-doc">go doc</a></h1>
-<p><code>fmt</code> 的 Printf，就像是 C 的 <code>printf</code>，可用的格式控制可參考 <a href="https://golang.org/pkg/fmt/">Package fmt</a> 的說明。實際上，Go 本身附帶了說明文件，可以執行 <code>go doc &lt;pkg&gt; &lt;sym&gt;[.&lt;method&gt;]</code> 來查詢說明。例如：</p>
+<p><code>fmt</code> 的 Printf，就像是 C 的 <code>printf</code>，可用的格式控制可參考 <a href="https://pkg.go.dev/fmt">Package fmt</a> 的說明。實際上，Go 本身附帶了說明文件，可以執行 <code>go doc &lt;pkg&gt; &lt;sym&gt;[.&lt;method&gt;]</code> 來查詢說明。例如：</p>
 <pre><code class="language-prettyprint">$ go doc fmt.Printf
 func Printf(format string, a ...interface{}) (n int, err error)
 
@@ -598,7 +602,8 @@ func Printf(format string, a ...interface{}) (n int, err error)
 <div class="header">
 <h1 id="go-套件管理"><a class="header" href="#go-套件管理">Go 套件管理</a></h1>
 </div>
-<p>在〈<a href="http://openhome.cc/Gossip/Go/HelloWorld.html">來個 Hello, World</a>〉中，你已經看到 Go 開發中，一個 workspace 的基本樣貌，你可以看到，裏頭會有 src、pkg、bin 目錄，你會設置 <code>GOPATH</code> 環境變數指向這個目錄，這些都是規範好的，也是強制的，正如〈<a href="https://golang.org/doc/code.html">How to Write Go Code</a>〉中說到的：</p>
+<p>本章主要是早期 <code>GOPATH</code> 時代的套件管理方式（歷史脈絡）。在 Go 1.26 的新專案中，通常會優先使用 Go 模組（<code>go mod init</code>、<code>go mod tidy</code>），可搭配〈<a href="Module.html">模組入門</a>〉閱讀。</p>
+<p>在〈<a href="http://openhome.cc/Gossip/Go/HelloWorld.html">來個 Hello, World</a>〉中，你已經看到 Go 開發中，一個 workspace 的基本樣貌，你可以看到，裏頭會有 src、pkg、bin 目錄，你會設置 <code>GOPATH</code> 環境變數指向這個目錄，這些都是當時的規範，正如〈<a href="https://go.dev/doc/code.html">How to Write Go Code</a>〉中說到的：</p>
 <blockquote>
 <p><em>The go tool is designed to work with open source code maintained in public repositories. Although you don't need to publish your code, the model for how the environment is set up works the same whether you do or not.</em></p>
 </blockquote>
@@ -653,10 +658,11 @@ func main() {
     goexample.Hello()
 }
 </code></pre>
-<p>也就是說，你可以直接將 /src/github.com/JustinSDK/goexample 當作檔案庫（repository）發佈到 Github，那麼，其他人需要你的原始碼時，有個很方便的 <code>go get</code> 指令可以用，我將這個範例發佈在 Github 的 <a href="https://github.com/JustinSDK/goexample">JustinSDK/goexample</a> 了，因此，你可以執行以下指令：</p>
+<p>也就是說，你可以直接將 /src/github.com/JustinSDK/goexample 當作檔案庫（repository）發佈到 Github，那麼，其他人需要你的原始碼時，在當時常會使用 <code>go get</code> 指令。我將這個範例發佈在 Github 的 <a href="https://github.com/JustinSDK/goexample">JustinSDK/goexample</a> 了，因此，你可以執行以下指令：</p>
 <pre><code class="language-prettyprint">go get github.com/JustinSDK/goexample
 </code></pre>
 <p><code>go get</code> 會自行判斷該使用的協定，以這邊的例子來說，就會使用 <code>git</code> 來複製檔案庫至 src 目錄底下，結果就是 src/github.com/JustinSDK 底下，會有個 goexample 目錄，其中就是原始碼，<code>go get</code> 在下載原始碼之後，就會開始進行編譯，因此，你也會在 pkg 目錄中的 $GOOS_$GOARCH 目錄底下，github.com/JustinSDK 中找到編譯好的 .a 檔案。</p>
+<p>補充（Go 1.26 現況）：在模組模式下，<code>go get</code> 主要用於調整目前模組的依賴版本；若是安裝命令列工具，請改用 <code>go install module/path/cmd@version</code>（例如 <code>@latest</code>）。</p>
 <p>接著，你就可以如上頭的程式撰寫 <code>import "github.com/JustinSDK/goexample"</code> 來使用這個套件。</p>
 <p>當然，執行 <code>go install main</code> 的話，你的 pkg 目錄中的 <code>$GOOS_$GOARCH</code> 目錄，會有個 github.com/JustinSDK 目錄，裏頭放置著 goexample.a 檔案，而編譯出來的可執行檔，則會放置在 bin 目錄之中，此時，你的目錄應該會像是：</p>
 <pre><code class="language-prettyprint">go-exercise
@@ -739,7 +745,7 @@ func main() {
 </div>
 </div>
 <h1 id="gofmt-簡單重構"><a class="header" href="#gofmt-簡單重構">gofmt 簡單重構</a></h1>
-<p><code>gofmt</code> 也可以使用 <code>-r</code> 指定規則來實現簡單的重構，例如在〈<a href="https://golang.org/cmd/gofmt/">Command gofmt</a>〉文件說明中，有個 <code>gofmt -r '(a) -&gt; a' -l *.go</code> 可以列出 .go 檔案中有多餘括號的檔案名稱（透過 <code>-l</code> 引數來列出名稱），要直接移除 .go 檔案中多餘的括號並重寫原有的 .go 檔案，可以使用 <code>gofmt -r '(a) -&gt; a' -w *.go</code>。</p>
+<p><code>gofmt</code> 也可以使用 <code>-r</code> 指定規則來實現簡單的重構，例如在〈<a href="https://pkg.go.dev/cmd/gofmt/">Command gofmt</a>〉文件說明中，有個 <code>gofmt -r '(a) -&gt; a' -l *.go</code> 可以列出 .go 檔案中有多餘括號的檔案名稱（透過 <code>-l</code> 引數來列出名稱），要直接移除 .go 檔案中多餘的括號並重寫原有的 .go 檔案，可以使用 <code>gofmt -r '(a) -&gt; a' -w *.go</code>。</p>
 <p><code>-r</code> 接受的規則是 <code>pattern -&gt; replacement</code>，其中 <code>pattern</code> 與 <code>replacement</code> 必須是合法的 Go 語法，而單一、小寫的字元會被作為萬用字元（Wildcard），因此，如果有個原始碼內容是：</p>
 <pre><code class="language-prettyprint">package goexample
 
@@ -769,8 +775,10 @@ func Hello(who string) {
 }
 </code></pre>
 <p>你可以執行 <code>gofmt -r 'a + "Hello, " -&gt; "Hello, " + a' -w *.go</code>，甚至 <code>gofmt -r 'a + b -&gt; b + a' -w</code> 來達到這個目的。</p>
-<p><code>gofmt</code> 還有個 <code>-s</code> 引數，可以嘗試為你簡化原始碼，你可以看看〈<a href="https://golang.org/cmd/gofmt/">Command gofmt</a>〉文件中的說明，瞭解它會做哪些簡化，文件中也談到，簡化後的 Go 原始碼，可能會與舊版的 Go 不相容。</p>
-<p>至於方才提及的 <code>goimports</code>，也可以透過 <code>go get golang.org/x/tools/cmd/goimports</code> 來安裝，例如：</p>
+<p><code>gofmt</code> 還有個 <code>-s</code> 引數，可以嘗試為你簡化原始碼，你可以看看〈<a href="https://pkg.go.dev/cmd/gofmt/">Command gofmt</a>〉文件中的說明，瞭解它會做哪些簡化，文件中也談到，簡化後的 Go 原始碼，可能會與舊版的 Go 不相容。</p>
+<p>至於方才提及的 <code>goimports</code>，在 Go 1.18+ / 1.26 的常見做法是使用 <code>go install</code> 搭配版本號來安裝，例如：</p>
+<pre><code class="language-prettyprint">go install golang.org/x/tools/cmd/goimports@latest
+</code></pre>
 <h1 id="go-fmt"><a class="header" href="#go-fmt">go fmt</a></h1>
 <p><code>go</code> 本身也可以附帶 <code>fmt</code>，也就是使用 <code>go fmt</code> 的方式來進行程式碼的格式化，<code>go fmt</code> 內部使用 <code>gofmt</code>，可以使用 <code>-n</code> 來顯示要被使用或已被使用的指令：</p>
 <div class="pure-g">
@@ -818,22 +826,22 @@ func Hello(who string) {
 <h1 id="註解即文件"><a class="header" href="#註解即文件">註解即文件</a></h1>
 <p>實際上，<code>go doc</code> 的文件說明來自於原始碼中的註解，這樣的概念有點類似 Java 的 JavaDoc，或者是 Python 的 DocString，不過 Go 的理念是讓它更簡單，不使用特殊標記，不使用特別的格式，希望可以在沒有 <code>go doc</code> 的場合中，也可以藉由閱讀原始碼中的註解，輕易地得到文件說明。</p>
 <p>當然，基本上還是要有一些約定，例如，在函式之前，緊接著函式的註解，中間沒有空白行，就是函式的文件說明來源。</p>
-<p>類似地，在套件之前，緊接著套件的註解，就是套件的文件說明來源，通常，一個套件的文件說明，會是來自於套件中，一個 doc.go 中 <code>package</code> 宣告前的註解，例如，你可以在 <a href="https://golang.org/src/fmt/"><code>fmt</code> 的原始碼目錄</a> 中，找到一個 <a href="https://golang.org/src/fmt/doc.go">doc.go</a>，其中除了 <code>package fmt</code> 之外，沒有任何原始碼，剩下的只有註解。</p>
-<p>除了函式、套件之外，最頂層的型態宣告、變數、常數等前緊接著的註解，都可以是文件的來源，不相鄰的註解則會被 <code>godoc</code> 忽略，如果有已知的 Bug，可以使用 <code>BUG()</code> 標示，例如 <a href="https://golang.org/src/bytes/bytes.go">bytes.go</a> 中有個：</p>
+<p>類似地，在套件之前，緊接著套件的註解，就是套件的文件說明來源，通常，一個套件的文件說明，會是來自於套件中，一個 doc.go 中 <code>package</code> 宣告前的註解，例如，你可以在 <a href="https://go.dev/src/fmt/"><code>fmt</code> 的原始碼目錄</a> 中，找到一個 <a href="https://go.dev/src/fmt/doc.go">doc.go</a>，其中除了 <code>package fmt</code> 之外，沒有任何原始碼，剩下的只有註解。</p>
+<p>除了函式、套件之外，最頂層的型態宣告、變數、常數等前緊接著的註解，都可以是文件的來源，不相鄰的註解則會被 <code>godoc</code> 忽略，如果有已知的 Bug，可以使用 <code>BUG()</code> 標示，例如 <a href="https://go.dev/src/bytes/bytes.go">bytes.go</a> 中有個：</p>
 <pre><code class="language-prettyprint">// BUG(rsc): The rule Title uses for word boundaries does not handle Unicode punctuation properly.
 func Title(s []byte) []byte {
     ....
 </code></pre>
-<p>這會出現在文件的 <a href="https://golang.org/pkg/bytes/#pkg-note-BUG">Bugs 區段</a>。</p>
+<p>這會出現在文件的 <a href="https://pkg.go.dev/bytes/#pkg-note-BUG">Bugs 區段</a>。</p>
 <p>如果你想要從註解產生 HTML 文件（使用 <code>-html</code> 引數），那麼有幾個簡單的規則（用過 Markdown 的應該感覺有點熟悉），參考一下 Go 的原始碼，應該能很快地掌握。</p>
 <p>基本上，<code>go doc</code> 會在 <code>GOROOT</code> 與 <code>GOPATH</code> 中的原始碼查詢註解作為文件，如果想改變查詢時的 Go 目錄，可以使用 <code>-goroot</code> 指定。</p>
-<p>有關註解與文件間的關係，也可以進一步參考 <a href="https://golang.org/doc/effective_go.html#commentary">Effective Go 的 Commentary</a>。</p>
+<p>有關註解與文件間的關係，也可以進一步參考 <a href="https://go.dev/doc/effective_go.html#commentary">Effective Go 的 Commentary</a>。</p>
 <h1 id="godoc-文件伺服器"><a class="header" href="#godoc-文件伺服器">godoc 文件伺服器</a></h1>
-<p>Go 1.2rc1 之後，曾經從 <code>go doc</code> 改用 <code>godoc</code> 指令了，不過，從 <a href="https://golang.org/doc/go1.5">Go 1.5 Release Notes</a> 中看到，Go 1.5 有個新的 <code>go doc</code> 指令，專門用於命令列模式下的文件查詢，這使得 <code>godoc</code> 主要剩下文件服器的功能，因而在 Go 1.13 中，<code>godoc</code> 被移除。</p>
-<p>如果在一個網路受限的環境，又想要在網頁上查詢文件，還是可以安裝 <code>godoc</code>：</p>
-<pre><code class="language-prettyprint">go get -u golang.org/x/tools/cmd/godoc
+<p>Go 1.2rc1 之後，曾經從 <code>go doc</code> 改用 <code>godoc</code> 指令了，不過，從 <a href="https://go.dev/doc/go1.5">Go 1.5 Release Notes</a> 中看到，Go 1.5 有個新的 <code>go doc</code> 指令，專門用於命令列模式下的文件查詢，這使得 <code>godoc</code> 主要剩下文件服器的功能，因而在 Go 1.13 中，<code>godoc</code> 被移除。</p>
+<p>如果在一個網路受限的環境，又想要在網頁上查詢文件，還是可以安裝 <code>godoc</code>（來自 <code>x/tools</code>）：</p>
+<pre><code class="language-prettyprint">go install golang.org/x/tools/cmd/godoc@latest
 </code></pre>
-<p>這時執行 bin 中的 <code>godoc</code>，並附帶一個 <code>-http</code> 引數指定連接埠，例如，<code>./bin/godoc -http=:6060</code>，這會在本機啟動一個 HTTP 伺服器，使用瀏覽器連接 http://localhost:6060（或 http://主機IP:6060）就可以查詢文件：</p>
+<p>這時執行安裝後的 <code>godoc</code>，並附帶一個 <code>-http</code> 引數指定連接埠，例如，<code>godoc -http=:6060</code>，這會在本機啟動一個 HTTP 伺服器，使用瀏覽器連接 http://localhost:6060（或 http://主機IP:6060）就可以查詢文件：</p>
 <div class="pure-g">
 <div class="pure-u-1">
 <img src="images/godoc-4.JPG" class="pure-img-responsive" alt="godoc" />
@@ -849,7 +857,7 @@ func Title(s []byte) []byte {
 <div class="header">
 <h1 id="go-測試套件"><a class="header" href="#go-測試套件">Go 測試套件</a></h1>
 </div>
-<p>Go 本身附帶了 <code>testing</code> 套件，搭配 <code>go test</code> 指令，可以自動對套件中的程式碼進行測試，在套件中，測試程式碼必須是 _test.go 結尾，一個套件中可以有多個 _test.go，例如，<a href="https://golang.org/src/fmt/">fmt 套件的原始碼</a> 中，可以看到 export_test.go、fmt_test.go 等，就是測試程式碼。</p>
+<p>Go 本身附帶了 <code>testing</code> 套件，搭配 <code>go test</code> 指令，可以自動對套件中的程式碼進行測試，在套件中，測試程式碼必須是 _test.go 結尾，一個套件中可以有多個 _test.go，例如，<a href="https://go.dev/src/fmt/">fmt 套件的原始碼</a> 中，可以看到 export_test.go、fmt_test.go 等，就是測試程式碼。</p>
 <h1 id="功能測試"><a class="header" href="#功能測試">功能測試</a></h1>
 <p>想要使用 Go 的 <code>testing</code> 套件撰寫測試程式碼，必須 <code>import "testing"</code>，在 _test.go 中撰寫形式 <code>func TestXxx(t *testing.T)</code> 的函式，Xxx 可以是任意名稱，例如，在 src/mymath 目錄中，寫個 basic_test.go：</p>
 <pre><code class="language-prettyprint">package mymath
@@ -1014,7 +1022,7 @@ func BenchmarkAdd(b *testing.B) {
 <img src="images/Testing-11.JPG" class="pure-img-responsive" alt="Go 測試套件" />
 </div>
 </div>
-<p>想知道更多 Go 測試套件的細節，可以參考 <a href="https://golang.org/pkg/testing/">Package testing</a> 的說明。</p>
+<p>想知道更多 Go 測試套件的細節，可以參考 <a href="https://pkg.go.dev/testing/">Package testing</a> 的說明。</p>
 <div class="ad336-280" style="text-align: center;">
 </div>
 <div class="recommend" style="text-align: center;">
@@ -1027,7 +1035,7 @@ func BenchmarkAdd(b *testing.B) {
 </div>
 <p>Go 包括了一些預先定義型態（Pre-declared Type），這包括了布林、數字與字串型態。</p>
 <h1 id="布林型態"><a class="header" href="#布林型態">布林型態</a></h1>
-<p>預定義型態也是具有名稱的型態（Named Type），布林型態名稱為 <code>bool</code>，只有兩個預先定義的常數 <code>true</code> 與 <code>false</code>，由於只有兩個值，因此在 <a href="https://golang.org/ref/spec#Boolean_types">Go 的規格書</a> 中，並沒有明確提及 <code>bool</code> 的大小，雖然在 Go 官方網站的 <a href="https://play.golang.org/">The Go Playground</a> 執行以下程式碼，會告訴你 <code>bool</code> 大小是 1：</p>
+<p>預定義型態也是具有名稱的型態（Named Type），布林型態名稱為 <code>bool</code>，只有兩個預先定義的常數 <code>true</code> 與 <code>false</code>，由於只有兩個值，因此在 <a href="https://go.dev/ref/spec#Boolean_types">Go 的規格書</a> 中，並沒有明確提及 <code>bool</code> 的大小，雖然在 Go 官方網站的 <a href="https://go.dev/play/">The Go Playground</a> 執行以下程式碼，會告訴你 <code>bool</code> 大小是 1：</p>
 <pre><code class="language-prettyprint">package main
 
 import (
@@ -1040,13 +1048,13 @@ func main() {
     fmt.Println(unsafe.Sizeof(false))
 }
 </code></pre>
-<p>附帶一提的是，Go 本身沒有提供 REPL 工具，不過 Go 官方網站的 <a href="https://play.golang.org/">The Go Playground</a> 是個方便的介面，你也可以在 <a href="http://stackoverflow.com/questions/8513609/does-go-provide-repl">Does Go provide REPL?</a> 找到一些其他開發者寫的 REPL。</p>
+<p>附帶一提的是，Go 本身沒有提供 REPL 工具，不過 Go 官方網站的 <a href="https://go.dev/play/">The Go Playground</a> 是個方便的介面，你也可以在 <a href="http://stackoverflow.com/questions/8513609/does-go-provide-repl">Does Go provide REPL?</a> 找到一些其他開發者寫的 REPL。</p>
 <h1 id="數字型態"><a class="header" href="#數字型態">數字型態</a></h1>
 <p>數字型態為整數與浮點數的集合，整數部份支援無號與有號整數，名稱分別為 <code>uint</code> 與 <code>int</code>，<code>int</code> 長度會與 <code>uint</code> 相同，而 <code>uint</code> 長度視平台實作而異，可能是 32 位元或是 64 位元。</p>
 <p>如果想要長度固定，無號整數的型態名稱為 <code>uint8</code>、<code>uint16</code>、<code>uint32</code>、<code>uint64</code>，顧名思義，使用的長度分別為 8 位元、16 位元、32 位元與 64 位元，舉例來說，<code>uint8</code> 可儲存的整數範圍為 0 到 255，這也是開發者熟悉的位元組型態，而在 Go 中，<code>byte</code> 正是　<code>uint8</code> 的別名。</p>
 <p>有號整數的型態名稱為 <code>int8</code>、<code>int16</code>、<code>int32</code>、<code>int64</code>，顧名思義，使用的長度分別為 8 位元、16 位元、32 位元與 64 位元，舉例來說，<code>int32</code> 可儲存的整數範圍為 -2147483648 到 2147483647，而 <code>rune</code> 為 <code>int32</code> 的別名，可用來儲存 Unicode 碼點（code point）。</p>
 <p>如果直接寫下一個整數實字（literal），例如 <code>10</code>，在沒有程式上下文（context）的情況下，<code>10</code> 是未定型態（Untyped），未定義型態整數的預設型態（Default type）為 <code>int</code> 型態，在必須得到一個型態而程式上下文未提供時（例如變數宣告與賦值要進行型態推斷時），就會使用預設型態。</p>
-<p>寫下 <code>10</code> 這樣的整數，預設是 10 進位制；可以在數字前加上 0，Go 1.13 後可使用 0o 來表示八進位制，加上 0x 表示 16 進位制，此時 a-f and A-F 都可以用來表示 10 到 15，例如 <code>0xBadFace</code>，G○ 1.13 後可以使用 <code>0x1.0p-1021</code> 來表示浮點數。</p>
+<p>寫下 <code>10</code> 這樣的整數，預設是 10 進位制；可以在數字前加上 0，Go 1.13 後可使用 0o 來表示八進位制，加上 0x 表示 16 進位制，此時 a-f and A-F 都可以用來表示 10 到 15，例如 <code>0xBadFace</code>，Go 1.13 後可以使用 <code>0x1.0p-1021</code> 來表示浮點數。</p>
 <p>Go 1.13 後，可以使用 <code>0b</code> 來定義二進位數字，例如 <code>0b00101101</code>；數字分隔底線在 Go 1.13 後可以使用，例如 <code>1_000_000</code>、<code>0b_1010_0110</code> 或 <code>3.1415_9265</code>。</p>
 <p><code>math</code> 模組上定義了一些常數，可以讓你得知各整數型態的儲存範圍，例如以下程式顯示了各整數型態的儲存範圍：</p>
 <pre><code class="language-prettyprint">package main
@@ -1106,7 +1114,7 @@ func main() {
 <p>不會！結果會顯示 30，為什麼？正如先前談過，寫下 <code>20</code> 這個整數，它是未定型態，根據 <code>x + 20</code>，進行 <code>int8</code> 的運算，所以不會發生錯誤，不這樣的話，每次都得寫 <code>x + int8(20)</code>，實在就夠煩的了！</p>
 <p>在 Go 中並沒有字元對應的型態，只有碼點的概念，<code>int32</code> 或其別名 <code>rune</code> 可用來儲存 Unicode 碼點，你可以將單一文字包在單引號之中，例如 <code>'林'</code>，這會以 <code>int32</code> 儲存為 26519，例如 <code>fmt.Println('林')</code> 會顯示 26519，若想顯示為文字，則要使用 <code>fmt.Println(string('林'))</code>。</p>
 <p>浮點數的名稱為 <code>float32</code>、<code>float64</code>，分別為 IEEE-754 32 位元與 64 位元浮點數，如果直接寫下一個浮點數實字，預設型態是 <code>float64</code> 型態，可使用科學記號，例如 <code>1.e+0</code>、<code>6.67428e-11</code> 等，常數 <code>math.MaxFloat32</code>、<code>math.MaxFloat64</code> 分別代表著浮點數的最大儲存範圍。</p>
-<p>Go 還有複數（Complex number），其中 <code>complex64</code>、<code>complex128</code>，可由一個實部數字，加上一個虛部數字與 <code>i</code> 來表示複數，例如 <code>1 + 2i</code>，寫下一個複數實字，預設型態為 <code>complex128</code>，虛數的部份，在 Go 1.13 後，之前談到的數字表示法都可以使用，有三個函式可以用來處理複數，即 <code>complex</code>、<code>real</code> 與 <code>imag</code>，可參考〈<a href="https://golang.org/ref/spec#Complex_numbers">Manipulating complex numbers</a>〉。</p>
+<p>Go 還有複數（Complex number），其中 <code>complex64</code>、<code>complex128</code>，可由一個實部數字，加上一個虛部數字與 <code>i</code> 來表示複數，例如 <code>1 + 2i</code>，寫下一個複數實字，預設型態為 <code>complex128</code>，虛數的部份，在 Go 1.13 後，之前談到的數字表示法都可以使用，有三個函式可以用來處理複數，即 <code>complex</code>、<code>real</code> 與 <code>imag</code>，可參考〈<a href="https://go.dev/ref/spec#Complex_numbers">Manipulating complex numbers</a>〉。</p>
 <p>Go 還有個 <code>uintptr</code>，可以用來儲存指標值，這之後有機會再來談。</p>
 <h1 id="字串型態"><a class="header" href="#字串型態">字串型態</a></h1>
 <p>Go 的字串在實作上使用 <a href="http://openhome.cc/Gossip/Encoding/UTF8.html">UTF-8</a>，就目前必須先知道的是，當使用雙引號包裹一系列文字，會產生字串型態，預設型態為 <code>string</code>，例如，<code>"Justin"</code> 會建立一個字串。</p>
@@ -1162,7 +1170,7 @@ func main() {
 <p><code>x</code>、<code>y</code>、<code>z</code> 的型態分別會是 <code>int</code>、<code>float64</code> 與 <code>string</code>，批量宣告時也可以自動推斷型態，例如：</p>
 <pre><code class="language-prettyprint">var (
     x = 10        // int 型態
-    y = 3.14      // float32 型態
+    y = 3.14      // float64 型態
     z = "Justin"  // string 型態
 )
 </code></pre>
@@ -1254,7 +1262,7 @@ func main() {
 </code></pre>
 <h1 id="常數運算式"><a class="header" href="#常數運算式">常數運算式</a></h1>
 <p>由於常數可以是未定型態，因此一個有趣的地方就是，像 <code>2 + 3.0</code>、<code>15 / 4</code>、<code>15 / 4.0</code> 這樣的常數運算式，該怎麼在編譯時期決定它們的值？答案是根據運算式中的常數運算元是整數、<code>rune</code>（單引號括住的常數）、浮點數或複數來決定，如果運算式中包括了越後面的常數，就會用它來決定。</p>
-<p>因此，<code>2 + 3.0</code> 會是未定型態的浮點數 <code>5.0</code>，<code>15 / 4</code> 會是未定型態的整數 <code>3</code>，然而，<code>15 / 4.0</code>，會是浮點數型態的 <code>3.75</code>，在規格書的〈<a href="https://golang.org/ref/spec#Constant_expressions">Constant expressions</a>〉中，列出了說明以及一些範例，例如：</p>
+<p>因此，<code>2 + 3.0</code> 會是未定型態的浮點數 <code>5.0</code>，<code>15 / 4</code> 會是未定型態的整數 <code>3</code>，然而，<code>15 / 4.0</code>，會是浮點數型態的 <code>3.75</code>，在規格書的〈<a href="https://go.dev/ref/spec#Constant_expressions">Constant expressions</a>〉中，列出了說明以及一些範例，例如：</p>
 <pre><code class="language-prettyprint">const a = 2 + 3.0          // a == 5.0   (untyped floating-point constant)
 const b = 15 / 4           // b == 3     (untyped integer constant)
 const c = 15 / 4.0         // c == 3.75  (untyped floating-point constant)
@@ -1274,7 +1282,7 @@ const Δ = Σ + 2.0e-4       //            (untyped complex constant)
 const Φ = iota*1i - 1/1i   //            (untyped complex constant)
 </code></pre>
 <p>現在，應該能明白，〈<a href="http://openhome.cc/Gossip/Go/PreDeclaredType.html">認識預定義型態</a>〉中 <code>math.MaxInt64</code> 若不加上 <code>int64</code>，何以會 overflow 的錯誤了。</p>
-<p>附帶一提的是，在 Go 中，模組中定義的名稱若要能在模組外可見，必須是首字大寫，而對於像 <code>math.MaxInt64</code> 這類的公用常數，可以定義在一個 .go 檔案之中，例如 <code>math.MaxInt64</code>，就是定義在一個 <a href="https://golang.org/src/math/const.go">const.go</a> 之中。</p>
+<p>附帶一提的是，在 Go 中，模組中定義的名稱若要能在模組外可見，必須是首字大寫，而對於像 <code>math.MaxInt64</code> 這類的公用常數，可以定義在一個 .go 檔案之中，例如 <code>math.MaxInt64</code>，就是定義在一個 <a href="https://go.dev/src/math/const.go">const.go</a> 之中。</p>
 <h1 id="使用-iota-列舉"><a class="header" href="#使用-iota-列舉">使用 iota 列舉</a></h1>
 <p>如果要需要列舉一些常數時，可以使用 <code>iota</code>，它每遇到一次 <code>const</code>，就會重置為 <code>0</code>，若它在批量常數宣告中使用時，第一次出現時的預設值是 <code>0</code>，每出現一次就遞增 <code>1</code>，例如：</p>
 <pre><code class="language-prettyprint">const (
@@ -1299,6 +1307,52 @@ const Φ = iota*1i - 1/1i   //            (untyped complex constant)
 </code></pre>
 <p>其實也可以這麼寫來列舉常數，只是比較麻煩：</p>
 <pre><code class="language-prettyprint">const x, y, z = iota, iota, iota
+</code></pre>
+<h1 id="go-120--121--126-補充"><a class="header" href="#go-120--121--126-補充">Go 1.20+ / 1.21+ / 1.26 補充</a></h1>
+<p>本章談變數、常數與型別轉換，這裡補充幾個較新的語法與內建函式。</p>
+<p>Go 1.17 起可將 slice 轉成陣列指標，Go 1.20 起也可直接轉成陣列（長度不足時會 panic）：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    s := []int{10, 20, 30}
+    ap := (*[3]int)(s) // Go 1.17+
+    a := [3]int(s)     // Go 1.20+
+
+    ap[0] = 99
+    fmt.Println(s) // [99 20 30]
+    fmt.Println(a) // [10 20 30]（a 是轉換當下的值複製）
+}
+</code></pre>
+<p>Go 1.21 新增 <code>min</code>、<code>max</code>、<code>clear</code> 三個內建函式：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    nums := []int{3, 1, 2}
+    m := map[string]int{"a": 1, "b": 2}
+
+    fmt.Println(min(3, 1, 2)) // 1
+    fmt.Println(max(3, 1, 2)) // 3
+
+    clear(nums)
+    clear(m)
+    fmt.Println(nums) // [0 0 0]
+    fmt.Println(m)    // map[]
+}
+</code></pre>
+<p>Go 1.26 起，<code>new</code> 的運算元可以是運算式，能直接建立並初始化指標值：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    p := new(42)
+    q := new(int64(300))
+    fmt.Println(*p, *q) // 42 300
+}
 </code></pre>
 <div class="ad336-280" style="text-align: center;">
 </div>
@@ -1431,7 +1485,7 @@ func main() {
 }
 </code></pre>
 <p>片段操作時，如果省略冒號之後的數字，則預設取得至字串尾端的子字串，例如 <code>"Go語言"[3:]</code> 會傳回 <code>"\xaa\x9e\xe8\xa8\x80"</code> 的字串，如果省略冒號之前的數字，預設從索引 0 開始，例如 <code>"Go語言"[:2]</code> 會取得 <code>"Go"</code> 的字串，也就是 <code>"\x47\x6f"</code> 的字串，如果是 <code>"Go語言"[:]</code>，那麼就是取得全部字串內容了。</p>
-<p><a href="https://golang.org/pkg/strings/"><code>strings</code> 套件</a> 中有不少字串可用的方法，想做字串操作時，可以多加利用，不過要看清楚是針對什麼在操作。例如 <code>strings.Index</code>：</p>
+<p><a href="https://pkg.go.dev/strings/"><code>strings</code> 套件</a> 中有不少字串可用的方法，想做字串操作時，可以多加利用，不過要看清楚是針對什麼在操作。例如 <code>strings.Index</code>：</p>
 <pre><code class="language-prettyprint">package main
 
 import "fmt"
@@ -1476,7 +1530,7 @@ U+006F 'o' 位元起始位置 1
 U+8A9E '語' 位元起始位置 2
 U+8A00 '言' 位元起始位置 5
 </code></pre>
-<p>總而言之，Go 的字串是由 UTF-8 編碼的位元組構成，在〈<a href="https://blog.golang.org/strings">Strings, bytes, runes and characters in Go</a>〉談到了這麼設計的理由是，「字元」的定義太模稜兩可了，Go 為了避免模稜兩可，就將字串定義為 UTF-8 編碼的位元組構成，而 <code>rune</code> 用於儲存碼點。</p>
+<p>總而言之，Go 的字串是由 UTF-8 編碼的位元組構成，在〈<a href="https://go.dev/blog/strings">Strings, bytes, runes and characters in Go</a>〉談到了這麼設計的理由是，「字元」的定義太模稜兩可了，Go 為了避免模稜兩可，就將字串定義為 UTF-8 編碼的位元組構成，而 <code>rune</code> 用於儲存碼點。</p>
 <p>PS. 這大概也是為何，我會整理出〈<a href="http://openhome.cc/Gossip/Encoding/">亂碼 1/2</a>〉的原因 … XD</p>
 <div class="ad336-280" style="text-align: center;">
 </div>
@@ -1898,7 +1952,7 @@ func main() {
 </div>
 <p>在上例中，<code>passwords</code> 是個參考，指向 <code>make(map[string]int)</code> 建立的 map 實例。</p>
 <p>類似一些語言（例如 Python），要設定一個鍵值對應時，使用 <code>[]</code> 與 <code>=</code> 指定，要取得鍵對應的值時，使用 <code>[]</code> 指定鍵，這會傳回對應的值，想知道 <code>map</code> 中的鍵數，可以使用 <code>len</code> 函式。</p>
-<p>要注意的是，可用來做為鍵的值，必須是 <a href="https://blog.golang.org/go-maps-in-action">comparable</a>，就目前來說，你要先知道的 comparable 型態有布林、數字、字串、指標（pointer）、channel、interface、struct，或者含有這這些型態的陣列，這些是都可以使用 <code>==</code> 來比較的值；而 slice、map 與函式，就不能用來做為鍵。</p>
+<p>要注意的是，可用來做為鍵的值，必須是 <a href="https://go.dev/blog/go-maps-in-action">comparable</a>，就目前來說，你要先知道的 comparable 型態有布林、數字、字串、指標（pointer）、channel、interface、struct，或者含有這這些型態的陣列，這些是都可以使用 <code>==</code> 來比較的值；而 slice、map 與函式，就不能用來做為鍵。</p>
 <p>如果已知 map 中會有的鍵值對，則可以如下建立 map：</p>
 <pre><code class="language-prettyprint">package main
 
@@ -2224,7 +2278,7 @@ func main() {
     fmt.Printf("10 != 5 結果 %t\n", 10 != 5)  // true
 }
 </code></pre>
-<p><code>==</code> 與 <code>!=</code> 只能用在 comparable 的運算元上，這有一套嚴格規則，Go 語言中哪些值是可以比較的，可以參考規格書中〈<a href="https://golang.org/ref/spec#Comparison_operators">Comparison operators</a>〉的說明。</p>
+<p><code>==</code> 與 <code>!=</code> 只能用在 comparable 的運算元上，這有一套嚴格規則，Go 語言中哪些值是可以比較的，可以參考規格書中〈<a href="https://go.dev/ref/spec#Comparison_operators">Comparison operators</a>〉的說明。</p>
 <p>Go 中沒有 <code>?:</code> 三元條件運算子。</p>
 <h1 id="邏輯運算"><a class="header" href="#邏輯運算">邏輯運算</a></h1>
 <p>在邏輯上有所謂的「且」、「或」與「反相」，在 Go 中提供對應的邏輯運算子（Logical operator），分別為 <code>&amp;&amp;</code>、<code>||</code>及 <code>!</code>。看看以下的程式片段會輸出什麼結果？</p>
@@ -2555,6 +2609,58 @@ func main() {
 <h1 id="for-range"><a class="header" href="#for-range">for range</a></h1>
 <p>Go 的 <code>for</code> 可以搭配 <code>range</code>，對 slice、陣列、<code>string</code>、<code>map</code> 和 channel（之後說明）進行迭代，<code>range</code> 視給定的形態不同，會有不同的傳回值。</p>
 <p>對於 slice、陣列、<code>string</code>、<code>map</code>，在之前的〈<a href="http://openhome.cc/Gossip/Go/String.html">位元組構成的字串</a>〉、〈<a href="http://openhome.cc/Gossip/Go/Array.html">身為複合值的陣列</a>〉、〈<a href="http://openhome.cc/Gossip/Go/Slice.html">底層為陣列的 slice</a>〉與〈<a href="http://openhome.cc/Gossip/Go/Map.html">成對鍵值的 map</a>〉中，都有相關範例示範，這邊不再贅述。</p>
+<h1 id="go-122-與-123-的-for-補充"><a class="header" href="#go-122-與-123-的-for-補充">Go 1.22+ 與 1.23+ 的 for 補充</a></h1>
+<p>從 Go 1.22 開始，<code>for</code> 迴圈中宣告的變數，會在每次迭代建立新的變數實例，這修正了過去常見的閉包捕捉問題。例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    funcs := []func(){}
+    for _, v := range []string{"a", "b", "c"} {
+        funcs = append(funcs, func() {
+            fmt.Println(v)
+        })
+    }
+    for _, f := range funcs {
+        f()
+    }
+}
+</code></pre>
+<p>在 Go 1.22 之後，上例會依序印出 <code>a</code>、<code>b</code>、<code>c</code>（舊版本常會看到重複最後一個值）。</p>
+<p>Go 1.22 也支援對整數直接使用 <code>range</code>，這相當於從 <code>0</code> 迭代到 <code>n-1</code>：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    for i := range 5 {
+        fmt.Println(i)
+    }
+}
+</code></pre>
+<p>Go 1.23 更進一步支援對 iterator function 使用 <code>range</code>，常見型態之一是 <code>func(func(T) bool)</code>：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func Counter(n int) func(func(int) bool) {
+    return func(yield func(int) bool) {
+        for i := range n {
+            if !yield(i) {
+                return
+            }
+        }
+    }
+}
+
+func main() {
+    for v := range Counter(3) {
+        fmt.Println(v)
+    }
+}
+</code></pre>
+<p>這讓自訂容器或序列，也能自然地配合 <code>for range</code> 語法使用。</p>
 <div class="ad336-280" style="text-align: center;">
 </div>
 <div class="recommend" style="text-align: center;">
@@ -2869,6 +2975,180 @@ func main() {
 }
 </code></pre>
 <p>這次使用了 <code>&amp;number</code> 取得 <code>number</code> 的位址值再傳遞給 <code>n</code>，也就是傳遞了<strong>變數位址值</strong>給 <code>n</code>，函式中使用 <code>*n</code> 取得位址處的值，加上 1 後再將值存回原位址處，因此，透過 <code>main</code> 函式中的 <code>number</code> 取得的值，也會是加 1 後的值。</p>
+<h1 id="go-118泛型函式補充"><a class="header" href="#go-118泛型函式補充">Go 1.18+：泛型函式補充</a></h1>
+<p>從 Go 1.18 開始，函式宣告可以帶有型別參數（type parameters），可讓同一個函式套用在多種型態上。例如，底下示範搜尋 slice 中第一個相等元素的位置：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func IndexOf[T comparable](elems []T, target T) int {
+    for i, elem := range elems {
+        if elem == target {
+            return i
+        }
+    }
+    return -1
+}
+
+func main() {
+    fmt.Println(IndexOf([]int{10, 20, 30}, 20))          // 1
+    fmt.Println(IndexOf([]string{"Go", "Rust"}, "Rust")) // 1
+}
+</code></pre>
+<p><code>[T comparable]</code> 表示 <code>T</code> 是型別參數，而 <code>comparable</code> 是型別條件（constraint）；因為函式中用了 <code>==</code>，所以要求 <code>T</code> 必須可比較。</p>
+<p>多數情況下，編譯器可以根據引數自動推斷型別參數，因此通常不用寫成 <code>IndexOf[int](...)</code> 這麼完整。</p>
+<p>如果你剛接觸泛型，建議搭配〈<a href="Generics.html">泛型入門（Go 1.18+）</a>〉一起閱讀；該章也會補充 <code>any</code>、<code>comparable</code>、型別集合與 Go 1.24/1.26 的相關更新。</p>
+<h1 id="go-121新的內建函式"><a class="header" href="#go-121新的內建函式">Go 1.21+：新的內建函式</a></h1>
+<p>雖然 <code>min</code>、<code>max</code>、<code>clear</code> 是內建函式（built-ins），不是一般套件函式，不過常會跟函式主題一起學習。從 Go 1.21 開始，可以直接使用：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func main() {
+    scores := []int{10, 20, 30}
+    fmt.Println(min(10, 3, 22)) // 3
+    fmt.Println(max(10, 3, 22)) // 22
+
+    clear(scores)
+    fmt.Println(scores) // [0 0 0]
+}
+</code></pre>
+<p><code>clear</code> 對 slice 的效果是「清為零值」，長度不變；對 map 的效果則是刪除全部鍵值對。</p>
+<div class="ad336-280" style="text-align: center;">
+</div>
+<div class="recommend" style="text-align: center;">
+<hr />
+</div>
+</div>
+<div style="break-before: page; page-break-before: always;"></div><div id="main" role="main" style="height: auto !important;">
+<div class="header">
+<h1 id="泛型入門go-118"><a class="header" href="#泛型入門go-118">泛型入門（Go 1.18+）</a></h1>
+</div>
+<p>從 Go 1.18 開始，Go 支援泛型（Generics，也就是 type parameters）。這讓你可以用同一份程式碼，處理多種型態，而不用到處寫重複函式或依賴 <code>interface{}</code> 加型態斷言。</p>
+<h1 id="泛型函式"><a class="header" href="#泛型函式">泛型函式</a></h1>
+<p>函式可以在名稱後面宣告型別參數，例如：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func First[T any](elems []T) (T, bool) {
+    if len(elems) == 0 {
+        var zero T
+        return zero, false
+    }
+    return elems[0], true
+}
+
+func main() {
+    if v, ok := First([]int{10, 20, 30}); ok {
+        fmt.Println(v) // 10
+    }
+    if v, ok := First([]string{"Go", "Rust"}); ok {
+        fmt.Println(v) // Go
+    }
+}
+</code></pre>
+<p><code>T any</code> 表示 <code>T</code> 可以是任何型態；<code>any</code> 是 <code>interface{}</code> 的別名（Go 1.18 新增）。</p>
+<p>通常編譯器可以從引數推斷型別參數，因此呼叫時常不必寫成 <code>First[int](...)</code>。</p>
+<h1 id="型別條件constraints"><a class="header" href="#型別條件constraints">型別條件（constraints）</a></h1>
+<p>如果泛型函式或泛型型別需要使用某些運算（例如 <code>==</code>、<code>&lt;</code>），就要限制型別參數可接受的型態範圍，這就是型別條件。</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+func IndexOf[T comparable](elems []T, target T) int {
+    for i, elem := range elems {
+        if elem == target {
+            return i
+        }
+    }
+    return -1
+}
+
+func main() {
+    fmt.Println(IndexOf([]int{1, 2, 3}, 2))           // 1
+    fmt.Println(IndexOf([]string{"Go", "C"}, "Rust")) // -1
+}
+</code></pre>
+<p><code>comparable</code> 也是 Go 1.18 新增的預定義識別名稱，只能用在型別條件中。從 Go 1.20 起，可比較（但可能在執行時比較時 panic）的型別，也能滿足 <code>comparable</code> 條件。</p>
+<h1 id="介面作為型別集合type-set"><a class="header" href="#介面作為型別集合type-set">介面作為型別集合（type set）</a></h1>
+<p>Go 1.18 之後，介面不只描述方法集合，也可以描述型別集合（用於 constraint）。例如：</p>
+<pre><code class="language-prettyprint">type Integer interface {
+    ~int | ~int8 | ~int16 | ~int32 | ~int64
+}
+</code></pre>
+<p><code>~int</code> 表示「底層型態是 <code>int</code> 的型態」，這讓自訂型別（例如 <code>type MyInt int</code>）也能符合條件。</p>
+<p>這類帶有 union（<code>|</code>）或具體型別元素的介面，通常只能用在型別條件，不會拿來當一般執行期介面值使用。</p>
+<h1 id="泛型型別"><a class="header" href="#泛型型別">泛型型別</a></h1>
+<p>不只函式可以用泛型，型別宣告也可以：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Stack[T any] struct {
+    elems []T
+}
+
+func (s *Stack[T]) Push(v T) {
+    s.elems = append(s.elems, v)
+}
+
+func (s *Stack[T]) Pop() (T, bool) {
+    if len(s.elems) == 0 {
+        var zero T
+        return zero, false
+    }
+    i := len(s.elems) - 1
+    v := s.elems[i]
+    s.elems = s.elems[:i]
+    return v, true
+}
+
+func main() {
+    var s Stack[string]
+    s.Push("Go")
+    s.Push("1.26")
+    v, _ := s.Pop()
+    fmt.Println(v) // 1.26
+}
+</code></pre>
+<h1 id="go-124generic-type-aliases"><a class="header" href="#go-124generic-type-aliases">Go 1.24：generic type aliases</a></h1>
+<p>Go 1.24 起，generic type aliases 完整支援，因此可像下面這樣寫：</p>
+<pre><code class="language-prettyprint">type Set[T comparable] = map[T]struct{}
+</code></pre>
+<p>這在整理常用資料結構別名時很方便，例如 <code>Set[string]</code>、<code>Set[int]</code>。</p>
+<h1 id="go-126型別參數列表中的自我參照"><a class="header" href="#go-126型別參數列表中的自我參照">Go 1.26：型別參數列表中的自我參照</a></h1>
+<p>Go 1.26 放寬了限制，泛型型別可在自己的型別參數列表中參照自己。這對某些泛型介面（特別是要求「輸入輸出都是自身型態」）會比較自然：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Adder[A Adder[A]] interface {
+    Add(A) A
+}
+
+type MyInt int
+
+func (x MyInt) Add(y MyInt) MyInt {
+    return x + y
+}
+
+func Algo[A Adder[A]](x, y A) A {
+    return x.Add(y)
+}
+
+func main() {
+    fmt.Println(Algo(MyInt(10), MyInt(20))) // 30
+}
+</code></pre>
+<h1 id="何時該用泛型"><a class="header" href="#何時該用泛型">何時該用泛型？</a></h1>
+<p>泛型適合用在：</p>
+<ul>
+<li>演算法或容器邏輯完全相同，只差元素型態（例如 stack、set、搜尋、走訪）</li>
+<li>想避免 <code>interface{}</code> 與型態斷言造成的樣板程式碼與執行期錯誤</li>
+<li>需要在編譯期保留型態資訊，提高可讀性與型別安全</li>
+</ul>
+<p>但如果某個邏輯本質上就是依賴行為（方法）而不是型態，傳統介面仍然常常是更直接的做法。</p>
 <div class="ad336-280" style="text-align: center;">
 </div>
 <div class="recommend" style="text-align: center;">
@@ -3482,8 +3762,8 @@ func main() {
     y := 20
     fmt.Printf("{%d %d}\n", x, y) // {10 20}
 
-    x := 20
-    y := 30
+    x = 20
+    y = 30
     fmt.Printf("{%d %d}\n", x, y) // {20 30}
 }
 </code></pre>
@@ -4070,7 +4350,7 @@ func main() {
 </code></pre>
 <p>如果是其他語言，例如 Java 的話，在 <code>findById("789").String()</code> 的地方會 <code>NullPointerException</code>，不過在 Go 中，可以針對接收者是否為 <code>nil</code>，來決定如何處理，例如這邊就實作了 nil safety 的概念。</p>
 <h1 id="模擬建構式初始式"><a class="header" href="#模擬建構式初始式">模擬建構式、初始式</a></h1>
-<p>Go 沒有物件導向語言中建構式或初始式之類的概念，然而可以自行模擬，例如在 <a href="https://golang.org/pkg/container/list/">container/list</a> 的<a href="https://golang.org/src/container/list/list.go">原始碼</a>可以看到 <code>New</code> 作為一個工廠函式，用來建立新的 <code>List</code>，初始的流程寫在 <code>Init</code> 方法之中：</p>
+<p>Go 沒有物件導向語言中建構式或初始式之類的概念，然而可以自行模擬，例如在 <a href="https://pkg.go.dev/container/list/">container/list</a> 的<a href="https://go.dev/src/container/list/list.go">原始碼</a>可以看到 <code>New</code> 作為一個工廠函式，用來建立新的 <code>List</code>，初始的流程寫在 <code>Init</code> 方法之中：</p>
 <pre><code class="language-prettyprint">...
 // Init initializes or clears list l.
 func (l *List) Init() *List {
@@ -4528,7 +4808,7 @@ fmt.Println(savings == nil)
 var savings Savings = acct
 fmt.Println(savings == nil)
 </code></pre>
-<p>這是個 FAQ 了，在〈<a href="https://golang.org/doc/faq#nil_error">Why is my nil error value not equal to nil?</a>〉就提到了個例子：</p>
+<p>這是個 FAQ 了，在〈<a href="https://go.dev/doc/faq#nil_error">Why is my nil error value not equal to nil?</a>〉就提到了個例子：</p>
 <pre><code class="language-prettyprint">func returnsError() error {
     var p *MyError = nil
     if bad() {
@@ -4558,6 +4838,25 @@ var savings2 Savings = savings1
 savings2.name = "Monica Huang"
 fmt.Println(savings.name) // Justin Lin
 </code></pre>
+<h1 id="go-118介面也可作為型別條件"><a class="header" href="#go-118介面也可作為型別條件">Go 1.18+：介面也可作為型別條件</a></h1>
+<p>從 Go 1.18 開始，<code>interface</code> 除了用來描述物件要有哪些方法，也可以用來描述「型別集合（type set）」，作為泛型的型別條件（constraint）。</p>
+<p>例如：</p>
+<pre><code class="language-prettyprint">type StringKeyed interface {
+    ~string
+}
+
+func HasKey[K StringKeyed, V any](m map[K]V, key K) bool {
+    _, ok := m[key]
+    return ok
+}
+</code></pre>
+<p>上例中的 <code>StringKeyed</code> 並不是拿來做一般執行期介面值（例如 <code>var x StringKeyed</code>），而是拿來限制型別參數 <code>K</code> 的可用型別。</p>
+<p>另外，Go 1.18 也新增了兩個常見的預定義識別名稱：</p>
+<ul>
+<li><code>any</code>：<code>interface{}</code> 的別名。</li>
+<li><code>comparable</code>：可用 <code>==</code>、<code>!=</code> 比較的型別集合（只能用在型別條件）。</li>
+</ul>
+<p>Go 1.20 之後，像一般介面型別這類「可比較但可能在執行時 panic」的型別，也可以滿足 <code>comparable</code> 條件，因此像 <code>Set[any]</code> 這類泛型實例化會更容易成立；只是若實際比較到不可比較的動態值（例如內含 slice 的介面值），仍可能在執行時發生 panic。</p>
 <h1 id="異質陣列或-slice"><a class="header" href="#異質陣列或-slice">異質陣列或 slice</a></h1>
 <p>Go 語言會檢查類型的實例，是否實現了介面中規範的行為，若是的話，就可以使用介面型態來接受不同型態實例的指定，因此，若要建立一個異質陣列或 slice，也是可以的：</p>
 <pre><code class="language-prettyprint">package main
@@ -4813,7 +5112,7 @@ func main() {
 </div>
 <p>就算 <code>testerA</code> 儲存的結構實例，確實有實作<code>testB()</code> 這個方法，然而從編譯器的角度來看，<code>testerA</code> 的行為只有 <code>testA()</code>，而看不到它有 <code>testB()</code> 的行為，因此上面這個範例會編譯錯誤。</p>
 <h1 id="comma-ok-型態斷言"><a class="header" href="#comma-ok-型態斷言">Comma-ok 型態斷言</a></h1>
-<p>如果真的要通過編譯，可以使用<a href="https://golang.org/ref/spec#Type_assertions">型態斷言（Type assertion）</a>：</p>
+<p>如果真的要通過編譯，可以使用<a href="https://go.dev/ref/spec#Type_assertions">型態斷言（Type assertion）</a>：</p>
 <pre><code class="language-prettyprint">...同前…略
 
 func main() {
@@ -5107,6 +5406,33 @@ func main() {
 </code></pre>
 <p>有些文件會說，在介面有組合關係時，子介面的實例可以指定給父介面，反之就不行，這種說法不能說是錯，畢竟就上例來說，<code>ChildTester</code> 介面的實例，被指定給 <code>ParentTester</code> 介面時，從編譯器的角度來看，<code>ChildTester</code> 介面確實是有 <code>ParentTester</code> 介面的行為；反過來的話，<code>ParentTester</code> 介面被指定給 <code>ChildTester</code> 介面時，編譯器是看不到 <code>ParentTester</code> 介面上，會有 <code>ChildTester</code> 介面行為的，當然會發生錯誤。</p>
 <p>更精確來說，Go 本身並非基於類別，沒有提供繼承語法，也就沒有父介面、子介面的概念，以上僅僅只是以行為的內嵌實現了繼承的概念，因而是就看不看得到相關的行為，來判斷是否可通過編譯。</p>
+<h1 id="go-118型別條件中的介面組合"><a class="header" href="#go-118型別條件中的介面組合">Go 1.18+：型別條件中的介面組合</a></h1>
+<p>從 Go 1.18 開始，介面除了行為組合，也能在泛型中用來組合型別條件。這類介面通常不是拿來建立執行期介面值，而是用在型別參數限制上。</p>
+<p>例如，可以先定義數值族群，再組合成更大的條件：</p>
+<pre><code class="language-prettyprint">type Integer interface {
+    ~int | ~int8 | ~int16 | ~int32 | ~int64
+}
+
+type Unsigned interface {
+    ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
+}
+
+type Number interface {
+    Integer
+    Unsigned
+    ~float32 | ~float64
+}
+</code></pre>
+<p>這裡的 <code>Number</code> 是透過介面內嵌（組合）與 union type element（<code>|</code>）建立出來的型別條件。</p>
+<p>Go 1.24 起，generic type aliases 完整支援，因此可以更自然地把這類條件用在 alias 上，例如：</p>
+<pre><code class="language-prettyprint">type Set[T comparable] = map[T]struct{}
+</code></pre>
+<p>Go 1.26 也放寬了限制：泛型型別可以在自己的型別參數列表中參照自己，像是：</p>
+<pre><code class="language-prettyprint">type Adder[A Adder[A]] interface {
+    Add(A) A
+}
+</code></pre>
+<p>這對某些需要「與自身同型態運算」的泛型介面或資料結構定義會比較直接。</p>
 <div class="ad336-280" style="text-align: center;">
 </div>
 <div class="recommend" style="text-align: center;">
@@ -5130,7 +5456,7 @@ func main() {
     fmt.Printf("嗨！%s！今年 %d 歲了啊？", name, age)
 }
 </code></pre>
-<p><code>%s</code>、<code>%d</code> 是格式符號，在 Go 中稱為 verb，Go 可用的 verb 可以在 <a href="https://golang.org/pkg/fmt/"><code>fmt</code></a> 套件的文件中找到。</p>
+<p><code>%s</code>、<code>%d</code> 是格式符號，在 Go 中稱為 verb，Go 可用的 verb 可以在 <a href="https://pkg.go.dev/fmt/"><code>fmt</code></a> 套件的文件中找到。</p>
 <p><code>Scanf</code> 就類似 C 語言中的 <code>scanf</code>，可以格式化地取得輸入，底下是個範例：</p>
 <pre><code class="language-prettyprint">輸入名稱 年齡：Justin 45
 嗨！Justin！今年 45 歲了啊？
@@ -5173,7 +5499,7 @@ func main() {
     os.Stdout.Write(buf)
 }   
 </code></pre>
-<p>實際上，<a href="https://golang.org/pkg/os/#File"><code>os.File</code></a> 可用的方法不只有 <code>Read</code>、<code>Write</code>，先留意這兩個方法的目的在於，這兩個方法分別符合 <code>io.Reader</code>、<code>io.Writer</code> 定義的行為：</p>
+<p>實際上，<a href="https://pkg.go.dev/os/#File"><code>os.File</code></a> 可用的方法不只有 <code>Read</code>、<code>Write</code>，先留意這兩個方法的目的在於，這兩個方法分別符合 <code>io.Reader</code>、<code>io.Writer</code> 定義的行為：</p>
 <pre><code class="language-prettyprint">type Reader interface {
     Read(p []byte) (n int, err error)
 }
@@ -5217,7 +5543,7 @@ func main() {
 }  
 </code></pre>
 <p><code>Fscanln</code> 會傳回掃描的筆數，如果筆數少於指定的掃描數量，<code>err</code> 會指出原因，在檔案讀取結束（End of file）時，<code>err</code> 會是 <code>io.EOF</code>，在上例中，資料來源是個格式確定的字串，因此僅簡單地判斷 <code>err</code> 是否為 <code>io.EOF</code> 來結束掃描。</p>
-<p><code>os.File</code> 不過是具有 <code>io.Reader</code>、<code>io.Writer</code> 的行為罷了，<code>os.File</code> 代表檔案，也就是說 <code>Fprint</code>、<code>Fprintln</code>、<code>Fprintf</code>、<code>Fscan</code>、<code>Fscanln</code>、<code>Fscanf</code> 等函式，也可以用在檔案讀寫，其實標準輸入、輸出、錯誤等，也是被視為檔案的，這在 <code>os</code> 的 <a href="https://golang.org/src/os/file.go">file.go</a> 可以看到：</p>
+<p><code>os.File</code> 不過是具有 <code>io.Reader</code>、<code>io.Writer</code> 的行為罷了，<code>os.File</code> 代表檔案，也就是說 <code>Fprint</code>、<code>Fprintln</code>、<code>Fprintf</code>、<code>Fscan</code>、<code>Fscanln</code>、<code>Fscanf</code> 等函式，也可以用在檔案讀寫，其實標準輸入、輸出、錯誤等，也是被視為檔案的，這在 <code>os</code> 的 <a href="https://go.dev/src/os/file.go">file.go</a> 可以看到：</p>
 <pre><code class="language-prettyprint">var (
     Stdin  = NewFile(uintptr(syscall.Stdin), "/dev/stdin")
     Stdout = NewFile(uintptr(syscall.Stdout), "/dev/stdout")
@@ -5236,7 +5562,7 @@ func main() {
 <h1 id="ioreaderiowriter"><a class="header" href="#ioreaderiowriter">io.Reader、io.Writer</a></h1>
 </div>
 <p>在〈<a href="StdOutInErr.html">從標準輸入、輸出認識 io</a>〉中談到了 <code>io.Reader</code>、<code>io.Writer</code>，在 Go 中，這兩個介面抽象化了輸入、輸出，認識這兩個介面分別定義的 <code>Read</code>、<code>Write</code> 行為，是掌握 Go 中輸入、輸出的基礎。</p>
-<p><code>io.Reader</code> 定義的 <code>Read</code> 行為，可以在 <a href="https://golang.org/pkg/io/#Reader"><code>type Reader</code></a> 查看：</p>
+<p><code>io.Reader</code> 定義的 <code>Read</code> 行為，可以在 <a href="https://pkg.go.dev/io/#Reader"><code>type Reader</code></a> 查看：</p>
 <pre><code class="language-prettyprint">type Reader interface {
     Read(p []byte) (n int, err error)
 }
@@ -5281,7 +5607,7 @@ func main() {
     printUTF8TC(f)
 }
 </code></pre>
-<p><code>io.Writer</code> 定義的 <code>Write</code> 行為，可以在 <a href="https://golang.org/pkg/io/#Writer"><code>type Writer</code></a> 查看：</p>
+<p><code>io.Writer</code> 定義的 <code>Write</code> 行為，可以在 <a href="https://pkg.go.dev/io/#Writer"><code>type Writer</code></a> 查看：</p>
 <pre><code class="language-prettyprint">type Writer interface {
     Write(p []byte) (n int, err error)
 }
@@ -5578,14 +5904,14 @@ func main() {
     Stderr = NewFile(uintptr(syscall.Stderr), "/dev/stderr")
 )
 </code></pre>
-<p><code>syscall.Stdin</code>、<code>syscall.Stdout</code>、<code>syscall.Stderr</code> 分別是標準輸入、輸出、錯誤的檔案描述，這在 <a href="https://golang.org/pkg/syscall/#pkg-variables"><code>syscall</code> 的文件</a>可以看到：</p>
+<p><code>syscall.Stdin</code>、<code>syscall.Stdout</code>、<code>syscall.Stderr</code> 分別是標準輸入、輸出、錯誤的檔案描述，這在 <a href="https://pkg.go.dev/syscall/#pkg-variables"><code>syscall</code> 的文件</a>可以看到：</p>
 <pre><code class="language-prettyprint">var (
     Stdin  = 0
     Stdout = 1
     Stderr = 2
 )
 </code></pre>
-<p><code>os.File</code> 實作了 <code>io.Reader</code>、<code>io.Writer</code> 等行為，因此只要知道〈<a href="ReaderWriter.html">io.Reader、io.Writer</a>〉，剩下的就是查詢文件，看看有哪些方法可以使用，沒什麼特別需要示範的了，倒是若需要簡單的檔案讀寫，可以看看 <a href="https://golang.org/pkg/io/ioutil/"><code>ioutil</code> 套件</a>，其中有些簡便的函式：</p>
+<p><code>os.File</code> 實作了 <code>io.Reader</code>、<code>io.Writer</code> 等行為，因此只要知道〈<a href="ReaderWriter.html">io.Reader、io.Writer</a>〉，剩下的就是查詢文件，看看有哪些方法可以使用，沒什麼特別需要示範的了，倒是若需要簡單的檔案讀寫，可以看看 <a href="https://pkg.go.dev/io/ioutil/"><code>ioutil</code> 套件</a>（歷史 API），其中有些簡便的函式：</p>
 <pre><code class="language-prettyprint">func NopCloser(r io.Reader) io.ReadCloser
 func ReadAll(r io.Reader) ([]byte, error)
 func ReadDir(dirname string) ([]os.FileInfo, error)
@@ -5594,7 +5920,14 @@ func TempDir(dir, prefix string) (name string, err error)
 func TempFile(dir, pattern string) (f *os.File, err error)
 func WriteFile(filename string, data []byte, perm os.FileMode) error
 </code></pre>
-<p><code>ReadFile</code>、<code>WriteFile</code> 只要指定檔案名稱等，程式碼上不需要自行建立檔案、緩衝區之類的，這些函式在 <a href="https://golang.org/pkg/io/ioutil/"><code>ioutil</code> 套件</a> 的文件中，都有範例可以參考。</p>
+<p><code>ReadFile</code>、<code>WriteFile</code> 只要指定檔案名稱等，程式碼上不需要自行建立檔案、緩衝區之類的，這些函式在 <a href="https://pkg.go.dev/io/ioutil/"><code>ioutil</code> 套件</a> 的文件中，都有範例可以參考。</p>
+<p>補充（Go 1.16+）：<code>ioutil</code> 已棄用（deprecated），功能多已移到 <code>io</code> 與 <code>os</code>：</p>
+<pre><code class="language-prettyprint">ioutil.ReadAll   -&gt; io.ReadAll
+ioutil.ReadFile  -&gt; os.ReadFile
+ioutil.WriteFile -&gt; os.WriteFile
+ioutil.TempDir   -&gt; os.MkdirTemp
+ioutil.TempFile  -&gt; os.CreateTemp
+</code></pre>
 <div class="ad336-280" style="text-align: center;">
 </div>
 <div class="recommend" style="text-align: center;">
@@ -5642,7 +5975,7 @@ if err != nil {
 </code></pre>
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
-<p>這段程式碼摘自〈<a href="https://blog.golang.org/errors-are-values">Errors are values</a>〉，該文章中提到一個解決的方式是：</p>
+<p>這段程式碼摘自〈<a href="https://go.dev/blog/errors-are-values">Errors are values</a>〉，該文章中提到一個解決的方式是：</p>
 <pre><code class="language-prettyprint">var err error
 write := func(buf []byte) {
     if err != nil {
@@ -5792,14 +6125,14 @@ if err := scanner.Err(); err != nil {
 <div class="header">
 <h1 id="錯誤的比對"><a class="header" href="#錯誤的比對">錯誤的比對</a></h1>
 </div>
-<p>如果函式或方法傳回錯誤，要比對的不單只是 <code>nil</code> 與否，例如，讀取檔案時，會需要判斷傳回的錯誤是否為 <code>io.EOF</code>，那麼 <code>io.EOF</code> 這些錯誤是什麼呢？在 <code>io</code> 套件的 <a href="https://golang.org/src/io/io.go">io.go</a> 原始碼中可以看到，它們就是個 <code>errors.New</code> 建出的值罷了：</p>
+<p>如果函式或方法傳回錯誤，要比對的不單只是 <code>nil</code> 與否，例如，讀取檔案時，會需要判斷傳回的錯誤是否為 <code>io.EOF</code>，那麼 <code>io.EOF</code> 這些錯誤是什麼呢？在 <code>io</code> 套件的 <a href="https://go.dev/src/io/io.go">io.go</a> 原始碼中可以看到，它們就是個 <code>errors.New</code> 建出的值罷了：</p>
 <pre><code class="language-prettyprint">var ErrShortWrite = errors.New("short write")
 var ErrShortBuffer = errors.New("short buffer")
 var EOF = errors.New("EOF")
 var ErrUnexpectedEOF = errors.New("unexpected EOF")
 var ErrNoProgress = errors.New("multiple Read calls return no data or error")
 </code></pre>
-<p>在 <code>errors</code> 套件的 <a href="https://golang.org/src/errors/errors.go">errors.go</a> 可以看到，<code>errors.New</code> 建立的是個結構值，只有一個 <code>string</code> 欄位，並且實作了 <code>Error</code> 方法：</p>
+<p>在 <code>errors</code> 套件的 <a href="https://go.dev/src/errors/errors.go">errors.go</a> 可以看到，<code>errors.New</code> 建立的是個結構值，只有一個 <code>string</code> 欄位，並且實作了 <code>Error</code> 方法：</p>
 <pre><code class="language-prettyprint">func New(text string) error {
     return &amp;errorString{text}
 }
@@ -5820,7 +6153,7 @@ func (e *errorString) Error() string {
     Error() string
 }
 </code></pre>
-<p>也就是說，只要有實作 <code>Error</code> 方法，都可以作為 <code>error</code> 實例傳回，例如，<code>os.PathError</code> 在 <code>os</code> 套件的 <a href="https://golang.org/src/os/error.go">error.go</a> 是這麼定義的：</p>
+<p>也就是說，只要有實作 <code>Error</code> 方法，都可以作為 <code>error</code> 實例傳回，例如，<code>os.PathError</code> 在 <code>os</code> 套件的 <a href="https://go.dev/src/os/error.go">error.go</a> 是這麼定義的：</p>
 <pre><code class="language-prettyprint">type PathError struct {
     Op   string
     Path string
@@ -5841,7 +6174,7 @@ func (e *PathError) Timeout() bool {
     // 透過 e 取得欄位或呼叫方法
 }
 </code></pre>
-<p>若要多種類型要判斷，可以使用型態 <code>switch</code> 語法，例如 <code>os</code> 套件的 <a href="https://golang.org/src/os/error.go">error.go</a> 內部實作就有個例子：</p>
+<p>若要多種類型要判斷，可以使用型態 <code>switch</code> 語法，例如 <code>os</code> 套件的 <a href="https://go.dev/src/os/error.go">error.go</a> 內部實作就有個例子：</p>
 <pre><code class="language-prettyprint">func underlyingError(err error) error {
     switch err := err.(type) {
     case *PathError:
@@ -6052,7 +6385,7 @@ func main() {
 <p><code>Search</code> 會使用二分搜尋，第二個參數指定的函式要傳回布林值，表示是否符合搜尋條件，若找到第一個符合的話傳回索引位置，否則傳回第一個參數指定的值。</p>
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
-<p>在 <a href="https://golang.org/pkg/sort/#Search">Search</a> 說明中，還有個猜數字的有趣範例，由程式猜出你心中想的數字：</p>
+<p>在 <a href="https://pkg.go.dev/sort/#Search">Search</a> 說明中，還有個猜數字的有趣範例，由程式猜出你心中想的數字：</p>
 <pre><code class="language-prettyprint">func GuessingGame() {
     var s string
     fmt.Printf("Pick an integer from 0 to 100.\n")
@@ -6229,7 +6562,8 @@ func main() {
     printAll(lt)
 }
 </code></pre>
-<p>你可能會有問題，<code>Element</code> 的 <code>Value</code> 型態是 <code>interface{}</code>，那麼想操作保存的元素值上的欄位、方法時，不就要知道型態嗎？就目前來說，Go 不支援泛型，必須透過型態斷言：</p>
+<p>你可能會有問題，<code>Element</code> 的 <code>Value</code> 型態是 <code>interface{}</code>，那麼想操作保存的元素值上的欄位、方法時，不就要知道型態嗎？這裡仍然需要透過型態斷言：</p>
+<p>補充（Go 1.18+）：Go 已支援泛型，不過 <code>container/list</code> 本身仍是舊有 API 風格（實務上可視為 <code>any</code> / <code>interface{}</code> 容器），因此若你需要型別安全的清單結構，常見做法是自行包一層泛型型別。</p>
 <pre><code class="language-prettyprint">package main
 
 import (
@@ -6330,7 +6664,7 @@ func main() {
     Pop() interface{} 
 }
 </code></pre>
-<p>也就是說，除了實現 <code>sort.Interface</code> 的 <code>Len</code>、<code>Less</code>、<code>Swap</code> 方法之外，還要實現 <code>Push</code> 與 <code>Pop</code> 的行為，在 <a href="https://golang.org/pkg/container/heap/"><code>heap</code> 的 Go 官方文件說明</a> 有個簡單範例：</p>
+<p>也就是說，除了實現 <code>sort.Interface</code> 的 <code>Len</code>、<code>Less</code>、<code>Swap</code> 方法之外，還要實現 <code>Push</code> 與 <code>Pop</code> 的行為，在 <a href="https://pkg.go.dev/container/heap/"><code>heap</code> 的 Go 官方文件說明</a> 有個簡單範例：</p>
 <pre><code class="language-prettyprint">type IntHeap []int
 
 func (h IntHeap) Len() int           { return len(h) }
@@ -6459,7 +6793,7 @@ func main() {
     })
 }
 </code></pre>
-<p><a href="https://golang.org/pkg/container/ring/"><code>ring</code> 的官方文件</a>有相關方法的範例，這邊就不重複列出了，實際應用上，<code>ring</code> 可以用來管理有限筆數的歷史記錄、輪播等。</p>
+<p><a href="https://pkg.go.dev/container/ring/"><code>ring</code> 的官方文件</a>有相關方法的範例，這邊就不重複列出了，實際應用上，<code>ring</code> 可以用來管理有限筆數的歷史記錄、輪播等。</p>
 <p>這邊的話拿來解一下 <a href="https://openhome.cc/Gossip/AlgorithmGossip/">約瑟夫問題（Josephus Problem）</a> 好了：</p>
 <pre><code class="language-prettyprint">package main
 
@@ -6508,7 +6842,7 @@ func main() {
 <div class="header">
 <h1 id="strconvstrings-套件"><a class="header" href="#strconvstrings-套件">strconv、strings 套件</a></h1>
 </div>
-<p>Go 的字串基本上是個 <code>[]byte</code>，在程式語言強弱型別的光譜中，Go 位於強型別的一端，對於字串與其他型態之間的轉換，往往得自行處理，在這方面，<a href="https://golang.org/pkg/strconv/"><code>strconv</code> 套件</a>就提供了不少的函式。</p>
+<p>Go 的字串基本上是個 <code>[]byte</code>，在程式語言強弱型別的光譜中，Go 位於強型別的一端，對於字串與其他型態之間的轉換，往往得自行處理，在這方面，<a href="https://pkg.go.dev/strconv/"><code>strconv</code> 套件</a>就提供了不少的函式。</p>
 <p>例如，最常用的是將字串剖析為某個型態：</p>
 <pre><code class="language-prettyprint">func ParseBool(str string) (bool, error)
 func ParseFloat(s string, bitSize int) (float64, error)
@@ -6539,7 +6873,7 @@ func AppendUint(dst []byte, i uint64, base int) []byte
 b = strconv.AppendBool(b, true)
 fmt.Println(string(b))
 </code></pre>
-<p>對於大量的字串附加處理，可以使用 <a href="https://golang.org/pkg/strings/"><code>strings</code> 套件</a>的 <code>Builder</code>，一來操作上比較方便，二來可看看是否可取得較好的效能表現：</p>
+<p>對於大量的字串附加處理，可以使用 <a href="https://pkg.go.dev/strings/"><code>strings</code> 套件</a>的 <code>Builder</code>，一來操作上比較方便，二來可看看是否可取得較好的效能表現：</p>
 <pre><code class="language-prettyprint">type Builder
     func (b *Builder) Cap() int
     func (b *Builder) Grow(n int)
@@ -6631,7 +6965,7 @@ func main() {
     fmt.Println(r.Replace("This is &lt;b&gt;HTML&lt;/b&gt;!"))
 }
 </code></pre>
-<p>其他對於字串的比較、分割、大小寫轉換等處理，<code>strings</code> 中提供了一系列的函式，<a href="https://golang.org/pkg/strings/"><code>strings</code> 套件</a>的文件中都有程式碼示範。</p>
+<p>其他對於字串的比較、分割、大小寫轉換等處理，<code>strings</code> 中提供了一系列的函式，<a href="https://pkg.go.dev/strings/"><code>strings</code> 套件</a>的文件中都有程式碼示範。</p>
 <div class="ad336-280" style="text-align: center;">
 </div>
 <div class="recommend" style="text-align: center;">
@@ -6642,8 +6976,8 @@ func main() {
 <div class="header">
 <h1 id="bytes-套件"><a class="header" href="#bytes-套件">bytes 套件</a></h1>
 </div>
-<p>Go 字串的本質是 <code>[]byte</code>，如果想基於位元組來處理字串，或者是想處理其他來源的 <code>[]byte</code>，可以使用 <a href="https://golang.org/pkg/bytes/"><code>bytes</code></a> 套件。</p>
-<p>因為 Go 字串本質上就是一組 Unicode 碼點的 UTF-8 編碼位元組，<a href="https://golang.org/pkg/bytes/"><code>bytes</code></a> 與 <a href="https://golang.org/pkg/strings/"><code>strings</code></a> 套件中提供的函式，有著很大的相似性，只不過前者針對 <code>[]byte</code>，後者針對 <code>string</code>…唔…好像在說廢話…也就是說…儘管兩者提供的函式在名稱上有重疊，除了函式上的參數或傳回型態不同之外，兩者處理的粒度等也不同，例如 Compare，一個是逐一比較位元組，另一個是逐一比較 Unicode 碼點。</p>
+<p>Go 字串的本質是 <code>[]byte</code>，如果想基於位元組來處理字串，或者是想處理其他來源的 <code>[]byte</code>，可以使用 <a href="https://pkg.go.dev/bytes/"><code>bytes</code></a> 套件。</p>
+<p>因為 Go 字串本質上就是一組 Unicode 碼點的 UTF-8 編碼位元組，<a href="https://pkg.go.dev/bytes/"><code>bytes</code></a> 與 <a href="https://pkg.go.dev/strings/"><code>strings</code></a> 套件中提供的函式，有著很大的相似性，只不過前者針對 <code>[]byte</code>，後者針對 <code>string</code>…唔…好像在說廢話…也就是說…儘管兩者提供的函式在名稱上有重疊，除了函式上的參數或傳回型態不同之外，兩者處理的粒度等也不同，例如 Compare，一個是逐一比較位元組，另一個是逐一比較 Unicode 碼點。</p>
 <p>類似地，對於頻繁性的字串操作，可以使用 <code>strings.Builder</code>，對於對於頻繁性的位元組操作，可以使用 <code>bytes.Buffer</code>：</p>
 <pre><code class="language-prettyprint">type Buffer
     func NewBuffer(buf []byte) *Buffer
@@ -6724,8 +7058,8 @@ func main() {
 <h1 id="unicode-套件"><a class="header" href="#unicode-套件">unicode 套件</a></h1>
 </div>
 <p><code>unicode</code>、<code>unicode/utf8</code>、<code>unicode/utf16</code> 是用來判斷、處理 Unicode 以及 UTF-8、UTF-16 編碼的套件，在使用這些套件之前，要先知道的是，Go 認為「字元」的定義過於模糊，在 Go 中使用 <code>rune</code> 儲存 Unicode 碼點（Code point），而 Go 中字串是 UTF-8 編碼的位元組組成。</p>
-<p><a href="https://golang.org/pkg/unicode/"><code>unicode</code></a> 套件主要用來判斷 Unicode 碼點的特性（properties），在 Unicode 規範中，每個碼點會被指定某些特性，具有相同特性的一組碼點構成一個集合，以便於理解、判斷這組碼點。</p>
-<p>例如，<a href="https://en.wikipedia.org/wiki/Template:General_Category_(Unicode)">General Category</a> 特性有 Letter/L 代表字母、Number/N 代表數字等，在 Go 的 <a href="https://golang.org/pkg/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 一開頭，列出的就是這類特性的變數：</p>
+<p><a href="https://pkg.go.dev/unicode/"><code>unicode</code></a> 套件主要用來判斷 Unicode 碼點的特性（properties），在 Unicode 規範中，每個碼點會被指定某些特性，具有相同特性的一組碼點構成一個集合，以便於理解、判斷這組碼點。</p>
+<p>例如，<a href="https://en.wikipedia.org/wiki/Template:General_Category_(Unicode)">General Category</a> 特性有 Letter/L 代表字母、Number/N 代表數字等，在 Go 的 <a href="https://pkg.go.dev/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 一開頭，列出的就是這類特性的變數：</p>
 <pre><code class="language-prettyprint">var (
     ...
     Digit  = _Nd // 十進位數字的集合
@@ -6747,7 +7081,7 @@ func main() {
 </code></pre>
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
-<p>碼點範圍表可以在 <a href="https://golang.org/src/unicode/tables.go">tables.go</a> 找到。舉例來說，字母集合的碼點範圍：</p>
+<p>碼點範圍表可以在 <a href="https://go.dev/src/unicode/tables.go">tables.go</a> 找到。舉例來說，字母集合的碼點範圍：</p>
 <pre><code class="language-prettyprint">var _L = &amp;RangeTable{
     R16: []Range16{
         {0x0041, 0x005a, 1},
@@ -6777,8 +7111,8 @@ func main() {
     fmt.Println(allNumbers("²³¹¼½¾𝟏𝟐𝟑𝟜𝟝𝟞𝟩𝟪𝟫𝟬𝟭𝟮𝟯𝟺𝟻𝟼㉛㉜㉝ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫⅬⅭⅮⅯⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹⅺⅻⅼⅽⅾⅿ"))
 }
 </code></pre>
-<p>Unicode 將希臘文、漢字等以<a href="https://en.wikipedia.org/wiki/Script_(Unicode)">文字（Script）</a>特性標示，在 Go 的 <a href="https://golang.org/pkg/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 第二組列出的變數清單，就是對應的 <code>RangeTable</code>，例如 <code>unicode.Han</code> 是正體中文、簡體中文，以及日、韓、越南文的全部漢字範圍。</p>
-<p>另外還有一些其他特性，列在 Go 的 <a href="https://golang.org/pkg/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 第三組變數清單，例如 <code>unicode.White_Space</code> 代表被標示為空白特性的碼點，這包括了半形、全形、Tab 等。</p>
+<p>Unicode 將希臘文、漢字等以<a href="https://en.wikipedia.org/wiki/Script_(Unicode)">文字（Script）</a>特性標示，在 Go 的 <a href="https://pkg.go.dev/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 第二組列出的變數清單，就是對應的 <code>RangeTable</code>，例如 <code>unicode.Han</code> 是正體中文、簡體中文，以及日、韓、越南文的全部漢字範圍。</p>
+<p>另外還有一些其他特性，列在 Go 的 <a href="https://pkg.go.dev/unicode/#pkg-variables">unicode 套件文件的 Variables</a> 第三組變數清單，例如 <code>unicode.White_Space</code> 代表被標示為空白特性的碼點，這包括了半形、全形、Tab 等。</p>
 <p>如果想要使用多個 RangeTable，<code>可以透過 IsOneOf</code>：</p>
 <pre><code class="language-prettyprint">func IsOneOf(ranges []*RangeTable, r rune) bool
 </code></pre>
@@ -6887,12 +7221,12 @@ U+754C '界':
 <h1 id="編碼轉換"><a class="header" href="#編碼轉換">編碼轉換</a></h1>
 </div>
 <p>不論從哪個面向，都可以看出 Go 獨厚 UTF-8，這可能是因為 Go 的設計者之一 Ken Thompson，也曾經參與了 UTF-8 的設計。</p>
-<p>如果文字資料的來源並非 UTF-8 呢？例如，儲存時並非使用 UTF-8 的檔案？解決的方法之一，是將檔案另行儲存為 UTF-8，再使用 Go 來讀取，當然，並非所有的的場合都可以這麼做，另一個方式是，使用 <a href="https://godoc.org/golang.org/x/text"><code>golang.org/x/text</code></a> 套件。</p>
-<p>Go 除了本身自帶的標準套件之外，還有另外一系列官方的擴充套件，這些擴充套件組織在 <a href="https://godoc.org/-/subrepo"><code>golang/x</code></a> 底下，依文件上的說明，這些套件也是 Go 專案的一部份，只不過在相容性的維護上比較沒那麼嚴格。</p>
-<p>在官方擴充套件中，<code>golang.org/x/text</code> 主要包含了文字編碼、轉換、國際化、本地化等文字性任務的套件，可以透過 <code>go get</code> 來取得、安裝：</p>
-<pre><code class="language-prettyprint">go get golang.org/x/text
+<p>如果文字資料的來源並非 UTF-8 呢？例如，儲存時並非使用 UTF-8 的檔案？解決的方法之一，是將檔案另行儲存為 UTF-8，再使用 Go 來讀取，當然，並非所有的的場合都可以這麼做，另一個方式是，使用 <a href="https://pkg.go.dev/golang.org/x/text"><code>golang.org/x/text</code></a> 套件。</p>
+<p>Go 除了本身自帶的標準套件之外，還有另外一系列官方的擴充套件（常稱 x/ repos），這些套件也是 Go 專案的一部份，只不過在相容性的維護上比較沒那麼嚴格。</p>
+<p>在官方擴充套件中，<code>golang.org/x/text</code> 主要包含了文字編碼、轉換、國際化、本地化等文字性任務的套件。若是在模組專案中使用，通常直接 <code>import</code> 後執行 <code>go mod tidy</code> 即可；若要手動加入依賴，也可以使用：</p>
+<pre><code class="language-prettyprint">go get golang.org/x/text@latest
 </code></pre>
-<p>文字編碼的轉換主要由 <a href="https://godoc.org/golang.org/x/text/transform"><code>golang.org/x/text/transform</code></a> 套件來處理，看看其中的函式或結構方法，都會需要 <code>Transformer</code> 介面的實現，例如最基本的 <code>String</code>：</p>
+<p>文字編碼的轉換主要由 <a href="https://pkg.go.dev/golang.org/x/text/transform"><code>golang.org/x/text/transform</code></a> 套件來處理，看看其中的函式或結構方法，都會需要 <code>Transformer</code> 介面的實現，例如最基本的 <code>String</code>：</p>
 <pre><code class="language-prettyprint">func String(t Transformer, s string) (result string, n int, err error)
 </code></pre>
 <p><code>Transformer</code> 定義的主要是 <code>Transform</code> 方法，代表著編碼的轉換：</p>
@@ -6902,7 +7236,7 @@ U+754C '界':
 }
 </code></pre>
 <p><code>dst</code>、<code>src</code> 代表著同一文字兩個不同編碼的位元組，由於 Go 使用 UTF-8，從 UTF-8 轉換為其他編碼，這個動作稱為 <code>Encode</code>，從其他編碼轉換為 UTF-8，這個動作稱為 Decode。</p>
-<p>Encode、Decode 的動作，分別由 <a href="https://godoc.org/golang.org/x/text/encoding"><code>golang.org/x/text/encoding</code></a> 套件的 <code>Encoder</code>、<code>Decoder</code> 來處理，它們都是 <code>transform.Transformer</code> 的實現：</p>
+<p>Encode、Decode 的動作，分別由 <a href="https://pkg.go.dev/golang.org/x/text/encoding"><code>golang.org/x/text/encoding</code></a> 套件的 <code>Encoder</code>、<code>Decoder</code> 來處理，它們都是 <code>transform.Transformer</code> 的實現：</p>
 <pre><code class="language-prettyprint">type Encoder struct {
     transform.Transformer
     ...
@@ -6919,7 +7253,7 @@ type Decoder struct {
     NewEncoder() *Encoder
 }
 </code></pre>
-<p><a href="https://godoc.org/golang.org/x/text/encoding"><code>golang.org/x/text/encoding</code></a> 套件之中，定義了不同的編碼轉換套件，例如，想處理 Big5（Code Page 950） 編碼轉換的話，需要 <code>golang.org/x/text/encoding/traditionalchinese</code> 套件，它的 <code>Big5</code> 就實現了 <code>Encoding</code>，因此想要獲得 UTF-8 &lt;-&gt; Big5 的 <code>Encoder</code>、<code>Decoder</code>，可以如下：</p>
+<p><a href="https://pkg.go.dev/golang.org/x/text/encoding"><code>golang.org/x/text/encoding</code></a> 套件之中，定義了不同的編碼轉換套件，例如，想處理 Big5（Code Page 950） 編碼轉換的話，需要 <code>golang.org/x/text/encoding/traditionalchinese</code> 套件，它的 <code>Big5</code> 就實現了 <code>Encoding</code>，因此想要獲得 UTF-8 &lt;-&gt; Big5 的 <code>Encoder</code>、<code>Decoder</code>，可以如下：</p>
 <pre><code class="language-prettyprint">utf8ToBig5 := traditionalchinese.Big5.NewEncoder()
 big5ToUtf8 := traditionalchinese.Big5.NewDecoder()
 </code></pre>
@@ -6973,13 +7307,12 @@ import (
     "fmt"
     "io"
     "os"
-    "io/ioutil"
 )
 
 func printBig5(r io.Reader) error {
     var big5R = transform.NewReader(r, traditionalchinese.Big5.NewDecoder())
 
-    b, err := ioutil.ReadAll(big5R)
+    b, err := io.ReadAll(big5R)
     fmt.Println(string(b))
 
     return err
@@ -7319,7 +7652,7 @@ func main() {
 }
 </code></pre>
 <p>技術上來說，上面的例子，只是傳了 <code>x</code> 的值複本給 <code>reflect.ValueOf()</code>，因此，對其設值並無意義。</p>
-<p>若對反射想進一步研究，可以參考〈<a href="http://blog.golang.org/laws-of-reflection">The Laws of Reflection</a>〉。</p>
+<p>若對反射想進一步研究，可以參考〈<a href="https://go.dev/blog/laws-of-reflection">The Laws of Reflection</a>〉。</p>
 <div class="ad336-280" style="text-align: center;">
 </div>
 <div class="recommend" style="text-align: center;">
@@ -7543,6 +7876,11 @@ func main() {
 <h1 id="使用-syncwaitgroup"><a class="header" href="#使用-syncwaitgroup">使用 sync.WaitGroup</a></h1>
 <p>有沒有辦法知道 Goroutine 執行結束呢？實際上沒有任何方法可以得知，除非你主動設計一種機制，可以在 Goroutine 結束時執行通知，使用 Channel 是一種方式，這在之後的文件再說明，這邊先說明另一種方式，也就是使用 <code>sync.WaitGroup</code>。</p>
 <p><code>sync.WaitGroup</code> 可以用來等待一組 Goroutine 的完成，主流程中建立 <code>sync.WaitGroup</code>，並透過 <code>Add</code> 告知要等待的 Goroutine 數量，並使用 <code>Wait</code> 等待 Goroutine 結束，而每個 Goroutine 結束前，必須執行 <code>sync.WaitGroup</code> 的 <code>Done</code> 方法。</p>
+<p>重點是，<code>Add</code> 的數字代表「之後會呼叫 <code>Done()</code> 的 Goroutine 數量」，不是程式總共會跑幾步或迴圈會執行幾次。</p>
+<ul>
+<li><code>Add</code> 設太小：可能提早結束，甚至在多呼叫 <code>Done()</code> 時發生 <code>panic: sync: negative WaitGroup counter</code></li>
+<li><code>Add</code> 設太大：<code>wg.Wait()</code> 會一直卡住不返回</li>
+</ul>
 <p>因此，我們可以使用 <code>sync.WaitGroup</code> 來改寫以上的範例：</p>
 <pre><code class="language-prettyprint">package main
 
@@ -7954,40 +8292,45 @@ func main() {
 <div class="header">
 <h1 id="模組入門"><a class="header" href="#模組入門">模組入門</a></h1>
 </div>
-<p>Go 在 1.11 時內建了實驗性的模組管理功能，並藉由 <code>GO111MODULE</code> 來決定是否啟用，可設定的值是 <code>auto</code>（1.11 ~ 1.13 預設）、<code>on</code> 與 <code>off</code>。</p>
-<p>若使用 Go 1.13，當設定值是 <code>auto</code>，執行建構指令時，會看看是否有個 go.mod 檔案（用來定義依賴的模組），若有就使用 Go 模組功能，如果沒有 go.mod 檔案，就採用舊式 <code>GOPATH</code>、vendor 的特性。</p>
-<p>當設定值為 <code>on</code> 時，就是始終使用 Go 模組功能（從 1.12 之後，go.mod 可以在必要時再新增），模組下載後會自動安裝至 <code>GOPATH</code>。</p>
-<p>go.mod 不可以在 <code>GOPATH</code> 之中。</p>
-<p>設定值為 <code>off</code> 時就是不使用 Go 模組功能。</p>
+<p>Go 在 1.11 時內建了實驗性的模組管理功能，並藉由 <code>GO111MODULE</code> 來決定是否啟用，可設定的值是 <code>auto</code>（1.11 ~ 1.15 的常見預設）、<code>on</code> 與 <code>off</code>。</p>
+<p>若使用 Go 1.13，當設定值是 <code>auto</code>，執行建構指令時，會看看是否有個 go.mod 檔案（用來定義依賴的模組），若有就使用 Go 模組功能；沒有 go.mod 時，則仍可能採用舊式 <code>GOPATH</code> / vendor 的工作方式。</p>
+<p>不過，在現代版本（例如 Go 1.26）中，模組已是標準做法。從 Go 1.16 起，模組模式預設啟用；日常開發通常不需要特別設定 <code>GO111MODULE</code>，直接使用 <code>go mod init</code> / <code>go mod tidy</code> 即可。</p>
+<p>當設定值為 <code>on</code> 時，就是始終使用 Go 模組功能（從 1.12 之後，go.mod 可以在必要時再新增），模組下載內容會放在模組快取（預設位於 <code>GOPATH/pkg/mod</code>）。</p>
+<p>在 Go 1.13 之後，go.mod 可以位於 <code>GOPATH</code> 之內或之外；新專案通常直接放在版本控制目錄下即可，不必刻意配合 <code>GOPATH</code>。</p>
+<p>設定值為 <code>off</code> 時就是使用舊式 <code>GOPATH</code> 模式（僅建議維護舊專案時使用）。</p>
 <p>例如，現在有個 pkgfoo 釋出了 <a href="https://github.com/JustinSDK/pkgfoo/tree/v1.0.0">v1.0.0</a> 版，而你打算基於它寫個 go-exercise，go-exercise 資料夾中有個 src/main/main.go：</p>
 <pre><code class="language-prettyprint">package main
 
 import "github.com/JustinSDK/pkgfoo"
 
 func main() {
-    kgfoo.Hi()
+    pkgfoo.Hi()
     pkgfoo.Hello()
 }
 </code></pre>
-<p>現在進入你的 go-exercise 資料夾底下，執行 <code>go mod init go-exercise</code>，這會建立一個 go.mod，使用 Go 1.13 的話，預設內容是：</p>
+<p>現在進入你的 go-exercise 資料夾底下，執行 <code>go mod init go-exercise</code>，這會建立一個 go.mod；<code>go</code> 指令寫入的版本號會依實際安裝版本而異。在 Go 1.26 中，<code>go mod init</code> 預設會寫入較低的相容版本（例如 1.25.0），而不是直接寫成 1.26：</p>
 <pre><code class="language-prettyprint">module go-exercise
 
-go 1.13
+go 1.25.0
 </code></pre>
 <p>從 Go 1.12 開始，預設的 go.mod 中會有版本字段，放置了 go.mod 的資料夾稱為模組根（module root）目錄，通常就是一個 repository 的根目錄，該目錄下的全部套件都屬於該模組（除了那些本身包含 go.mod 檔案的子目錄之外）。</p>
-<p>接著執行 <code>go build -o bin/main.exe src/main/main.go</code>，這時會自動找出 <code>import</code> 陳述，執行了套件的下載並完成建構，此時會顯示以下訊息：</p>
-<pre><code class="language-prettyprint">go: finding github.com/JustinSDK/pkgfoo v1.0.0
+<p>在 Go 1.13 時，<code>go build</code> 常會一邊找出 <code>import</code> 陳述、一邊下載套件並更新 <code>go.mod</code>。不過從 Go 1.16 開始，<code>go build</code> / <code>go test</code> 預設不再自動改寫 <code>go.mod</code> 與 <code>go.sum</code>。在 Go 1.26 中，較常見的做法是先執行 <code>go mod tidy</code>（或 <code>go get</code> 調整依賴），再執行建構。</p>
+<p>另外，因為 <code>pkgfoo</code> 現在最新版本可能已經不是 <code>v1.0.0</code>，如果你想重現本頁後面「從 <code>v1.0.0</code> 昇級到 <code>v1.0.1</code>」的過程，可以先明確指定版本：</p>
+<pre><code class="language-prettyprint">go get github.com/JustinSDK/pkgfoo@v1.0.0
+</code></pre>
+<p>例如，先執行 <code>go mod tidy</code> 時，會看到類似訊息：</p>
+<pre><code class="language-prettyprint">go: finding module for package github.com/JustinSDK/pkgfoo
 go: downloading github.com/JustinSDK/pkgfoo v1.0.0
-go: extracting github.com/JustinSDK/pkgfoo v1.0.0
+go: found github.com/JustinSDK/pkgfoo in github.com/JustinSDK/pkgfoo v1.0.0
 </code></pre>
 <p>而 go.mod 也有了底下內容：</p>
-<pre><code class="language-prettyprint">module exercise
+<pre><code class="language-prettyprint">module go-exercise
 
-go 1.13
+go 1.25.0
 
 require github.com/JustinSDK/pkgfoo v1.0.0
 </code></pre>
-<p>go.mod 定義了相依的套件與版本，若是第一次執行 <code>go build</code>，那麼總是會下載最新版本，你也可以自行編輯 go.mod 的內容，來取得想要的版本，另外你也會發現多了個 go.sum，其中包含了套件的 hash 等訊息，這用來確認取得的是正確的版本：</p>
+<p>go.mod 定義了相依的套件與版本，你也可以自行編輯 go.mod 的內容，來取得想要的版本；另外你也會發現多了個 go.sum，其中包含了套件的 hash 等訊息，這用來確認取得的是正確的版本。實務上常以 <code>go mod tidy</code> 來同步整理 <code>go.mod</code> 與 <code>go.sum</code>：</p>
 <pre><code class="language-prettyprint">github.com/JustinSDK/pkgfoo v1.0.0 h1:XOi67njsT9pcRrsT40Oi3LCA3b1TyIxHd6+9ceGwa0U=
 github.com/JustinSDK/pkgfoo v1.0.0/go.mod h1:5PAHGmqvfj2XbzxxOeiJJjOflE/p6zTVRFfaiEeSn1w=
 </code></pre>
@@ -7997,7 +8340,8 @@ Helo
 </code></pre>
 <p>喔！Hello 少了一個小寫的 l，這是一個小 bug，在修正之後，發佈了 <a href="https://github.com/JustinSDK/pkgfoo/tree/v1.0.1">v1.0.1</a>：</p>
 <p>現在 appfoo 為了要能取得更新，可以使用 <code>go get -u</code>，這會昇級到最新的 MINOR 或 PATCH 版本，像是從 1.0.0 到 1.0.1，或者是 1.0.0 到 1.1.0，是的，這採用的是 <a href="https://semver.org/">Semantic Versioning</a>；若是使用 <code>go get -u=patch all</code>，會將用到的套件昇級至最新的 PATCH 版本，像是從 1.0.0 到 1.0.1；若是使用 <code>go get package@version</code>，可以指定昇級至某個版本號，例如 <code>go get github.com/JustinSDK/pkgfoo@v1.0.1</code>，然而，不建議以此方式昇級至新的 MAJOR 版本，原因後述。</p>
-<p>在這邊因為只是小 bug 更新，就使用 <code>go get -u=patch all</code>，這會看到底下的訊息：</p>
+<p>補充（Go 1.26 現況）：這裡的 <code>go get</code> 是在「目前模組內管理依賴版本」。如果是安裝命令列工具，請改用 <code>go install module/path/cmd@version</code>（例如 <code>@latest</code>）；從 Go 1.18 起，<code>go get</code> 不再負責建構/安裝可執行檔。</p>
+<p>在這邊因為只是小 bug 更新，就使用 <code>go get -u=patch all</code>，這會看到類似底下的訊息：</p>
 <pre><code class="language-prettyprint">go: finding github.com/JustinSDK/pkgfoo v1.0.1
 go: downloading github.com/JustinSDK/pkgfoo v1.0.1
 go: extracting github.com/JustinSDK/pkgfoo v1.0.1
@@ -8005,7 +8349,7 @@ go: extracting github.com/JustinSDK/pkgfoo v1.0.1
 <p>go.mod 的內容也更新了（go.sum 也會更新）：</p>
 <pre><code class="language-prettyprint">module go-exercise
 
-go 1.13
+go 1.25.0
 
 require github.com/JustinSDK/pkgfoo v1.0.1
 </code></pre>
@@ -8030,7 +8374,7 @@ func main() {
     pkgfoo.Hello()
 }
 </code></pre>
-<p>直接 <code>go build -o bin/main.exe src/main/main.go</code>，就會看到下載了 v2.0.0：</p>
+<p>直接 <code>go build -o bin/main.exe src/main/main.go</code>，就會看到類似底下下載 v2.0.0 的訊息：</p>
 <pre><code class="language-prettyprint">go: finding github.com/JustinSDK/pkgfoo/v2 v2.0.0
 go: downloading github.com/JustinSDK/pkgfoo/v2 v2.0.0
 go: extracting github.com/JustinSDK/pkgfoo/v2 v2.0.0
@@ -8038,13 +8382,14 @@ go: extracting github.com/JustinSDK/pkgfoo/v2 v2.0.0
 <p>而且你可以看到 appfoo 的 go.mod 更新為：</p>
 <pre><code class="language-prettyprint">module go-exercise
 
-go 1.13
+go 1.25.0
 
 require (
     github.com/JustinSDK/pkgfoo v1.0.1
     github.com/JustinSDK/pkgfoo/v2 v2.0.0
 )
 </code></pre>
+<p>補充（Go 1.18+）：如果你同時維護多個模組（例如 app 與數個本地 library），可以使用 <code>go work init</code> / <code>go work use</code> 建立 workspace，避免在本機開發時大量寫 <code>replace</code> 指令。</p>
 <p>現在它依賴在…兩個版本？是的，事實上，你也可以同時在 appfoo 中使用：</p>
 <pre><code class="language-prettyprint">package main
 
@@ -8074,8 +8419,8 @@ Hello
 <div class="header">
 <h1 id="哈囉webassembly"><a class="header" href="#哈囉webassembly">哈囉！WebAssembly！</a></h1>
 </div>
-<p>Go 1.11 實驗性地加入了 WebAssembly 的支援，這表示你可以使用 Go 來撰寫程式碼，然後令其在網頁中執行，也可以與瀏覽器互動，像是瀏覽器的 JavaScript 環境、DOM 操作等。</p>
-<p>對 Go 開發者而言，理想的狀況下，若 Go 封裝的好，最好是可以完全忽略 JavaScript、瀏覽器環境等事實，也不需要知道 WebAssembly 的細節，然而，畢竟目前還是實驗性質，如果能認識 JavaScript、瀏覽器、WebAssembly 的特性，對使用 Go 撰寫程式並編譯為 WebAssembly 來說，是有很大的幫助的。</p>
+<p>Go 1.11 當時以實驗性功能加入了 WebAssembly 支援；在現代版本（例如 Go 1.26）中，<code>js/wasm</code> 已是常見目標之一，你可以使用 Go 來撰寫程式碼，然後令其在網頁中執行，也可以與瀏覽器互動，像是瀏覽器的 JavaScript 環境、DOM 操作等。</p>
+<p>對 Go 開發者而言，理想的狀況下，若 Go 封裝的好，最好是可以完全忽略 JavaScript、瀏覽器環境等事實，也不需要知道 WebAssembly 的細節；不過，若能認識 JavaScript、瀏覽器、WebAssembly 的特性，對使用 Go 撰寫程式並編譯為 WebAssembly 來說，仍有很大的幫助。</p>
 <p>如果對 JavaScript、瀏覽器的細節有興趣，建議參考〈<a href="https://openhome.cc/Gossip/ECMAScript/">ECMAScript 本質部份</a>〉，如果對 WebAssembly 的細節有興趣，建議參考〈<a href="https://openhome.cc/Gossip/WebAssembly/">WebAssembly</a>〉文件。</p>
 <p>無論如何，來看個簡單的 Go 程式如何編譯為 WebAssembly，首先，來個簡單的 Go 程式：</p>
 <pre><code class="language-prettyprint">package main
@@ -8101,10 +8446,10 @@ SET GOARCH=wasm
 <p>接下來，可以執行建構：</p>
 <pre><code class="language-prettyprint">go build -o test.wasm main.go
 </code></pre>
-<p>test.wasm 是編譯出來的 WebAssembly 模組位元組碼，除了你撰寫的程式之外，根據〈<a href="https://goo.gl/YfaETG">Go 1.11 Release Notes</a>〉，編譯出來的 WebAssembly 模組也包含了 goroutine、垃圾收集、maps 等功能的執行環境，最小約在 2MB 左右，壓縮後可以減至 500KB。</p>
+<p>test.wasm 是編譯出來的 WebAssembly 模組位元組碼。體積會依 Go 版本、程式內容與最佳化方式而異；早期 Go 1.11 的 wasm hello world 常見約數 MB 等級（壓縮後可明顯降低），現代版本的結果也仍建議搭配壓縮與快取策略評估。</p>
 <p>接下來就是開個 HTML 檔案，在當中使用 JavaScript，運用 Fetch API、WebAssembly API 等，取得、編譯、初始化 WebAssembly 模組，這些細節在〈<a href="https://openhome.cc/Gossip/WebAssembly/">WebAssembly</a>〉文件都有談到。</p>
-<p>如果想要直接有個現成的載入頁面可以使用，可以複製 Go 安裝目錄的 misc\wasm 中 wasm_exec.html 與 wasm_exec.js 到你的工作目錄之中，wasm_exec.html 裏頭寫的 JavaScript，會使用 Fetch API 來取得 test.wasm，這也是為什麼，方才編譯時指定輸出檔案名稱為 test.wasm 的原因。</p>
-<p>如果你有安裝 Node.js，那麼可以直接搭配 wasm_exec.js 來運行 test.wasm，這會顯示 Hello, WebAssembly：</p>
+<p>如果想要直接有個現成的載入頁面可以使用，在 Go 1.26 可從 Go 安裝目錄的 <code>lib/wasm</code> 取得 <code>wasm_exec.html</code> 與 <code>wasm_exec.js</code>（舊版文件常見 <code>misc/wasm</code> 路徑）。<code>wasm_exec.html</code> 裏頭寫的 JavaScript，會使用 Fetch API 來取得 test.wasm，這也是為什麼，方才編譯時指定輸出檔案名稱為 test.wasm 的原因。</p>
+<p>如果你有安裝 Node.js，Go 1.26 也可使用 <code>go_js_wasm_exec</code>（或參考 <code>lib/wasm/wasm_exec_node.js</code>）來運行 test.wasm。舊版文件常見直接搭配 <code>wasm_exec.js</code> 的方式，實際可用性會依版本而異：</p>
 <pre><code class="language-prettyprint">node wasm_exec.js test.wasm
 </code></pre>
 <p>如果要在瀏覽器中運行，你需要有個 HTTP 伺服器，例如 Node.js 的 <code>http-server</code>，在啟動之後，請求你的 http://localhost:8080/wasm_exec.html。</p>
@@ -8126,7 +8471,7 @@ SET GOARCH=wasm
 <div class="header">
 <h1 id="go-呼叫-javascript"><a class="header" href="#go-呼叫-javascript">Go 呼叫 JavaScript</a></h1>
 </div>
-<p>Go 社群中有不少人直言，Go 支援 WebAssembly 就是要取代 Javascript，雖然我個人覺得，這就姑且當成是個崇高的理想就好，不過這也表示，在編譯為 WebAssembly 之後，可以呼叫 JavaScript 或操作 DOM，自然也是 Go 應該照料之事，為此，Go 1.11 提供了個實驗性的 <code>syscall/js</code> 套件來負責這項任務。</p>
+<p>Go 社群中有不少人直言，Go 支援 WebAssembly 就是要取代 Javascript，雖然我個人覺得，這就姑且當成是個崇高的理想就好，不過這也表示，在編譯為 WebAssembly 之後，可以呼叫 JavaScript 或操作 DOM，自然也是 Go 應該照料之事。<code>syscall/js</code> 在 Go 1.11 時期以實驗性姿態登場，而在現代版本（例如 Go 1.26）的 <code>js/wasm</code> 開發中，仍是重要的橋接套件。</p>
 <p>Go 與 JavaScript 畢竟是兩個不同的語言，各擁有不同的資料型態與結構，因而必須先知道，兩個語言間的型態如何對應，這主要定義在 <code>syscall/js</code> 套件的 js.go 中。</p>
 <p>例如，<code>js.Value</code> 結構代表 JavaScript 中的值，定義有 <code>Get</code> 與 <code>Set</code> 方法，可以對物件上的特性存取；若想存取的對象實際上是陣列，可以使用 <code>Index</code>、<code>SetIndex</code> 並指定索引；若對象是個函式，可以使用 <code>Invoke</code> 指定引數來呼叫，若想呼叫的是物件上的方法，可以使用 <code>Call</code> 指定方法名稱與呼叫時的引數等。</p>
 <p>在 js.go 中預先定義了一些 <code>js.Value</code> 的實例，可以透過公開的 <code>js.Undefined</code>、<code>js.Null</code>、<code>js.Global</code> 等函式呼叫取得。</p>
@@ -8289,8 +8634,8 @@ async function run() {
 </div>
 <p>Go 有自己的匯入物件，也就是 <code>go.importObject</code>，這個物件主要是 JavaScript 環境與 Go 編譯出來的 WebAssembly 之橋樑，將 JavaScript 的值與 Go 的結構實例作了個對應，因此，不用自己匯入某個函式，只要取得某個作為名稱空間的 JavaScript 物件，取得上頭對應的特性，像是函式，就可以在 Go 中操作。</p>
 <p>也就是說，如果想要在 Go 中定義函式，然後在 JavaScript 中呼叫，就是將 Go 中定義的函式，設定給某個對應的 JavaScript 物件，之後就可以在 JavaScript 環境中使用了，只不過在定義時，必須留意 JavaScript 與 Go 的型態對應。</p>
-<p>可以被 JavaScript 環境呼叫的 Go 函式，必須被包裝為 <code>js.Callback</code> 型態，這個結構型態內嵌 <code>js.Value</code>，也就是它也是一種值，想要建立 <code>js.Callback</code> 實例，可以透過 <code>js.NewCallback</code> 函式（定義在 callback.go）。</p>
-<p>要能被 JavaScript 呼叫的 Go 函式，參數型態是 <code>[]js.Value</code>，也就是 <code>js.Value</code> 的 <code>slice</code>，<code>slice</code> 的元素代表著呼叫函式時傳入的引數，你可以想像 JavaScript 函式中 <code>arguments</code> 的對應型態。</p>
+<p>在現代版本（例如 Go 1.26）中，可以被 JavaScript 環境呼叫的 Go 函式，通常會使用 <code>js.Func</code> 搭配 <code>js.FuncOf</code> 來包裝；這個值可以設定到 JavaScript 物件上，之後由 JavaScript 呼叫。</p>
+<p>要能被 JavaScript 呼叫的 Go 函式，常見簽章為 <code>func(this js.Value, args []js.Value) any</code>，其中 <code>args</code> 是呼叫函式時傳入的引數，你可以想像 JavaScript 函式中 <code>arguments</code> 的對應型態。</p>
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
 <p>例如，顯示加總至某個指定 DOM 物件的函式，可以如下定義：</p>
@@ -8300,15 +8645,16 @@ import "syscall/js"
 
 func main() {
     // 註冊在 JavaScript 全域
-    js.Global().Set("printSumTo", js.NewCallback(printSum))
+    js.Global().Set("printSumTo", js.FuncOf(printSum))
     // 阻斷 main 流程
     select {}   
 }
 
-func printSum(args []js.Value) {
+func printSum(this js.Value, args []js.Value) any {
     c1 := args[0]         // 結果顯示到這個 div 
     numbers := args[1:]   // 接下來是要加總的數字
     c1.Set("innerHTML", sum(numbers))
+    return nil
 }
 
 func sum(numbers []js.Value) int {
@@ -8321,7 +8667,7 @@ func sum(numbers []js.Value) int {
 </code></pre>
 <div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
 </div>
-<p>目前 Go 給 JavaScript 回呼用的函式不支援傳回值，未來也許會進一步支援，如果你想將結果帶回 JavaScript 環境，就是以副作用的方式實現，例如改變某個 JavaScript 物件的狀態，像是這邊是改變某個 DOM 的 <code>innerHTML</code>。</p>
+<p><code>js.FuncOf</code> 的回呼可傳回值（會轉為對應的 JavaScript 值），不過像事件處理器這類場合，通常仍以副作用方式實現比較常見，例如改變某個 JavaScript 物件的狀態，像是這邊是改變某個 DOM 的 <code>innerHTML</code>。</p>
 <p>因為 Go 的 <code>main</code> 執行完，模組的程式就結束了，這樣 Go 中定義的函式就沒有了，然而，事件會是在之後才發生，因而要被回呼的函式必須存活著，為了這個目的，範例中使用 <code>select {}</code> 來阻斷流程，視需求而定，你也可以用別的方式來設計某種阻斷。</p>
 <p>至於 JavaScript 的部份，來稍微修改一下 wasm_exec.html：</p>
 <pre><code class="language-prettyprint">&lt;!doctype html&gt;
@@ -8389,7 +8735,7 @@ import (
 
 func main() {
     // 註冊按鈕事件
-    dom("runButton").Call("addEventListener", "click", js.NewCallback(cal))
+    dom("runButton").Call("addEventListener", "click", js.FuncOf(cal))
     select {}
 }
 
@@ -8399,10 +8745,11 @@ func dom(id string) js.Value {
 }
 
 // 按下 Run 的事件處理器
-func cal(args []js.Value) {
+func cal(this js.Value, args []js.Value) any {
     n1, _ := inputValue("n1")
     n2, _ := inputValue("n2")
     dom("r").Set("innerHTML", n1+n2)
+    return nil
 }
 
 // 取得輸入欄位值

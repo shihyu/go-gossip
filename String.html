@@ -300,7 +300,7 @@ func main() {
 }
 </code></pre>
 <p>片段操作時，如果省略冒號之後的數字，則預設取得至字串尾端的子字串，例如 <code>"Go語言"[3:]</code> 會傳回 <code>"\xaa\x9e\xe8\xa8\x80"</code> 的字串，如果省略冒號之前的數字，預設從索引 0 開始，例如 <code>"Go語言"[:2]</code> 會取得 <code>"Go"</code> 的字串，也就是 <code>"\x47\x6f"</code> 的字串，如果是 <code>"Go語言"[:]</code>，那麼就是取得全部字串內容了。</p>
-<p><a href="https://golang.org/pkg/strings/"><code>strings</code> 套件</a> 中有不少字串可用的方法，想做字串操作時，可以多加利用，不過要看清楚是針對什麼在操作。例如 <code>strings.Index</code>：</p>
+<p><a href="https://pkg.go.dev/strings/"><code>strings</code> 套件</a> 中有不少字串可用的方法，想做字串操作時，可以多加利用，不過要看清楚是針對什麼在操作。例如 <code>strings.Index</code>：</p>
 <pre><code class="language-prettyprint">package main
 
 import "fmt"
@@ -345,7 +345,7 @@ U+006F 'o' 位元起始位置 1
 U+8A9E '語' 位元起始位置 2
 U+8A00 '言' 位元起始位置 5
 </code></pre>
-<p>總而言之，Go 的字串是由 UTF-8 編碼的位元組構成，在〈<a href="https://blog.golang.org/strings">Strings, bytes, runes and characters in Go</a>〉談到了這麼設計的理由是，「字元」的定義太模稜兩可了，Go 為了避免模稜兩可，就將字串定義為 UTF-8 編碼的位元組構成，而 <code>rune</code> 用於儲存碼點。</p>
+<p>總而言之，Go 的字串是由 UTF-8 編碼的位元組構成，在〈<a href="https://go.dev/blog/strings">Strings, bytes, runes and characters in Go</a>〉談到了這麼設計的理由是，「字元」的定義太模稜兩可了，Go 為了避免模稜兩可，就將字串定義為 UTF-8 編碼的位元組構成，而 <code>rune</code> 用於儲存碼點。</p>
 <p>PS. 這大概也是為何，我會整理出〈<a href="http://openhome.cc/Gossip/Encoding/">亂碼 1/2</a>〉的原因 … XD</p>
 <div class="ad336-280" style="text-align: center;">
 </div>

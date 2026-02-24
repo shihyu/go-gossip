@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Go 測試套件</title>
+        <title>泛型入門（Go 1.18+）</title>
 
 
         <!-- Custom HTML head -->
@@ -177,174 +177,133 @@
                     <main>
                         <div id="main" role="main" style="height: auto !important;">
 <div class="header">
-<h1 id="go-測試套件"><a class="header" href="#go-測試套件">Go 測試套件</a></h1>
+<h1 id="泛型入門go-118"><a class="header" href="#泛型入門go-118">泛型入門（Go 1.18+）</a></h1>
 </div>
-<p>Go 本身附帶了 <code>testing</code> 套件，搭配 <code>go test</code> 指令，可以自動對套件中的程式碼進行測試，在套件中，測試程式碼必須是 _test.go 結尾，一個套件中可以有多個 _test.go，例如，<a href="https://go.dev/src/fmt/">fmt 套件的原始碼</a> 中，可以看到 export_test.go、fmt_test.go 等，就是測試程式碼。</p>
-<h1 id="功能測試"><a class="header" href="#功能測試">功能測試</a></h1>
-<p>想要使用 Go 的 <code>testing</code> 套件撰寫測試程式碼，必須 <code>import "testing"</code>，在 _test.go 中撰寫形式 <code>func TestXxx(t *testing.T)</code> 的函式，Xxx 可以是任意名稱，例如，在 src/mymath 目錄中，寫個 basic_test.go：</p>
-<pre><code class="language-prettyprint">package mymath
+<p>從 Go 1.18 開始，Go 支援泛型（Generics，也就是 type parameters）。這讓你可以用同一份程式碼，處理多種型態，而不用到處寫重複函式或依賴 <code>interface{}</code> 加型態斷言。</p>
+<h1 id="泛型函式"><a class="header" href="#泛型函式">泛型函式</a></h1>
+<p>函式可以在名稱後面宣告型別參數，例如：</p>
+<pre><code class="language-prettyprint">package main
 
-import "testing"
+import "fmt"
 
-func TestSomething(t *testing.T) {
-    // write some test
+func First[T any](elems []T) (T, bool) {
+    if len(elems) == 0 {
+        var zero T
+        return zero, false
+    }
+    return elems[0], true
 }
-</code></pre>
-<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
-</div>
-<p>接著只要執行 <code>go test mymath</code>，就會自動尋找 <code>mymath</code> 套件中的 _test.go 中 Test 開頭的函式並執行，由於目前沒撰寫任何測試內容，測試是以 PASS 結束。</p>
-<div class="pure-g">
-<div class="pure-u-1">
-<img src="images/Testing-1.JPG" class="pure-img-responsive" alt="Go 測試套件" />
-</div>
-</div>
-<p>如果函式中使用了 <code>testing</code> 的 <code>Error</code>、<code>Fail</code> 等與失敗相關的方法，那麼測試就會失敗，例如：</p>
-<pre><code class="language-prettyprint">package mymath
 
-import "testing"
-
-func TestSomething(t *testing.T) {
-    t.Fail()
-}
-</code></pre>
-<div class="pure-g">
-<div class="pure-u-1">
-<img src="images/Testing-2.JPG" class="pure-img-responsive" alt="Go 測試套件" />
-</div>
-</div>
-<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
-</div>
-<p>如果想要在測試失敗時，留下一些訊息，可以使用 <code>Error</code> 方法，例如：</p>
-<pre><code class="language-prettyprint">package mymath
-
-import "testing"
-
-func TestSomething(t *testing.T) {
-    t.Error("something wrong")
-}
-</code></pre>
-<div class="pure-g">
-<div class="pure-u-1">
-<img src="images/Testing-3.JPG" class="pure-img-responsive" alt="Go 測試套件" />
-</div>
-</div>
-<p>來實際寫個測試，例如，測試一個 <code>Add</code> 函式：</p>
-<pre><code class="language-prettyprint">package mymath
-
-import "testing"
-
-func TestAdd(t *testing.T) {
-    if Add(1, 2) == 3 {
-        t.Log("mymath.Add PASS")
-    } else {
-        t.Error("mymath.Add FAIL")
+func main() {
+    if v, ok := First([]int{10, 20, 30}); ok {
+        fmt.Println(v) // 10
+    }
+    if v, ok := First([]string{"Go", "Rust"}); ok {
+        fmt.Println(v) // Go
     }
 }
 </code></pre>
-<p>由於目前還沒有撰寫 <code>Add</code> 函式，因此若執行 <code>go test mymath</code> 的話，會以 [build failed] 收場，如果在 basic.go 撰寫了正確的 <code>Add</code> 函式：</p>
-<pre><code class="language-prettyprint">package mymath
+<p><code>T any</code> 表示 <code>T</code> 可以是任何型態；<code>any</code> 是 <code>interface{}</code> 的別名（Go 1.18 新增）。</p>
+<p>通常編譯器可以從引數推斷型別參數，因此呼叫時常不必寫成 <code>First[int](...)</code>。</p>
+<h1 id="型別條件constraints"><a class="header" href="#型別條件constraints">型別條件（constraints）</a></h1>
+<p>如果泛型函式或泛型型別需要使用某些運算（例如 <code>==</code>、<code>&lt;</code>），就要限制型別參數可接受的型態範圍，這就是型別條件。</p>
+<pre><code class="language-prettyprint">package main
 
-func Add(a, b int) int {
-    return a + b
+import "fmt"
+
+func IndexOf[T comparable](elems []T, target T) int {
+    for i, elem := range elems {
+        if elem == target {
+            return i
+        }
+    }
+    return -1
+}
+
+func main() {
+    fmt.Println(IndexOf([]int{1, 2, 3}, 2))           // 1
+    fmt.Println(IndexOf([]string{"Go", "C"}, "Rust")) // -1
 }
 </code></pre>
-<p>不過，如果直接執行 <code>go test mymath</code> 的話，只會顯示 ok 等字眼，不會顯示 <code>Log</code> 的訊息，想看到 <code>Log</code> 的訊息的話，必須加上 <code>-v</code> 引數（代表 verbose），例如：</p>
-<div class="pure-g">
-<div class="pure-u-1">
-<img src="images/Testing-4.JPG" class="pure-img-responsive" alt="Go 測試套件" />
-</div>
-</div>
-<p>如果 <code>Log</code> 之後接上 <code>Fail</code> 函式，那麼不加上 <code>-v</code>，也會顯示 <code>Log</code> 的訊息，實際上，<code>Error</code> 函式就是相當於先以 <code>Log</code> 顯示指定的訊息，然後再接上 <code>Fail</code> 函式。</p>
-<p>如果想要略過測試，那麼可以使用 <code>Skip</code> 函式，例如：</p>
-<pre><code class="language-prettyprint">package mymath
-
-import "testing"
-
-func TestSomething(t *testing.T) {
-    t.Skip()
-}
-
-func TestAdd(t *testing.T) {
-    if Add(1, 2) == 3 {
-        t.Log("mymath.Add PASS")
-    } else {
-        t.Error("mymath.Add FAIL")
-    }
+<p><code>comparable</code> 也是 Go 1.18 新增的預定義識別名稱，只能用在型別條件中。從 Go 1.20 起，可比較（但可能在執行時比較時 panic）的型別，也能滿足 <code>comparable</code> 條件。</p>
+<h1 id="介面作為型別集合type-set"><a class="header" href="#介面作為型別集合type-set">介面作為型別集合（type set）</a></h1>
+<p>Go 1.18 之後，介面不只描述方法集合，也可以描述型別集合（用於 constraint）。例如：</p>
+<pre><code class="language-prettyprint">type Integer interface {
+    ~int | ~int8 | ~int16 | ~int32 | ~int64
 }
 </code></pre>
-<p><code>TestSomething</code> 中如果沒有執行 <code>Skip</code> 會是兩個 PASS 的測試結果，若如上執行了 <code>Skip</code>，會是一個 SKIP 與一個 PASS 的測試結果。例如：</p>
-<div class="pure-g">
-<div class="pure-u-1">
-<img src="images/Testing-5.JPG" class="pure-img-responsive" alt="Go 測試套件" />
-</div>
-</div>
-<p>如果你想指定某個測試，可以使用 <code>-run</code> 引數，這接受一個正則表示式，例如，若只想執行 <code>TestAdd</code>，那麼可以如下：</p>
-<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
-</div>
-<div class="pure-g">
-<div class="pure-u-1">
-<img src="images/Testing-6.JPG" class="pure-img-responsive" alt="Go 測試套件" />
-</div>
-</div>
-<h1 id="效能評測"><a class="header" href="#效能評測">效能評測</a></h1>
-<p>如果想進行效能評測（Benchmark），那麼 _test.go 中，評測函式必須是 <code>func BenchmarkXxx(b *testing.B)</code> 形式，例如：</p>
-<pre><code class="language-prettyprint">package mymath
+<p><code>~int</code> 表示「底層型態是 <code>int</code> 的型態」，這讓自訂型別（例如 <code>type MyInt int</code>）也能符合條件。</p>
+<p>這類帶有 union（<code>|</code>）或具體型別元素的介面，通常只能用在型別條件，不會拿來當一般執行期介面值使用。</p>
+<h1 id="泛型型別"><a class="header" href="#泛型型別">泛型型別</a></h1>
+<p>不只函式可以用泛型，型別宣告也可以：</p>
+<pre><code class="language-prettyprint">package main
 
-import "testing"
+import "fmt"
 
-func TestSomething(t *testing.T) {
-    t.Skip()
+type Stack[T any] struct {
+    elems []T
 }
 
-func TestAdd(t *testing.T) {
-    if Add(1, 2) == 3 {
-        t.Log("mymath.Add PASS")
-    } else {
-        t.Error("mymath.Add FAIL")
-    }
+func (s *Stack[T]) Push(v T) {
+    s.elems = append(s.elems, v)
 }
 
-func BenchmarkAdd(b *testing.B) {
-    for i := 0; i &lt; b.N; i++ {
-        Add(1, 2)
+func (s *Stack[T]) Pop() (T, bool) {
+    if len(s.elems) == 0 {
+        var zero T
+        return zero, false
     }
+    i := len(s.elems) - 1
+    v := s.elems[i]
+    s.elems = s.elems[:i]
+    return v, true
+}
+
+func main() {
+    var s Stack[string]
+    s.Push("Go")
+    s.Push("1.26")
+    v, _ := s.Pop()
+    fmt.Println(v) // 1.26
 }
 </code></pre>
-<p>為了進行評測，被測試的函式要執行多次，以求得每次執行的平均時間，要執行多次函式可以使用迴圈，並以 <code>b.N</code> 作為邊界，<code>b.N</code> 目標預設是 1000000000，評測預設會在一秒內，以越來越大的 <code>b.N</code> 執行迴圈，這是為了讓評測進入穩定狀態，以收集到可靠的評測資料；如果運行時間到了，<code>b.N</code> 目標值仍未達成，就以現有收集到的資料來回報評測結果。</p>
-<p>你可以在執行 <code>go test</code> 時，加上 <code>-bench</code> 引數，這個引數後可以使用正則表示式，來指定符合的評測函式名稱，例如，想執行所有評測函式，可以使用 <code>-bench="."</code>：</p>
-<div class="google-auto-placed" style="width: 100%; height: auto; clear: both; text-align: center;">
-</div>
-<div class="pure-g">
-<div class="pure-u-1">
-<img src="images/Testing-7.JPG" class="pure-img-responsive" alt="Go 測試套件" />
-</div>
-</div>
-<p>評測的結果中顯示，達到了 <code>b.N</code> 預設目標 100000000 次，平均每次迴圈花了 0.58 奈秒（nanosecond）。</p>
-<p>如果只想進行效能評測，可以使用 <code>-run</code> 引數，這本來是用來指定要執行的測試函式，只要指定一個不符合任何測試函式的正則表示式，就可以略過所有測試，只執行評測函式了，例如：</p>
-<div class="pure-g">
-<div class="pure-u-1">
-<img src="images/Testing-8.JPG" class="pure-img-responsive" alt="Go 測試套件" />
-</div>
-</div>
-<p>方才談到，評測預設的運行時間是一秒，如果在這個時間內，無法達到 <code>b.N</code> 的目標值，可以增加這個時間，這要使用 <code>-benchtime</code> 引數，指定的格式像是 1h30s，例如：</p>
-<div class="pure-g">
-<div class="pure-u-1">
-<img src="images/Testing-9.JPG" class="pure-img-responsive" alt="Go 測試套件" />
-</div>
-</div>
-<p>如果想固定 <code>b.N</code> 的值，Go 1.12 以後可以使用 <code>x</code> 後置，例如指定執行 100000000000 次（預設 <code>b.N</code> 目標的 10 倍）並收集結果：</p>
-<div class="pure-g">
-<div class="pure-u-1">
-<img src="images/Testing-10.JPG" class="pure-img-responsive" alt="Go 測試套件" />
-</div>
-</div>
-<p><code>-count</code> 可以指定評測重啟幾次：</p>
-<div class="pure-g">
-<div class="pure-u-1">
-<img src="images/Testing-11.JPG" class="pure-img-responsive" alt="Go 測試套件" />
-</div>
-</div>
-<p>想知道更多 Go 測試套件的細節，可以參考 <a href="https://pkg.go.dev/testing/">Package testing</a> 的說明。</p>
+<h1 id="go-124generic-type-aliases"><a class="header" href="#go-124generic-type-aliases">Go 1.24：generic type aliases</a></h1>
+<p>Go 1.24 起，generic type aliases 完整支援，因此可像下面這樣寫：</p>
+<pre><code class="language-prettyprint">type Set[T comparable] = map[T]struct{}
+</code></pre>
+<p>這在整理常用資料結構別名時很方便，例如 <code>Set[string]</code>、<code>Set[int]</code>。</p>
+<h1 id="go-126型別參數列表中的自我參照"><a class="header" href="#go-126型別參數列表中的自我參照">Go 1.26：型別參數列表中的自我參照</a></h1>
+<p>Go 1.26 放寬了限制，泛型型別可在自己的型別參數列表中參照自己。這對某些泛型介面（特別是要求「輸入輸出都是自身型態」）會比較自然：</p>
+<pre><code class="language-prettyprint">package main
+
+import "fmt"
+
+type Adder[A Adder[A]] interface {
+    Add(A) A
+}
+
+type MyInt int
+
+func (x MyInt) Add(y MyInt) MyInt {
+    return x + y
+}
+
+func Algo[A Adder[A]](x, y A) A {
+    return x.Add(y)
+}
+
+func main() {
+    fmt.Println(Algo(MyInt(10), MyInt(20))) // 30
+}
+</code></pre>
+<h1 id="何時該用泛型"><a class="header" href="#何時該用泛型">何時該用泛型？</a></h1>
+<p>泛型適合用在：</p>
+<ul>
+<li>演算法或容器邏輯完全相同，只差元素型態（例如 stack、set、搜尋、走訪）</li>
+<li>想避免 <code>interface{}</code> 與型態斷言造成的樣板程式碼與執行期錯誤</li>
+<li>需要在編譯期保留型態資訊，提高可讀性與型別安全</li>
+</ul>
+<p>但如果某個邏輯本質上就是依賴行為（方法）而不是型態，傳統介面仍然常常是更直接的做法。</p>
 <div class="ad336-280" style="text-align: center;">
 </div>
 <div class="recommend" style="text-align: center;">
@@ -356,11 +315,11 @@ func BenchmarkAdd(b *testing.B) {
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="godoc.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="Function.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="PreDeclaredType.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="FirstClassFunction.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -370,11 +329,11 @@ func BenchmarkAdd(b *testing.B) {
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="godoc.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="Function.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="PreDeclaredType.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="FirstClassFunction.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

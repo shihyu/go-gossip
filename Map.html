@@ -203,7 +203,7 @@ func main() {
 </div>
 <p>在上例中，<code>passwords</code> 是個參考，指向 <code>make(map[string]int)</code> 建立的 map 實例。</p>
 <p>類似一些語言（例如 Python），要設定一個鍵值對應時，使用 <code>[]</code> 與 <code>=</code> 指定，要取得鍵對應的值時，使用 <code>[]</code> 指定鍵，這會傳回對應的值，想知道 <code>map</code> 中的鍵數，可以使用 <code>len</code> 函式。</p>
-<p>要注意的是，可用來做為鍵的值，必須是 <a href="https://blog.golang.org/go-maps-in-action">comparable</a>，就目前來說，你要先知道的 comparable 型態有布林、數字、字串、指標（pointer）、channel、interface、struct，或者含有這這些型態的陣列，這些是都可以使用 <code>==</code> 來比較的值；而 slice、map 與函式，就不能用來做為鍵。</p>
+<p>要注意的是，可用來做為鍵的值，必須是 <a href="https://go.dev/blog/go-maps-in-action">comparable</a>，就目前來說，你要先知道的 comparable 型態有布林、數字、字串、指標（pointer）、channel、interface、struct，或者含有這這些型態的陣列，這些是都可以使用 <code>==</code> 來比較的值；而 slice、map 與函式，就不能用來做為鍵。</p>
 <p>如果已知 map 中會有的鍵值對，則可以如下建立 map：</p>
 <pre><code class="language-prettyprint">package main
 

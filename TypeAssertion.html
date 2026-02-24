@@ -243,7 +243,7 @@ func main() {
 </div>
 <p>就算 <code>testerA</code> 儲存的結構實例，確實有實作<code>testB()</code> 這個方法，然而從編譯器的角度來看，<code>testerA</code> 的行為只有 <code>testA()</code>，而看不到它有 <code>testB()</code> 的行為，因此上面這個範例會編譯錯誤。</p>
 <h1 id="comma-ok-型態斷言"><a class="header" href="#comma-ok-型態斷言">Comma-ok 型態斷言</a></h1>
-<p>如果真的要通過編譯，可以使用<a href="https://golang.org/ref/spec#Type_assertions">型態斷言（Type assertion）</a>：</p>
+<p>如果真的要通過編譯，可以使用<a href="https://go.dev/ref/spec#Type_assertions">型態斷言（Type assertion）</a>：</p>
 <pre><code class="language-prettyprint">...同前…略
 
 func main() {
